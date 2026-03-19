@@ -12,10 +12,11 @@
 - [x] Claude project structure set up (.claude/skills, rules, docs)
 
 ### In Progress
-- [ ] Polish remaining pages (About, Projects, HCI, Contact) for bright theme
-- [ ] Add GSAP for enhanced animations
+- [x] Polish remaining pages — entrance animations added to all subpages
+- [x] Premium hero — 4-layer canvas particle network with data pulses
+- [ ] Add GSAP for enhanced scroll animations
 - [ ] Self-host fonts for performance
-- [ ] GitHub Pages deployment (user needs to enable in repo Settings)
+- [x] GitHub Pages deployment — live at wingchunleung.github.io/website/
 
 ### Pending
 - [ ] HCI assignment content (as coursework progresses)
