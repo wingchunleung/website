@@ -185,11 +185,34 @@ const projects = [
   .featured-project { padding: var(--space-6) 0 var(--section-gap); }
 
   .featured-card {
+    position: relative;
+    overflow: hidden;
     background: var(--color-surface);
     border-radius: var(--radius-lg);
     padding: var(--space-6);
     border-left: 4px solid var(--brand, var(--color-vermillion));
     opacity: 0; transform: translateY(30px);
+  }
+
+  /* Subtle animated gradient shimmer on featured card */
+  .featured-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      transparent 30%,
+      rgba(199, 62, 29, 0.03) 50%,
+      transparent 70%
+    );
+    background-size: 200% 200%;
+    animation: featuredShimmer 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes featuredShimmer {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
   }
 
   .featured-card.visible {
