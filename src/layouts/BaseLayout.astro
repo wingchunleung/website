@@ -1,5 +1,8 @@
 ---
 import '../styles/global.css';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/cormorant-garamond';
+import '@fontsource-variable/jetbrains-mono';
 
 interface Props {
   title: string;
@@ -31,13 +34,7 @@ const accentColor = accent === 'celadon' ? '#7d9e8c' : '#c73e1d';
     <meta property="og:image" content={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/og-image.svg`} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Fonts: preconnect + load for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
+    <!-- Fonts: self-hosted via fontsource (no external DNS, GDPR-safe, faster) -->
 
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
     <title>{title}</title>
