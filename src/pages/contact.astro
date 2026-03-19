@@ -1,14 +1,39 @@
 ---
 /**
- * Contact Page
- * HCI: H8 (Error Prevention) — clear, direct contact paths
- * HCI: H3 (Minimalism) — only essential information
- * Fitts's Law — large, easy-to-reach CTAs
+ * Contact Page — Clean, premium, direct
+ * HCI: H8 (Error Prevention) — clear, unambiguous contact paths
+ * HCI: Fitts's Law — large, easy-to-tap contact cards
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const contacts = [
+  {
+    label: 'Email',
+    value: 'wingchunleung8@gmail.com',
+    href: 'mailto:wingchunleung8@gmail.com',
+    cta: 'Send an email',
+    external: false,
+  },
+  {
+    label: 'LinkedIn',
+    value: '/in/wingchunleung',
+    href: 'https://linkedin.com/in/wingchunleung',
+    cta: 'Connect',
+    external: true,
+  },
+  {
+    label: 'GitHub',
+    value: 'wingchunleung',
+    href: 'https://github.com/wingchunleung',
+    cta: 'View code',
+    external: true,
+  },
+];
 ---
 
 <BaseLayout title="Contact — Wing Chun Leung" description="Get in touch with Wing Chun Leung.">
@@ -18,41 +43,40 @@ import Footer from '../components/Footer.astro';
     <div class="container content">
       <span class="section-label">Contact</span>
       <h1>Let's talk</h1>
-      <p class="page-subtitle">
-        Whether you're interested in AI research, fintech opportunities, speaking engagements, or just want to connect — I'd love to hear from you.
+      <p class="hero-sub">
+        Open to conversations about AI research, fintech, speaking, or anything in between.
       </p>
     </div>
   </section>
 
   <section class="contact-section">
     <div class="container content">
-      <div class="contact-methods" data-animate="reveal">
-        <a href="mailto:wingchunleung8@gmail.com" class="contact-card">
-          <span class="contact-label">Email</span>
-          <span class="contact-value">wingchunleung8@gmail.com</span>
-          <span class="contact-cta">Send an email &rarr;</span>
-        </a>
-
-        <a href="https://linkedin.com/in/wingchunleung" class="contact-card" target="_blank" rel="noopener noreferrer">
-          <span class="contact-label">LinkedIn</span>
-          <span class="contact-value">wingchunleung</span>
-          <span class="contact-cta">Connect &rarr;</span>
-        </a>
-
-        <a href="https://github.com/wingchunleung" class="contact-card" target="_blank" rel="noopener noreferrer">
-          <span class="contact-label">GitHub</span>
-          <span class="contact-value">wingchunleung</span>
-          <span class="contact-cta">View code &rarr;</span>
-        </a>
+      <div class="contact-grid">
+        {contacts.map((c, i) => (
+          <a
+            href={c.href}
+            class="contact-card"
+            data-animate="reveal"
+            style={`--delay: ${i * 0.1}s`}
+            target={c.external ? '_blank' : undefined}
+            rel={c.external ? 'noopener noreferrer' : undefined}
+          >
+            <span class="contact-label">{c.label}</span>
+            <span class="contact-value">{c.value}</span>
+            <span class="contact-cta">
+              {c.cta}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        ))}
       </div>
 
-      <div class="contact-location" data-animate="reveal">
+      <div class="location-block" data-animate="reveal">
         <span class="section-label">Based in</span>
-        <p class="location-text">Hong Kong SAR</p>
-        <p class="location-detail">
-          Currently at HKUST, Clear Water Bay<br />
-          Open to opportunities worldwide
-        </p>
+        <p class="location-city">Hong Kong SAR</p>
+        <p class="location-detail">HKUST, Clear Water Bay</p>
       </div>
     </div>
   </section>
@@ -65,58 +89,39 @@ import Footer from '../components/Footer.astro';
     padding-top: calc(72px + var(--section-gap));
     padding-bottom: var(--space-6);
   }
-
   .page-hero .section-label {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: pageReveal 0.8s var(--ease-out) 0.2s forwards;
+    opacity: 0; transform: translateY(20px);
+    animation: pr 0.8s var(--ease-out) 0.2s forwards;
   }
-
   .page-hero h1 {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
-    margin-top: var(--space-3);
-    margin-bottom: var(--space-3);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: pageReveal 0.8s var(--ease-out) 0.4s forwards;
+    margin-top: var(--space-3); margin-bottom: var(--space-3);
+    opacity: 0; transform: translateY(30px);
+    animation: pr 0.8s var(--ease-out) 0.4s forwards;
   }
-
-  .page-subtitle {
-    color: var(--color-text-secondary);
-    max-width: 50ch;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: pageReveal 0.8s var(--ease-out) 0.6s forwards;
+  .hero-sub {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    color: var(--color-wash); max-width: 480px;
+    opacity: 0; transform: translateY(20px);
+    animation: pr 0.8s var(--ease-out) 0.6s forwards;
   }
-
-  @keyframes pageReveal {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes pr { to { opacity: 1; transform: translateY(0); } }
 
   .contact-section {
     padding-bottom: var(--section-gap);
   }
 
-  .contact-methods {
+  .contact-grid {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
     margin-bottom: var(--space-8);
-    opacity: 0;
-    transform: translateY(40px);
-  }
-
-  .contact-methods.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out);
   }
 
   .contact-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 6px;
     padding: var(--space-4) var(--space-5);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -125,10 +130,19 @@ import Footer from '../components/Footer.astro';
     transition: border-color var(--duration-normal) var(--ease-out),
                 box-shadow var(--duration-normal) var(--ease-out),
                 transform var(--duration-normal) var(--ease-out);
+    opacity: 0; transform: translateY(30px);
     min-height: 44px;
   }
 
   .contact-card::after { display: none; }
+
+  .contact-card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                border-color var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
 
   .contact-card:hover {
     border-color: var(--color-vermillion);
@@ -152,33 +166,42 @@ import Footer from '../components/Footer.astro';
   }
 
   .contact-cta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: var(--text-small);
     color: var(--color-vermillion);
-    margin-top: var(--space-1);
+    margin-top: 4px;
   }
 
-  .contact-location {
-    opacity: 0;
-    transform: translateY(40px);
+  .contact-cta svg {
+    transition: transform var(--duration-normal) var(--ease-out);
   }
 
-  .contact-location.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out);
+  .contact-card:hover .contact-cta svg {
+    transform: translate(3px, -3px);
   }
 
-  .location-text {
+  .location-block {
+    text-align: center;
+    opacity: 0; transform: translateY(20px);
+  }
+
+  .location-block.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+
+  .location-city {
     font-family: var(--font-display);
     font-size: var(--text-h2);
     font-weight: var(--weight-light);
     margin-top: var(--space-3);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-1);
   }
 
   .location-detail {
-    color: var(--color-text-secondary);
+    color: var(--color-wash);
     font-size: var(--text-small);
   }
 </style>
@@ -195,7 +218,7 @@ import Footer from '../components/Footer.astro';
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
     revealElements.forEach((el) => observer.observe(el));
   }

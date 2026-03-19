@@ -1,99 +1,171 @@
 ---
 /**
- * About Page — Three-part narrative
- * HCI: Reflective level — meaning, identity, personal story
- * Structure: The Professional, The Bridge-Builder, The Human
+ * About Page — Visual, premium, Apple/SaaS-quality
+ * HCI: Recognition > Recall — logos, colors, visual cards instead of text walls
+ * HCI: Visceral — immediate visual impression of professional credibility
+ * HCI: Gestalt Proximity — grouped cards, clear visual sections
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const experience = [
+  {
+    org: 'HKUST',
+    role: 'Research Assistant — AI in Asset Management',
+    period: '2026 — Present',
+    color: '#003366',
+    highlight: 'LLM-driven macro allocation pipeline',
+    metrics: ['Multi-agent systems', 'RMB 5T+ AUM scope', 'Prof. Yi Yang'],
+  },
+  {
+    org: 'Carta',
+    role: 'Private Equity Analyst',
+    period: '2024 — 2025',
+    color: '#1a1a1a',
+    highlight: 'Redesigned PE advisory workflow',
+    metrics: ['70% faster processing', '4.8/5.0 satisfaction', 'LLM tools built'],
+  },
+  {
+    org: 'Costco',
+    role: 'Financial Systems Analyst',
+    period: '2023 — 2024',
+    color: '#e31837',
+    highlight: 'Automated financial operations',
+    metrics: ['99% time reduction', '97% forecast accuracy', 'Python/SQL'],
+  },
+];
+
+const education = [
+  {
+    org: 'HKUST',
+    degree: 'MSc Artificial Intelligence',
+    period: '2025 — 2027',
+    color: '#003366',
+    detail: 'GPA 3.43 · Talent Development Scholarship',
+  },
+  {
+    org: 'UW',
+    degree: 'BBA Finance & Information Systems',
+    period: '2020 — 2022',
+    color: '#4b2e83',
+    detail: 'GPA 3.78 · Dean\'s List · CFO Blockchain Society',
+  },
+  {
+    org: 'Edmonds',
+    degree: 'AA Business Administration',
+    period: '2018 — 2020',
+    color: '#2d6a4f',
+    detail: 'GPA 4.0 · Commencement Honors',
+  },
+];
+
+const stats = [
+  { value: '5×', label: 'Guest Speaker' },
+  { value: '3', label: 'Languages' },
+  { value: '4.0', label: 'College GPA' },
+  { value: '6+', label: 'Leadership Roles' },
+];
 ---
 
 <BaseLayout title="About — Wing Chun Leung" description="Learn about Wing Chun Leung — bridging finance and AI, from Hong Kong to HKUST.">
   <Header slot="header" />
 
+  <!-- Hero -->
   <section class="page-hero">
-    <div class="container content">
+    <div class="container">
       <span class="section-label">About</span>
       <h1>The person behind<br />the systems</h1>
+      <p class="hero-sub">
+        Builder at the intersection of finance and AI. From Hong Kong,
+        through the US, and back — always bridging disciplines.
+      </p>
     </div>
   </section>
 
-  <section class="about-section" aria-label="Professional background">
+  <!-- Stats strip -->
+  <section class="stats-strip" aria-label="Quick stats">
+    <div class="container">
+      <div class="stats-row" data-animate="reveal">
+        {stats.map((s) => (
+          <div class="stat-item">
+            <span class="stat-value">{s.value}</span>
+            <span class="stat-label">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="exp-section" aria-label="Experience">
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Experience</span>
+        <h2>Where I've built</h2>
+      </div>
+
+      <div class="exp-grid">
+        {experience.map((exp, i) => (
+          <article class="exp-card" data-animate="reveal" style={`--delay: ${i * 0.1}s; --brand: ${exp.color}`}>
+            <div class="exp-card-top">
+              <span class="exp-org">{exp.org}</span>
+              <span class="exp-period">{exp.period}</span>
+            </div>
+            <h3 class="exp-role">{exp.role}</h3>
+            <p class="exp-highlight">{exp.highlight}</p>
+            <div class="exp-metrics">
+              {exp.metrics.map((m) => (
+                <span class="exp-metric">{m}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="edu-section" aria-label="Education">
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Education</span>
+        <h2>Where I've learned</h2>
+      </div>
+
+      <div class="edu-grid">
+        {education.map((edu, i) => (
+          <article class="edu-card" data-animate="reveal" style={`--delay: ${i * 0.1}s; --brand: ${edu.color}`}>
+            <span class="edu-org">{edu.org}</span>
+            <h3 class="edu-degree">{edu.degree}</h3>
+            <span class="edu-period">{edu.period}</span>
+            <p class="edu-detail">{edu.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bio -->
+  <section class="bio-section" aria-label="Personal">
     <div class="container content">
-      <article class="about-block" data-animate="reveal">
-        <span class="section-label">The Professional</span>
-        <p class="about-lead">
-          I'm a builder at the intersection of finance and artificial intelligence. Currently pursuing an MSc in AI at the Hong Kong University of Science and Technology, where I research LLM-driven macro allocation as a Research Assistant under Prof. Yi Yang.
-        </p>
-        <p>
-          Before returning to academia, I worked at <strong>Carta</strong> as a Private Equity Analyst, where I redesigned financial projection workflows and built LLM-powered tools that transformed how the advisory team served clients. At <strong>Costco</strong>, I turned manual processes into automated systems — including reducing a 4-hour payroll task to a single button click.
-        </p>
-        <p>
-          I graduated from the <strong>University of Washington</strong> with a double major in Finance and Information Systems, and a 3.78 GPA. I started my US education at Edmonds College, earning straight A's and commencement honors.
-        </p>
-      </article>
-
-      <article class="about-block" data-animate="reveal">
-        <span class="section-label">The Bridge-Builder</span>
-        <p>
-          Every role I've held has been about the same impulse: making complex systems more intelligent and more human. At Costco, I asked "what if this 4-hour task could be one click?" At Carta, "what if an LLM could do what inconsistent contractors couldn't?" At HKUST, "what if language models could reason about global macro cycles?"
-        </p>
-        <p>
-          The thread connecting these questions is the belief that <strong>the most valuable work happens at boundaries</strong> — between disciplines, between cultures, between what exists and what's possible. Finance gives me the questions. Technology gives me the tools. The bridge is where the interesting problems live.
-        </p>
-      </article>
-
-      <article class="about-block" data-animate="reveal">
+      <div class="section-header centered" data-animate="reveal">
         <span class="section-label">The Human</span>
+        <h2>Beyond the resume</h2>
+      </div>
+      <div class="bio-content" data-animate="reveal">
         <p>
-          I was born and raised in Hong Kong, spent my formative college years in the United States, and have now returned home. I speak English, Cantonese, and Mandarin. I'm a Christian who attends church weekly.
+          Born and raised in <strong>Hong Kong</strong>, educated in the <strong>United States</strong>,
+          now home building the future of AI. I speak English, Cantonese, and Mandarin.
         </p>
         <p>
-          I've been a guest speaker five times — at universities, high schools, and community organizations — because I believe in giving back what others gave me. I've mentored interns, tutored students in math and economics, and served as president of multiple student organizations.
+          I've been a guest speaker five times — at universities, high schools, and community organizations.
+          I've mentored interns, tutored students, and led multiple student organizations.
+          I believe the most important skill is the ability to make others better.
         </p>
-        <p>
-          Outside of work, I value deep friendships, thoughtful conversations, and the occasional badminton match.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section class="skills-section" aria-label="Skills and expertise">
-    <div class="container content">
-      <span class="section-label">Expertise</span>
-      <div class="skills-grid" data-animate="reveal">
-        <div class="skill-group">
-          <h3>AI & Engineering</h3>
-          <ul>
-            <li>Large Language Models</li>
-            <li>Multi-Agent Systems</li>
-            <li>Python / SQL</li>
-            <li>NLP & Text Analysis</li>
-            <li>Machine Learning</li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3>Finance</h3>
-          <ul>
-            <li>Macro Analysis</li>
-            <li>Private Equity</li>
-            <li>Financial Modeling</li>
-            <li>Asset Allocation</li>
-            <li>Payroll Systems</li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3>Leadership</h3>
-          <ul>
-            <li>Public Speaking (5x)</li>
-            <li>Mentorship</li>
-            <li>Process Design</li>
-            <li>Cross-functional Teams</li>
-            <li>Bilingual Communication</li>
-          </ul>
-        </div>
       </div>
     </div>
   </section>
@@ -102,126 +174,264 @@ import Footer from '../components/Footer.astro';
 </BaseLayout>
 
 <style>
+  /* ── Hero ──────────────────────────────────────────────────────────── */
   .page-hero {
     padding-top: calc(72px + var(--section-gap));
-    padding-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
   }
 
   .page-hero .section-label {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 0; transform: translateY(20px);
     animation: pageReveal 0.8s var(--ease-out) 0.2s forwards;
   }
 
   .page-hero h1 {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     margin-top: var(--space-3);
-    opacity: 0;
-    transform: translateY(30px);
+    margin-bottom: var(--space-3);
+    opacity: 0; transform: translateY(30px);
     animation: pageReveal 0.8s var(--ease-out) 0.4s forwards;
   }
 
-  @keyframes pageReveal {
-    to { opacity: 1; transform: translateY(0); }
+  .hero-sub {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    color: var(--color-wash);
+    max-width: 520px;
+    opacity: 0; transform: translateY(20px);
+    animation: pageReveal 0.8s var(--ease-out) 0.6s forwards;
   }
 
-  .about-section {
-    padding-bottom: var(--section-gap);
+  @keyframes pageReveal { to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Stats strip ───────────────────────────────────────────────────── */
+  .stats-strip {
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .about-block {
-    margin-bottom: var(--space-8);
-    opacity: 0;
-    transform: translateY(40px);
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    flex-wrap: wrap;
+    opacity: 0; transform: translateY(20px);
   }
 
-  .about-block.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out);
+  .stats-row.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   }
 
-  .about-block .section-label {
-    display: block;
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--weight-light);
+    color: var(--color-vermillion);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
+  }
+
+  /* ── Section headers ───────────────────────────────────────────────── */
+  .section-header {
+    margin-bottom: var(--space-6);
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .section-header.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+
+  .section-header.centered { text-align: center; }
+  .section-header h2 { margin-top: var(--space-2); }
+
+  /* ── Experience cards ──────────────────────────────────────────────── */
+  .exp-section {
+    padding: var(--section-gap) 0;
+  }
+
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .exp-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .exp-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    border-top: 3px solid var(--brand, var(--color-border));
+    opacity: 0; transform: translateY(30px);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .exp-card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .exp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .exp-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: var(--space-3);
   }
 
-  .about-lead {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
-    line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-3);
+  .exp-org {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: var(--weight-semibold);
+    color: var(--brand, var(--color-text));
+    letter-spacing: 0.02em;
   }
 
-  .about-block p {
-    margin-bottom: var(--space-3);
-    color: var(--color-text-secondary);
+  .exp-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-wash);
   }
 
-  .about-block p strong {
-    color: var(--color-text);
+  .exp-role {
+    font-size: var(--text-body);
     font-weight: var(--weight-medium);
+    margin-bottom: var(--space-2);
+    line-height: var(--leading-snug);
   }
 
-  .about-block .about-lead {
-    color: var(--color-text);
+  .exp-highlight {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+    margin-bottom: var(--space-3);
   }
 
-  /* Skills */
-  .skills-section {
+  .exp-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .exp-metric {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+    padding: 4px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+  }
+
+  /* ── Education cards ───────────────────────────────────────────────── */
+  .edu-section {
     padding: var(--section-gap) 0;
     background: var(--color-surface);
   }
 
-  .skills-grid {
+  .edu-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
-    margin-top: var(--space-5);
-    opacity: 0;
-    transform: translateY(40px);
-  }
-
-  .skills-grid.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out);
+    gap: var(--space-4);
   }
 
   @media (min-width: 768px) {
-    .skills-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .edu-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
-  .skill-group h3 {
-    margin-bottom: var(--space-3);
+  .edu-card {
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    border-left: 3px solid var(--brand, var(--color-border));
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .edu-card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s);
+  }
+
+  .edu-org {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    font-weight: var(--weight-semibold);
+    color: var(--brand, var(--color-text));
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+
+  .edu-degree {
     font-size: var(--text-h3);
+    margin-bottom: var(--space-1);
   }
 
-  .skill-group ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+  .edu-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+    display: block;
+    margin-bottom: var(--space-2);
   }
 
-  .skill-group li {
+  .edu-detail {
     font-size: var(--text-small);
-    color: var(--color-text-secondary);
-    padding-left: var(--space-3);
-    position: relative;
+    color: var(--color-wash);
   }
 
-  .skill-group li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 6px;
-    height: 1px;
-    background: var(--color-vermillion);
+  /* ── Bio section ───────────────────────────────────────────────────── */
+  .bio-section {
+    padding: var(--section-gap) 0;
+  }
+
+  .bio-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .bio-content.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out) 0.1s, transform 0.8s var(--ease-out) 0.1s;
+  }
+
+  .bio-content p {
+    color: var(--color-wash);
+    margin-bottom: var(--space-3);
+    line-height: var(--leading-relaxed);
+  }
+
+  .bio-content strong {
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
   }
 </style>
 
@@ -237,7 +447,7 @@ import Footer from '../components/Footer.astro';
           }
         });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
     );
     revealElements.forEach((el) => observer.observe(el));
   }

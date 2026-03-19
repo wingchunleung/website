@@ -1,64 +1,83 @@
 ---
 /**
- * Projects Page
- * HCI: H6 (Recognition) — impact metrics visible, scannable cards
+ * Projects Page — Premium case study style
+ * HCI: H6 (Recognition) — metrics visible, company badges, scannable
  * HCI: Gestalt Similarity — consistent card design
- * HCI: Progressive disclosure — summary cards → detail pages
+ * HCI: Visceral — large metrics create immediate impact
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const projects = [
   {
     title: 'LLM Macro Allocation Pipeline',
-    metric: 'RMB 5T+ AUM',
+    metric: 'RMB 5T+',
+    metricLabel: 'AUM scope',
+    org: 'HKUST',
+    orgColor: '#003366',
     period: '2026 — Present',
-    org: 'HKUST Business School',
-    description: 'Building a multi-agent LLM system for macro cycle analysis and asset allocation. The pipeline uses pairwise tournament ranking and dual-ranker Borda aggregation to synthesize qualitative reasoning from multiple language models into actionable investment signals.',
+    description: 'Building a multi-agent LLM system for macro cycle analysis and asset allocation. Uses pairwise tournament ranking and dual-ranker Borda aggregation to synthesize qualitative reasoning into actionable investment signals.',
     tags: ['LLM', 'Multi-Agent', 'Finance', 'Python', 'NLP'],
-    highlight: true,
+    featured: true,
   },
   {
     title: 'PE Advisory Workflow Redesign',
-    metric: '70% faster',
-    period: '2024 — 2025',
+    metric: '70%',
+    metricLabel: 'faster',
     org: 'Carta',
-    description: 'Redesigned the financial projection workflow from Bloomberg Terminal to Google Sheets, reducing processing time from 30+ minutes to under 8 minutes. Built LLM-powered data extraction tools to replace inconsistent contractor work.',
-    tags: ['Process Design', 'LLM', 'Google Sheets', 'Bloomberg'],
+    orgColor: '#1a1a1a',
+    period: '2024 — 2025',
+    description: 'Redesigned the financial projection workflow from Bloomberg Terminal to Google Sheets, reducing processing from 30+ minutes to under 8 minutes.',
+    tags: ['Process Design', 'LLM', 'Google Sheets'],
+    featured: false,
   },
   {
     title: 'LLM Email Response Generator',
-    metric: '4.8/5.0 satisfaction',
-    period: '2024 — 2025',
+    metric: '4.8/5',
+    metricLabel: 'satisfaction',
     org: 'Carta',
-    description: 'Built an LLM-powered email response generator for PE advisory client inquiries, standardizing communication quality across the team and significantly improving response time.',
-    tags: ['LLM', 'NLP', 'Client Communication'],
+    orgColor: '#1a1a1a',
+    period: '2024 — 2025',
+    description: 'Built an LLM-powered email response generator for PE advisory client inquiries, standardizing communication quality across the team.',
+    tags: ['LLM', 'NLP', 'Automation'],
+    featured: false,
   },
   {
     title: 'Payroll Automation System',
-    metric: '99% time reduction',
+    metric: '99%',
+    metricLabel: 'time saved',
+    org: 'Costco',
+    orgColor: '#e31837',
     period: '2023 — 2024',
-    org: 'Costco Wholesale',
-    description: 'Transformed a 4-hour manual payroll process into a single-click automated system using Python and SQL. The solution eliminated human error and freed the team to focus on higher-value analysis.',
-    tags: ['Python', 'SQL', 'Automation', 'Payroll'],
+    description: 'Transformed a 4-hour manual payroll process into a single-click automated system. Eliminated human error and freed the team for higher-value work.',
+    tags: ['Python', 'SQL', 'Automation'],
+    featured: false,
   },
   {
     title: 'Payroll Expense Forecasting',
-    metric: '97% accuracy',
+    metric: '97%',
+    metricLabel: 'accuracy',
+    org: 'Costco',
+    orgColor: '#e31837',
     period: '2023 — 2024',
-    org: 'Costco Wholesale',
-    description: 'Developed a payroll expense forecasting model achieving 97% prediction accuracy, enabling better budget planning and resource allocation across departments.',
-    tags: ['Forecasting', 'Python', 'SQL', 'Finance'],
+    description: 'Developed a payroll expense forecasting model enabling better budget planning and resource allocation.',
+    tags: ['Forecasting', 'Python', 'Finance'],
+    featured: false,
   },
   {
     title: 'Revenue Accounting Automation',
-    metric: '40 hrs/week saved',
+    metric: '40hrs',
+    metricLabel: '/week saved',
+    org: 'Costco',
+    orgColor: '#e31837',
     period: '2022',
-    org: 'Costco Wholesale',
-    description: 'Built VBA-based process improvements during an internship that saved approximately 40 hours per week of manual work across the revenue accounting team.',
-    tags: ['VBA', 'Excel', 'Process Improvement'],
+    description: 'Built VBA-based process improvements saving approximately 40 hours per week across the revenue accounting team.',
+    tags: ['VBA', 'Excel', 'Automation'],
+    featured: false,
   },
 ];
 ---
@@ -67,36 +86,63 @@ const projects = [
   <Header slot="header" />
 
   <section class="page-hero">
-    <div class="container content">
+    <div class="container">
       <span class="section-label">Projects</span>
       <h1>Building systems<br />that think</h1>
-      <p class="page-subtitle">
-        From payroll automation to LLM-driven macro analysis — each project is about making complex systems more intelligent.
+      <p class="hero-sub">
+        From payroll automation to LLM-driven macro analysis — making complex systems more intelligent.
       </p>
     </div>
   </section>
 
-  <section class="projects-section">
-    <div class="container">
-      <div class="projects-list">
-        {projects.map((project, i) => (
-          <article
-            class:list={['project-card', { highlight: project.highlight }]}
-            data-animate="reveal"
-            style={`transition-delay: ${i * 80}ms`}
-          >
-            <div class="project-header">
-              <span class="project-metric">{project.metric}</span>
-              <div class="project-meta">
-                <span class="project-org">{project.org}</span>
-                <span class="project-period">{project.period}</span>
+  <!-- Featured project — large hero card -->
+  {projects.filter(p => p.featured).map((project) => (
+    <section class="featured-project" aria-label="Featured project">
+      <div class="container">
+        <article class="featured-card" data-animate="reveal" style={`--brand: ${project.orgColor}`}>
+          <div class="featured-badge">
+            <span class="featured-org" style={`color: ${project.orgColor}`}>{project.org}</span>
+            <span class="featured-label">Featured</span>
+          </div>
+          <div class="featured-body">
+            <div class="featured-metric-group">
+              <span class="featured-metric">{project.metric}</span>
+              <span class="featured-metric-label">{project.metricLabel}</span>
+            </div>
+            <div class="featured-info">
+              <h2 class="featured-title">{project.title}</h2>
+              <p class="featured-desc">{project.description}</p>
+              <div class="featured-tags">
+                {project.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
               </div>
             </div>
-            <h2 class="project-title">{project.title}</h2>
-            <p class="project-description">{project.description}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  ))}
+
+  <!-- Other projects grid -->
+  <section class="projects-grid-section" aria-label="All projects">
+    <div class="container">
+      <div class="projects-grid">
+        {projects.filter(p => !p.featured).map((project, i) => (
+          <article class="project-card" data-animate="reveal" style={`--delay: ${i * 0.08}s; --brand: ${project.orgColor}`}>
+            <div class="project-card-top">
+              <span class="project-org">{project.org}</span>
+              <span class="project-period">{project.period}</span>
+            </div>
+            <div class="project-metric-row">
+              <span class="project-metric">{project.metric}</span>
+              <span class="project-metric-label">{project.metricLabel}</span>
+            </div>
+            <h3 class="project-title">{project.title}</h3>
+            <p class="project-desc">{project.description}</p>
             <div class="project-tags">
               {project.tags.map((tag) => (
-                <span class="project-tag">{tag}</span>
+                <span class="tag">{tag}</span>
               ))}
             </div>
           </article>
@@ -113,107 +159,151 @@ const projects = [
     padding-top: calc(72px + var(--section-gap));
     padding-bottom: var(--space-6);
   }
-
   .page-hero .section-label {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: pageReveal 0.8s var(--ease-out) 0.2s forwards;
+    opacity: 0; transform: translateY(20px);
+    animation: pr 0.8s var(--ease-out) 0.2s forwards;
   }
-
   .page-hero h1 {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
-    margin-top: var(--space-3);
+    margin-top: var(--space-3); margin-bottom: var(--space-3);
+    opacity: 0; transform: translateY(30px);
+    animation: pr 0.8s var(--ease-out) 0.4s forwards;
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    color: var(--color-wash); max-width: 520px;
+    opacity: 0; transform: translateY(20px);
+    animation: pr 0.8s var(--ease-out) 0.6s forwards;
+  }
+  @keyframes pr { to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Featured project hero card ──────────────────────────────────── */
+  .featured-project { padding: var(--space-6) 0 var(--section-gap); }
+
+  .featured-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    border-left: 4px solid var(--brand, var(--color-vermillion));
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .featured-card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+  }
+
+  .featured-badge {
+    display: flex; align-items: center; gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .featured-org {
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-body);
+  }
+
+  .featured-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-vermillion);
+    padding: 4px 12px;
+    border: 1px solid var(--color-vermillion);
+    border-radius: 100px;
+  }
+
+  .featured-body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (max-width: 767px) {
+    .featured-body { grid-template-columns: 1fr; gap: var(--space-4); }
+  }
+
+  .featured-metric-group { text-align: center; }
+
+  .featured-metric {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: var(--weight-light);
+    color: var(--color-vermillion);
+    line-height: 1;
+    display: block;
+  }
+
+  .featured-metric-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
+  }
+
+  .featured-title {
+    font-size: var(--text-h2);
+    margin-bottom: var(--space-2);
+  }
+
+  .featured-desc {
+    font-size: var(--text-body);
+    color: var(--color-wash);
     margin-bottom: var(--space-3);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: pageReveal 0.8s var(--ease-out) 0.4s forwards;
+    max-width: 55ch;
   }
 
-  .page-subtitle {
-    color: var(--color-text-secondary);
-    max-width: 50ch;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: pageReveal 0.8s var(--ease-out) 0.6s forwards;
-  }
+  /* ── Projects grid ─────────────────────────────────────────────────── */
+  .projects-grid-section { padding-bottom: var(--section-gap); }
 
-  @keyframes pageReveal {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .projects-section {
-    padding-bottom: var(--section-gap);
-  }
-
-  .projects-list {
-    display: flex;
-    flex-direction: column;
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-4);
-    max-width: 900px;
+  }
+
+  @media (min-width: 640px) {
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   .project-card {
     padding: var(--space-5);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    transition: border-color var(--duration-normal) var(--ease-out),
-                box-shadow var(--duration-normal) var(--ease-out),
-                transform var(--duration-normal) var(--ease-out);
-    opacity: 0;
-    transform: translateY(30px);
+    border-top: 3px solid var(--brand, var(--color-border));
+    opacity: 0; transform: translateY(30px);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
   }
 
   .project-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out),
-                border-color var(--duration-normal) var(--ease-out),
+    opacity: 1; transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
                 box-shadow var(--duration-normal) var(--ease-out);
   }
 
   .project-card:hover {
-    border-color: var(--color-wash);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
   }
 
-  .project-card.highlight {
-    border-color: var(--color-vermillion);
-    background: var(--color-surface);
-  }
-
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-3);
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .project-metric {
-    font-family: var(--font-display);
-    font-size: var(--text-h2);
-    font-weight: var(--weight-light);
-    color: var(--color-vermillion);
-    line-height: 1;
-  }
-
-  .project-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-1);
+  .project-card-top {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: var(--space-3);
   }
 
   .project-org {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-text);
-    font-weight: var(--weight-medium);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-small);
+    color: var(--brand, var(--color-text));
   }
 
   .project-period {
@@ -222,34 +312,50 @@ const projects = [
     color: var(--color-wash);
   }
 
-  .project-title {
-    font-family: var(--font-body);
-    font-size: var(--text-h3);
-    font-weight: var(--weight-semibold);
+  .project-metric-row {
     margin-bottom: var(--space-2);
   }
 
-  .project-description {
-    font-size: var(--text-small);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-3);
-    max-width: 65ch;
+  .project-metric {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: var(--weight-light);
+    color: var(--color-vermillion);
+    line-height: 1;
   }
 
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .project-tag {
+  .project-metric-label {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+    margin-left: 6px;
+  }
+
+  .project-title {
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    margin-bottom: var(--space-2);
+  }
+
+  .project-desc {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+    margin-bottom: var(--space-3);
+  }
+
+  /* ── Shared tags ───────────────────────────────────────────────────── */
+  .featured-tags, .project-tags {
+    display: flex; flex-wrap: wrap; gap: var(--space-2);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
     letter-spacing: var(--tracking-wide);
     color: var(--color-wash);
-    padding: var(--space-1) var(--space-2);
+    padding: 4px 10px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    border-radius: 100px;
   }
 </style>
 
@@ -265,7 +371,7 @@ const projects = [
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
     );
     revealElements.forEach((el) => observer.observe(el));
   }
