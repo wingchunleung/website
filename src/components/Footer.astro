@@ -15,15 +15,22 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="footer-links">
-      <a href="mailto:wingchunleung8@gmail.com" class="footer-link text-link" aria-label="Email">Email</a>
-      <a href="https://linkedin.com/in/wingchunleung" class="footer-link text-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)">LinkedIn</a>
-      <a href="https://github.com/wingchunleung" class="footer-link text-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in new tab)">GitHub</a>
+      <a href="mailto:wingchunleung8@gmail.com" class="footer-link" aria-label="Email">Email</a>
+      <a href="https://linkedin.com/in/wingchunleung" class="footer-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+      <a href="https://github.com/wingchunleung" class="footer-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub</a>
     </div>
 
-    <p class="footer-copy">
-      <span class="seal-mark" aria-hidden="true">&#21360;</span>
-      &copy; {year}
-    </p>
+    <div class="footer-right">
+      <button class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 14V2M2 8l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <p class="footer-copy">
+        <span class="seal-mark" aria-hidden="true">&#21360;</span>
+        &copy; {year}
+      </p>
+    </div>
   </div>
 </footer>
 
@@ -75,6 +82,37 @@ const year = new Date().getFullYear();
 
   .footer-link:hover {
     color: var(--color-text);
+  }
+
+  .footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .footer-right { align-items: flex-end; }
+  }
+
+  .back-to-top {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-wash);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  .back-to-top:hover {
+    border-color: var(--color-vermillion);
+    color: var(--color-vermillion);
+    transform: translateY(-2px);
   }
 
   .footer-copy {

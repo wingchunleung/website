@@ -172,6 +172,10 @@ const featuredWork = [
         <p class="intro-bio">
           Currently pursuing an MSc in Artificial Intelligence at HKUST, where I research LLM-driven macro allocation. Previously at Carta and Costco, turning complex financial processes into intelligent automated systems.
         </p>
+        <div class="intro-actions">
+          <a href={`${base}/about`} class="btn-primary">Learn more</a>
+          <a href={`${base}/contact`} class="btn-outline">Get in touch</a>
+        </div>
       </div>
     </div>
   </section>
@@ -640,8 +644,15 @@ const featuredWork = [
     font-size: var(--text-body);
     color: var(--color-wash);
     max-width: 560px;
-    margin: 0 auto;
+    margin: 0 auto var(--space-5);
     line-height: var(--leading-relaxed);
+  }
+
+  .intro-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   /* ══════════════════════════════════════════════════════════════════════
