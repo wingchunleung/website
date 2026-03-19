@@ -92,7 +92,7 @@ const stats = [
       <div class="stats-row" data-animate="reveal">
         {stats.map((s) => (
           <div class="stat-item">
-            <span class="stat-value">{s.value}</span>
+            <span class="stat-value" data-count={s.value}>{s.value}</span>
             <span class="stat-label">{s.label}</span>
           </div>
         ))}
@@ -456,23 +456,52 @@ const stats = [
 </style>
 
 <script>
-  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
-  if (revealElements.length > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  // GSAP scroll reveals for all sections
+  gsap.utils.toArray('[data-animate="reveal"]').forEach((el) => {
+    const element = el as HTMLElement;
+    const delay = parseFloat(element.style.getPropertyValue('--delay') || '0');
+    gsap.fromTo(element,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0, duration: 0.8, delay, ease: 'power3.out',
+        scrollTrigger: { trigger: element, start: 'top 85%', toggleActions: 'play none none none' },
+      }
+    );
+  });
+
+  // Animated stat counter
+  document.querySelectorAll('.stat-value[data-count]').forEach((el) => {
+    const target = el as HTMLElement;
+    const raw = target.dataset.count || '0';
+    const hasDecimal = raw.includes('.');
+    const hasSuffix = raw.match(/[×+]/);
+    const numericPart = parseFloat(raw.replace(/[^0-9.]/g, ''));
+    const suffix = raw.replace(/[0-9.]/g, '');
+
+    ScrollTrigger.create({
+      trigger: target,
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: numericPart,
+          duration: 1.5,
+          ease: 'power2.out',
+          onUpdate: () => {
+            const display = hasDecimal ? obj.val.toFixed(1) : Math.round(obj.val).toString();
+            target.textContent = display + suffix;
+          },
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
-    );
-    revealElements.forEach((el) => observer.observe(el));
-  }
+    });
+  });
 
-  // Spotlight glow — track mouse on exp cards
+  // Spotlight glow on exp cards
   document.querySelectorAll('.exp-card').forEach((card) => {
     card.addEventListener('pointermove', (e: PointerEvent) => {
       const rect = (card as HTMLElement).getBoundingClientRect();

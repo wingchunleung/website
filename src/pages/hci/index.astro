@@ -466,19 +466,18 @@ const principles = [
 </style>
 
 <script>
-  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
-  if (revealElements.length > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('[data-animate="reveal"]').forEach((el) => {
+    const element = el as HTMLElement;
+    gsap.fromTo(element,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: element, start: 'top 85%', toggleActions: 'play none none none' },
+      }
     );
-    revealElements.forEach((el) => observer.observe(el));
-  }
+  });
 </script>

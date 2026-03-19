@@ -226,23 +226,22 @@ const contacts = [
 </style>
 
 <script>
-  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
-  if (revealElements.length > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    revealElements.forEach((el) => observer.observe(el));
-  }
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
 
-  // Spotlight glow on contact cards
+  gsap.utils.toArray('[data-animate="reveal"]').forEach((el) => {
+    const element = el as HTMLElement;
+    const delay = parseFloat(element.style.getPropertyValue('--delay') || '0');
+    gsap.fromTo(element,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0, duration: 0.8, delay, ease: 'power3.out',
+        scrollTrigger: { trigger: element, start: 'top 85%', toggleActions: 'play none none none' },
+      }
+    );
+  });
+
   document.querySelectorAll('.contact-card').forEach((card) => {
     card.addEventListener('pointermove', (e: PointerEvent) => {
       const rect = (card as HTMLElement).getBoundingClientRect();
