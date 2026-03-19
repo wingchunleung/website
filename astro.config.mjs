@@ -4,7 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import preact from '@astrojs/preact';
 
 export default defineConfig({
-  site: 'https://wingchunleung.com',
+  site: 'https://wingleung-exp.github.io',
+  base: '/website',
   vite: {
     plugins: [tailwindcss()],
   },
