@@ -616,6 +616,17 @@ const featuredWork = [
     line-height: 1.02;
     letter-spacing: -0.03em;
     margin-bottom: var(--space-5);
+    background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-vermillion) 50%, var(--color-ink) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: nameGradientShift 4s ease-in-out infinite;
+  }
+
+  @keyframes nameGradientShift {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
   }
 
   .intro-divider {
