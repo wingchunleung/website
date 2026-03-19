@@ -16,7 +16,22 @@
 ---
 
 <div class="hero-canvas-container">
+  <!-- Layer 1: Animated CSS gradient (0 JS, rich color depth) -->
+  <div class="hero-gradient-bg" aria-hidden="true"></div>
+
+  <!-- Layer 2: Flowing SVG circuit lines -->
+  <svg class="hero-svg-lines" viewBox="0 0 1400 800" fill="none" preserveAspectRatio="none" aria-hidden="true">
+    <path class="flow-line fl-1" d="M-50,400 C200,340 500,460 750,400 S1100,340 1450,400" />
+    <path class="flow-line fl-2" d="M-50,280 C300,230 550,330 800,270 S1100,300 1450,280" />
+    <path class="flow-line fl-3" d="M-50,550 C250,520 480,580 720,540 S1050,560 1450,550" />
+    <path class="flow-line fl-4" d="M-50,180 C350,150 600,210 850,170 S1150,200 1450,180" />
+    <path class="flow-line fl-5" d="M-50,650 C200,630 450,670 700,640 S1000,660 1450,650" />
+  </svg>
+
+  <!-- Layer 3: Canvas particle network -->
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <!-- Layer 4: Radial overlay for text readability -->
   <div class="hero-gradient-overlay" aria-hidden="true"></div>
 </div>
 
@@ -28,7 +43,57 @@
     overflow: hidden;
   }
 
+  /* Layer 1: Animated gradient — rich color depth behind particles */
+  .hero-gradient-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(-45deg,
+      rgba(199, 62, 29, 0.06),
+      rgba(125, 158, 140, 0.08),
+      rgba(100, 140, 200, 0.06),
+      rgba(160, 120, 170, 0.06)
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Layer 2: SVG flowing circuit lines */
+  .hero-svg-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .flow-line {
+    stroke-width: 1;
+    stroke-dasharray: 12 60;
+    stroke-dashoffset: 0;
+    animation: flowLine 10s linear infinite;
+  }
+
+  .fl-1 { stroke: rgba(199, 62, 29, 0.08); animation-duration: 8s; }
+  .fl-2 { stroke: rgba(125, 158, 140, 0.08); animation-duration: 12s; animation-delay: -3s; }
+  .fl-3 { stroke: rgba(100, 140, 200, 0.07); animation-duration: 10s; animation-delay: -5s; }
+  .fl-4 { stroke: rgba(180, 140, 100, 0.06); animation-duration: 14s; animation-delay: -7s; }
+  .fl-5 { stroke: rgba(160, 120, 170, 0.06); animation-duration: 11s; animation-delay: -2s; }
+
+  @keyframes flowLine {
+    to { stroke-dashoffset: -144; }
+  }
+
+  /* Layer 3: Canvas */
   #hero-canvas {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     display: block;
