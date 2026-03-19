@@ -148,9 +148,14 @@ const featuredWork = [
       <span class="section-label" style="text-align:center;display:block;margin-bottom:var(--space-4)">Experience</span>
       <div class="logo-row">
         <div class="logo-item">
-          <img src={`${base}/logos/hkust.svg`} alt="HKUST" class="logo-img" loading="lazy" width="120" height="24" />
-          <span class="logo-role">Research Assistant – AI in Asset Management</span>
+          <img src={`${base}/logos/hkust.svg`} alt="HKUST" class="logo-img" loading="lazy" width="120" height="28" />
+          <span class="logo-role">MSc in Artificial Intelligence</span>
           <span class="logo-prestige">Top 50 Global · #1 AI in Hong Kong</span>
+        </div>
+        <div class="logo-item">
+          <img src={`${base}/logos/hkust_bs.png`} alt="HKUST Business School" class="logo-img" loading="lazy" width="120" height="32" />
+          <span class="logo-role">Research Assistant – AI in Asset Management</span>
+          <span class="logo-prestige">Industry collaboration · RMB 5T+ AUM asset manager</span>
         </div>
         <div class="logo-item">
           <img src={`${base}/logos/carta.png`} alt="Carta" class="logo-img" loading="lazy" width="110" height="28" />
@@ -697,13 +702,19 @@ const featuredWork = [
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-5) var(--space-4);
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     .logo-row {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .logo-row {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 
