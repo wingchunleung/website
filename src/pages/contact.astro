@@ -119,6 +119,8 @@ const contacts = [
   }
 
   .contact-card {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -146,10 +148,27 @@ const contacts = [
 
   .contact-card:hover {
     border-color: var(--color-vermillion);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    transform: translateY(-4px);
     color: var(--color-text);
   }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      400px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(199, 62, 29, 0.05),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .contact-card:hover::before { opacity: 1; }
 
   .contact-label {
     font-family: var(--font-mono);
@@ -222,4 +241,13 @@ const contacts = [
     );
     revealElements.forEach((el) => observer.observe(el));
   }
+
+  // Spotlight glow on contact cards
+  document.querySelectorAll('.contact-card').forEach((card) => {
+    card.addEventListener('pointermove', (e: PointerEvent) => {
+      const rect = (card as HTMLElement).getBoundingClientRect();
+      (card as HTMLElement).style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      (card as HTMLElement).style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
 </script>
