@@ -42,6 +42,25 @@ const accentColor = accent === 'celadon' ? '#7d9e8c' : '#c73e1d';
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
     <title>{title}</title>
 
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Wing Chun Leung",
+      "jobTitle": "MSc AI Student & Research Assistant",
+      "affiliation": { "@type": "Organization", "name": "HKUST" },
+      "url": "https://wingchunleung.github.io/website/",
+      "sameAs": [
+        "https://linkedin.com/in/wingchunleung",
+        "https://github.com/wingchunleung"
+      ],
+      "knowsAbout": ["Artificial Intelligence", "Finance", "LLM", "Multi-Agent Systems"],
+      "alumniOf": [
+        { "@type": "EducationalOrganization", "name": "HKUST" },
+        { "@type": "EducationalOrganization", "name": "University of Washington" }
+      ]
+    })} />
+
     <!-- Accent color override for HCI page -->
     {accent === 'celadon' && (
       <style is:inline>
