@@ -274,7 +274,10 @@ const projects = [
   }
 
   .project-card {
+    position: relative;
+    overflow: hidden;
     padding: var(--space-5);
+    background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     border-top: 3px solid var(--brand, var(--color-border));
@@ -282,6 +285,40 @@ const projects = [
     transition: transform var(--duration-normal) var(--ease-out),
                 box-shadow var(--duration-normal) var(--ease-out);
   }
+
+  /* Spotlight glow — follows mouse cursor (Stripe-style) */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      500px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(199, 62, 29, 0.08),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .project-card:hover::before { opacity: 1; }
+
+  /* Shimmer sweep */
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    pointer-events: none; z-index: 1;
+  }
+
+  .project-card:hover::after {
+    animation: shimmer 0.7s ease-out forwards;
+  }
+
+  @keyframes shimmer { to { left: 150%; } }
 
   .project-card.visible {
     opacity: 1; transform: translateY(0);
@@ -291,8 +328,9 @@ const projects = [
   }
 
   .project-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    border-color: transparent;
   }
 
   .project-card-top {
@@ -360,6 +398,7 @@ const projects = [
 </style>
 
 <script>
+  // Scroll-reveal
   const revealElements = document.querySelectorAll('[data-animate="reveal"]');
   if (revealElements.length > 0) {
     const observer = new IntersectionObserver(
@@ -375,4 +414,13 @@ const projects = [
     );
     revealElements.forEach((el) => observer.observe(el));
   }
+
+  // Spotlight glow — track mouse position on cards
+  document.querySelectorAll('.project-card').forEach((card) => {
+    card.addEventListener('pointermove', (e: PointerEvent) => {
+      const rect = (card as HTMLElement).getBoundingClientRect();
+      (card as HTMLElement).style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      (card as HTMLElement).style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
 </script>
