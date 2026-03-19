@@ -1187,6 +1187,32 @@ const featuredWork = [
     );
   }
 
+  // ── Staggered journey steps ──
+  const journeySteps = gsap.utils.toArray('.journey-step');
+  if (journeySteps.length > 0) {
+    journeySteps.forEach((step, i) => {
+      gsap.fromTo(step as HTMLElement,
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1, x: 0, duration: 0.8, delay: i * 0.08, ease: 'power3.out',
+          scrollTrigger: { trigger: step as HTMLElement, start: 'top 85%' },
+        }
+      );
+    });
+  }
+
+  // ── Staggered logo strip entrance ──
+  const logoItems = gsap.utils.toArray('.logo-item');
+  if (logoItems.length > 0) {
+    gsap.fromTo(logoItems,
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.logo-strip', start: 'top 80%' },
+      }
+    );
+  }
+
   // ── Hero parallax: fade + translate as user scrolls past ──
   const heroContent = document.querySelector('.hero-content') as HTMLElement;
   if (heroContent) {
