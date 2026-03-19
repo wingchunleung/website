@@ -72,29 +72,36 @@
 
   // ── Configuration ──────────────────────────────────────────────────
   const CONFIG = {
-    particleCount: 80,
-    connectionDistance: 150,
-    particleSpeed: 0.3,
-    mouseRadius: 200,
-    mouseForce: 0.02,
+    particleCount: 90,
+    connectionDistance: 160,
+    particleSpeed: 0.35,
+    mouseRadius: 220,
+    mouseForce: 0.025,
     colors: [
       { r: 199, g: 62, b: 29 },   // vermillion
       { r: 125, g: 158, b: 140 },  // celadon
       { r: 180, g: 140, b: 100 },  // warm gold
-      { r: 100, g: 130, b: 180 },  // soft blue
-      { r: 160, g: 120, b: 160 },  // soft purple
+      { r: 100, g: 140, b: 200 },  // soft blue
+      { r: 150, g: 110, b: 170 },  // soft purple
+      { r: 220, g: 120, b: 80 },   // warm coral
     ],
-    lineOpacityBase: 0.12,
-    particleOpacityBase: 0.5,
-    glowSize: 3,
+    lineOpacityBase: 0.15,
+    particleOpacityBase: 0.55,
+    glowSize: 4,
+    // Data pulse config — bright dots traveling along connections
+    pulseCount: 12,
+    pulseSpeed: 1.5,
+    pulseSize: 2,
+    pulseGlow: 8,
   };
 
   // Reduce particles on mobile
   const isMobile = window.innerWidth < 768;
   if (isMobile) {
-    CONFIG.particleCount = 40;
-    CONFIG.connectionDistance = 100;
-    CONFIG.glowSize = 2;
+    CONFIG.particleCount = 45;
+    CONFIG.connectionDistance = 110;
+    CONFIG.glowSize = 2.5;
+    CONFIG.pulseCount = 6;
   }
 
   // ── State ──────────────────────────────────────────────────────────
@@ -105,6 +112,8 @@
   let mouseY = -1000;
   let animationId: number;
   let particles: Particle[] = [];
+  let dataPulses: DataPulse[] = [];
+  let frameCount = 0;
 
   interface Particle {
     x: number;
@@ -116,6 +125,15 @@
     opacity: number;
     pulsePhase: number;
     pulseSpeed: number;
+  }
+
+  interface DataPulse {
+    fromIdx: number;  // particle index
+    toIdx: number;    // particle index
+    progress: number; // 0 → 1
+    speed: number;
+    color: { r: number; g: number; b: number };
+    active: boolean;
   }
 
   // ── Resize ─────────────────────────────────────────────────────────
@@ -187,6 +205,39 @@
       // Pulse
       p.pulsePhase += p.pulseSpeed;
     }
+
+    // Update data pulses
+    for (const pulse of dataPulses) {
+      if (!pulse.active) continue;
+      pulse.progress += pulse.speed / 60; // normalize to ~1s travel time
+      if (pulse.progress >= 1) pulse.active = false;
+    }
+    dataPulses = dataPulses.filter(p => p.active);
+
+    // Spawn new data pulses periodically
+    frameCount++;
+    if (frameCount % 8 === 0 && dataPulses.length < CONFIG.pulseCount) {
+      // Find a random connected pair
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const i = Math.floor(Math.random() * particles.length);
+        const j = Math.floor(Math.random() * particles.length);
+        if (i === j) continue;
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONFIG.connectionDistance) {
+          dataPulses.push({
+            fromIdx: i,
+            toIdx: j,
+            progress: 0,
+            speed: CONFIG.pulseSpeed * (0.7 + Math.random() * 0.6),
+            color: CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)],
+            active: true,
+          });
+          break;
+        }
+      }
+    }
   }
 
   // ── Draw ────────────────────────────────────────────────────────────
@@ -218,6 +269,33 @@
           ctx!.stroke();
         }
       }
+    }
+
+    // Draw data pulses — bright dots traveling along connections
+    for (const pulse of dataPulses) {
+      if (!pulse.active) continue;
+      const a = particles[pulse.fromIdx];
+      const b = particles[pulse.toIdx];
+      if (!a || !b) continue;
+
+      const px = a.x + (b.x - a.x) * pulse.progress;
+      const py = a.y + (b.y - a.y) * pulse.progress;
+
+      // Outer glow
+      const glow = ctx!.createRadialGradient(px, py, 0, px, py, CONFIG.pulseGlow);
+      glow.addColorStop(0, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0.6)`);
+      glow.addColorStop(0.4, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0.15)`);
+      glow.addColorStop(1, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0)`);
+      ctx!.beginPath();
+      ctx!.arc(px, py, CONFIG.pulseGlow, 0, Math.PI * 2);
+      ctx!.fillStyle = glow;
+      ctx!.fill();
+
+      // Core bright dot
+      ctx!.beginPath();
+      ctx!.arc(px, py, CONFIG.pulseSize, 0, Math.PI * 2);
+      ctx!.fillStyle = `rgba(255, 255, 255, 0.9)`;
+      ctx!.fill();
     }
 
     // Draw particles with glow
