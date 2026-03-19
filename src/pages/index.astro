@@ -317,7 +317,21 @@ const featuredWork = [
   .intro-bg {
     position: absolute;
     inset: 0;
-    background: var(--color-bg);
+    background: linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #faf9f7 30%,
+      rgba(199, 62, 29, 0.03) 60%,
+      #faf9f7 80%,
+      #ffffff 100%
+    );
+    background-size: 200% 200%;
+    animation: introGradientShift 4s ease-in-out infinite;
+  }
+
+  @keyframes introGradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .intro-stage {
