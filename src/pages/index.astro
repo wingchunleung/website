@@ -777,9 +777,18 @@ const featuredWork = [
 
   .step-number {
     font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    color: var(--step-accent, var(--color-vermillion));
+    font-size: 0.6rem;
+    color: var(--color-bg);
     font-weight: var(--weight-medium);
+    background: var(--step-accent, var(--color-vermillion));
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 4px var(--color-stone), 0 0 0 5px var(--step-accent, var(--color-vermillion));
   }
 
   .step-line {
