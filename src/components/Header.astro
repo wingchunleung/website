@@ -229,12 +229,17 @@ const navItems = [
     transform: translateY(-3.75px) rotate(-45deg);
   }
 
-  /* Mobile menu — must be fully opaque, solid background, above everything */
+  /* Mobile menu — MUST be fully opaque solid white, no transparency */
   .mobile-menu {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 9998;
-    background: #ffffff;
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -251,9 +256,10 @@ const navItems = [
   }
 
   .mobile-menu.open {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    background-color: #ffffff !important;
   }
 
   .mobile-nav-links {

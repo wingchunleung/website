@@ -56,12 +56,7 @@ const education = [
   },
 ];
 
-const stats = [
-  { value: '5×', label: 'Guest Speaker' },
-  { value: '3', label: 'Languages' },
-  { value: '2', label: 'Industries' },
-  { value: '6+', label: 'Leadership Roles' },
-];
+// Stats removed — info now shown in places section + homepage highlights
 ---
 
 <BaseLayout title="About — Wing Chun Leung" description="Learn about Wing Chun Leung — bridging finance and AI, from Hong Kong to HKUST.">
@@ -71,24 +66,33 @@ const stats = [
   <section class="page-hero">
     <div class="container">
       <span class="section-label">About</span>
-      <h1>The person behind<br />the systems</h1>
+      <h1>Finance, markets,<br />and technology</h1>
       <p class="hero-sub">
-        Finance, markets, and technology. From Hong Kong through the US
-        and back — building smarter systems for the investment world.
+        From Hong Kong through the US and back — combining investment
+        expertise with technology to work smarter and think deeper.
       </p>
     </div>
   </section>
 
-  <!-- Stats strip -->
-  <section class="stats-strip" aria-label="Quick stats">
+  <!-- Languages & Places — visual, artistic -->
+  <section class="places-section" aria-label="Background">
     <div class="container">
-      <div class="stats-row" data-animate="reveal">
-        {stats.map((s) => (
-          <div class="stat-item">
-            <span class="stat-value" data-count={s.value}>{s.value}</span>
-            <span class="stat-label">{s.label}</span>
-          </div>
-        ))}
+      <div class="places-grid" data-animate="reveal">
+        <div class="place-card">
+          <span class="place-emoji" aria-hidden="true">&#127469;&#127472;</span>
+          <span class="place-name">Hong Kong</span>
+          <span class="place-detail">Born & raised · Cantonese</span>
+        </div>
+        <div class="place-card">
+          <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
+          <span class="place-name">United States</span>
+          <span class="place-detail">8+ years · English</span>
+        </div>
+        <div class="place-card">
+          <span class="place-emoji" aria-hidden="true">&#127464;&#127475;</span>
+          <span class="place-name">Mandarin</span>
+          <span class="place-detail">Native fluency</span>
+        </div>
       </div>
     </div>
   </section>
@@ -98,7 +102,7 @@ const stats = [
     <div class="container">
       <div class="section-header" data-animate="reveal">
         <span class="section-label">Experience</span>
-        <h2>Where I've built</h2>
+        <h2>Professional Experience</h2>
       </div>
 
       <div class="exp-grid">
@@ -213,50 +217,56 @@ const stats = [
 
   @keyframes pageReveal { to { opacity: 1; transform: translateY(0); } }
 
-  /* ── Stats strip ───────────────────────────────────────────────────── */
-  .stats-strip {
+  /* ── Places & Languages ──────────────────────────────────────────── */
+  .places-section {
     padding: var(--space-6) 0;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
-    background:
-      radial-gradient(circle, var(--color-border) 1px, transparent 1px);
-    background-size: 24px 24px;
-    background-position: center;
   }
 
-  .stats-row {
+  .places-grid {
     display: flex;
     justify-content: center;
-    gap: clamp(2rem, 6vw, 5rem);
+    gap: var(--space-5);
     flex-wrap: wrap;
     opacity: 0; transform: translateY(20px);
   }
 
-  .stats-row.visible {
+  .places-grid.visible {
     opacity: 1; transform: translateY(0);
     transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   }
 
-  .stat-item {
+  .place-card {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     gap: 4px;
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    min-width: 140px;
+    transition: transform var(--duration-normal) var(--ease-out);
   }
 
-  .stat-value {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: var(--weight-light);
-    color: var(--color-vermillion);
+  .place-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .place-emoji {
+    font-size: 2rem;
     line-height: 1;
+    margin-bottom: var(--space-1);
   }
 
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
+  .place-name {
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-body);
+  }
+
+  .place-detail {
+    font-size: var(--text-caption);
     color: var(--color-wash);
   }
 
