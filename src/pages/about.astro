@@ -107,9 +107,22 @@ import Footer from '../components/Footer.astro';
     padding-bottom: var(--space-8);
   }
 
+  .page-hero .section-label {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: pageReveal 0.8s var(--ease-out) 0.2s forwards;
+  }
+
   .page-hero h1 {
-    font-size: var(--text-display);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
     margin-top: var(--space-3);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: pageReveal 0.8s var(--ease-out) 0.4s forwards;
+  }
+
+  @keyframes pageReveal {
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .about-section {
