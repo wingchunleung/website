@@ -95,21 +95,20 @@ const education = [
     <div class="container">
       <div class="places-row" data-animate="reveal">
         <div class="places-group">
-          <span class="places-label">Lived in</span>
+          <span class="places-label">Locations</span>
           <div class="places-items">
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127469;&#127472;</span>
-              <span class="place-name">Hong Kong</span>
-              <span class="place-detail">Born & raised</span>
+            <div class="place-card place-card--photo">
+              <img src={`${base}/logos/hk.webp`} alt="Hong Kong" class="place-photo" loading="lazy" />
+              <span class="place-name">Hong Kong, China</span>
             </div>
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
-              <span class="place-name">Seattle, WA</span>
+            <div class="place-card place-card--photo">
+              <img src={`${base}/logos/seattle.png`} alt="Seattle" class="place-photo" loading="lazy" />
+              <span class="place-name">Washington, USA</span>
               <span class="place-detail">7 years</span>
             </div>
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
-              <span class="place-name">North Carolina</span>
+            <div class="place-card place-card--photo">
+              <img src={`${base}/logos/north-carolina.jpg`} alt="North Carolina" class="place-photo" loading="lazy" />
+              <span class="place-name">North Carolina, USA</span>
               <span class="place-detail">1 year</span>
             </div>
           </div>
@@ -320,7 +319,24 @@ const education = [
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 2px;
+    gap: 4px;
+  }
+
+  .place-card--photo {
+    width: 140px;
+  }
+
+  .place-photo {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 4px;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .place-card:hover .place-photo {
+    transform: scale(1.05);
   }
 
   .place-emoji {
