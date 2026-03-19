@@ -276,6 +276,8 @@ const stats = [
   }
 
   .exp-card {
+    position: relative;
+    overflow: hidden;
     background: var(--color-surface);
     border-radius: var(--radius-lg);
     padding: var(--space-5);
@@ -293,9 +295,27 @@ const stats = [
   }
 
   .exp-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
   }
+
+  /* Spotlight glow on exp cards */
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      400px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(199, 62, 29, 0.06),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .exp-card:hover::before { opacity: 1; }
 
   .exp-card-top {
     display: flex;
@@ -451,4 +471,13 @@ const stats = [
     );
     revealElements.forEach((el) => observer.observe(el));
   }
+
+  // Spotlight glow — track mouse on exp cards
+  document.querySelectorAll('.exp-card').forEach((card) => {
+    card.addEventListener('pointermove', (e: PointerEvent) => {
+      const rect = (card as HTMLElement).getBoundingClientRect();
+      (card as HTMLElement).style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      (card as HTMLElement).style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
 </script>
