@@ -68,9 +68,9 @@ const featuredWork = [
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
-    <!-- Phase 1: Floating emoji chaos (JS-generated) -->
-    <div class="emoji-chaos" id="emojiChaos"></div>
-    <!-- Phase 2: Wave + Welcome (fades in after chaos clears) -->
+    <!-- Phase 1: Canvas-based floating wow/eyes bombardment -->
+    <canvas id="wowCanvas" class="wow-canvas"></canvas>
+    <!-- Phase 2: Wave + Welcome (fades in after bombardment) -->
     <div class="intro-stage" id="introStage">
       <span class="intro-wave-emoji">👋</span>
       <span class="intro-welcome-text">Welcome to my site</span>
@@ -269,7 +269,7 @@ const featuredWork = [
     pointer-events: none;
     will-change: clip-path, opacity;
     clip-path: inset(0 0 0 0);
-    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 3.8s forwards;
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 7.5s forwards;
   }
 
   .intro-overlay.finished { display: none; }
@@ -303,28 +303,14 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  /* Floating emoji chaos container */
-  .emoji-chaos {
+  /* Canvas for wow/eyes bombardment */
+  .wow-canvas {
     position: absolute;
     inset: 0;
     z-index: 1;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    overflow: hidden;
-  }
-
-  .floating-emoji {
-    position: absolute;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    opacity: 0;
-    animation: floatUp var(--float-duration, 2s) ease-out var(--float-delay, 0s) forwards;
-    will-change: transform, opacity;
-  }
-
-  @keyframes floatUp {
-    0% { opacity: 0; transform: translateY(30px) scale(0.5) rotate(var(--float-rot, 0deg)); }
-    20% { opacity: 1; transform: translateY(-20px) scale(1.1) rotate(calc(var(--float-rot, 0deg) + 10deg)); }
-    70% { opacity: 0.8; transform: translateY(-80px) scale(1) rotate(calc(var(--float-rot, 0deg) - 5deg)); }
-    100% { opacity: 0; transform: translateY(-150px) scale(0.7) rotate(calc(var(--float-rot, 0deg) + 15deg)); }
   }
 
   /* Wave + Welcome greeting (appears after chaos) */
@@ -440,7 +426,7 @@ const featuredWork = [
   .hero-wave {
     opacity: 0;
     transform: scale(0.3);
-    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 4.2s forwards;
+    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 8s forwards;
     margin-bottom: var(--space-3);
   }
 
@@ -448,7 +434,7 @@ const featuredWork = [
     display: inline-block;
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     transform-origin: 70% 70%;
-    animation: waveMotion 2s ease-in-out 5s 2;
+    animation: waveMotion 2s ease-in-out 8.8s 2;
   }
 
   @keyframes handPop {
@@ -493,7 +479,7 @@ const featuredWork = [
   .greeting-text {
     display: block;
     transform: translateY(110%);
-    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 4.5s forwards;
+    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 8.3s forwards;
   }
 
   @keyframes textReveal {
@@ -504,7 +490,7 @@ const featuredWork = [
   .hero-cta-wrap {
     opacity: 0;
     transform: translateY(16px);
-    animation: ctaReveal 0.8s var(--ease-out) 5.2s forwards;
+    animation: ctaReveal 0.8s var(--ease-out) 9s forwards;
   }
 
   @keyframes ctaReveal {
@@ -1165,9 +1151,9 @@ const featuredWork = [
 </style>
 
 <script>
-  // ── Intro overlay: floating emoji chaos → wave greeting ──
+  // ── Intro: Canvas wow/eyes bombardment → wave greeting ──
   const overlay = document.getElementById('intro-overlay');
-  const chaosContainer = document.getElementById('emojiChaos');
+  const wowCanvas = document.getElementById('wowCanvas') as HTMLCanvasElement;
   const introStage = document.getElementById('introStage');
 
   if (overlay) {
@@ -1181,52 +1167,138 @@ const featuredWork = [
     } else {
       sessionStorage.setItem('intro-seen', '1');
 
-      // Phase 1: Spawn floating emojis for ~3 seconds
-      const emojis = ['🤩', '👀', '✨', '🔥', '💫', '⚡', '😎', '👀', '🤩', '✨', '👀', '💫'];
-      let spawnCount = 0;
-      const maxSpawns = 30;
+      // ── Canvas wow/eyes particle system ──
+      if (wowCanvas) {
+        const ctx = wowCanvas.getContext('2d')!;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const W = wowCanvas.offsetWidth;
+        const H = wowCanvas.offsetHeight;
+        wowCanvas.width = W * dpr;
+        wowCanvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
 
-      function spawnEmoji() {
-        if (!chaosContainer || spawnCount >= maxSpawns) return;
-        const el = document.createElement('span');
-        el.className = 'floating-emoji';
-        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.left = `${10 + Math.random() * 80}%`;
-        el.style.top = `${30 + Math.random() * 50}%`;
-        el.style.setProperty('--float-duration', `${1.2 + Math.random() * 1.5}s`);
-        el.style.setProperty('--float-delay', '0s');
-        el.style.setProperty('--float-rot', `${-20 + Math.random() * 40}deg`);
-        el.style.fontSize = `${1.5 + Math.random() * 2}rem`;
-        chaosContainer.appendChild(el);
-        spawnCount++;
-        // Remove after animation
-        setTimeout(() => el.remove(), 3000);
-      }
+        const texts = ['wow', '👀'];
+        const particles: Array<{
+          x: number; y: number; vx: number; vy: number;
+          text: string; size: number; opacity: number;
+          rotation: number; rotSpeed: number; life: number; maxLife: number;
+        }> = [];
 
-      // Spawn emojis rapidly for 2.5 seconds
-      const spawnInterval = setInterval(spawnEmoji, 80);
-      setTimeout(() => clearInterval(spawnInterval), 2500);
+        let startTime = Date.now();
+        const SPAWN_DURATION = 4000;  // spawn for 4 seconds
+        const FADE_START = 4500;      // start fading at 4.5s
+        const TOTAL_DURATION = 5500;  // total bombardment phase
 
-      // Phase 2: After 3s, fade out chaos + show wave greeting
-      setTimeout(() => {
-        if (chaosContainer) chaosContainer.style.opacity = '0';
-        if (chaosContainer) chaosContainer.style.transition = 'opacity 0.5s ease-out';
+        function spawnParticle() {
+          const isWow = Math.random() > 0.4; // 60% wow, 40% eyes
+          particles.push({
+            x: Math.random() * W,
+            y: H * 0.3 + Math.random() * H * 0.6,
+            vx: -1.5 + Math.random() * 3,
+            vy: -1 - Math.random() * 2.5,
+            text: isWow ? 'wow' : '👀',
+            size: isWow ? (18 + Math.random() * 28) : (24 + Math.random() * 32),
+            opacity: 0,
+            rotation: -0.3 + Math.random() * 0.6,
+            rotSpeed: -0.02 + Math.random() * 0.04,
+            life: 0,
+            maxLife: 60 + Math.random() * 90,
+          });
+        }
 
-        if (introStage) {
-          introStage.classList.add('visible');
-          const waveEmoji = introStage.querySelector('.intro-wave-emoji');
-          const welcomeText = introStage.querySelector('.intro-welcome-text');
-          if (waveEmoji) {
-            waveEmoji.classList.add('pop');
-            setTimeout(() => waveEmoji.classList.add('wave'), 600);
+        let globalAlpha = 1;
+        let rafId: number;
+
+        function animate() {
+          const elapsed = Date.now() - startTime;
+          ctx.clearRect(0, 0, W, H);
+
+          // Spawn new particles
+          if (elapsed < SPAWN_DURATION) {
+            const spawnRate = Math.min(4, 1 + elapsed / 500); // accelerate spawning
+            for (let i = 0; i < spawnRate; i++) spawnParticle();
           }
-          if (welcomeText) {
-            setTimeout(() => welcomeText.classList.add('show'), 300);
+
+          // Global fade after FADE_START
+          if (elapsed > FADE_START) {
+            globalAlpha = Math.max(0, 1 - (elapsed - FADE_START) / (TOTAL_DURATION - FADE_START));
+          }
+
+          ctx.globalAlpha = globalAlpha;
+
+          // Update and draw particles
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.life++;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rotation += p.rotSpeed;
+
+            // Fade in first 15 frames, fade out last 20 frames
+            if (p.life < 15) {
+              p.opacity = p.life / 15;
+            } else if (p.life > p.maxLife - 20) {
+              p.opacity = Math.max(0, (p.maxLife - p.life) / 20);
+            } else {
+              p.opacity = 1;
+            }
+
+            // Remove dead particles
+            if (p.life >= p.maxLife || p.y < -50) {
+              particles.splice(i, 1);
+              continue;
+            }
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.globalAlpha = p.opacity * globalAlpha;
+
+            if (p.text === 'wow') {
+              ctx.font = `bold ${p.size}px Inter, sans-serif`;
+              ctx.fillStyle = '#1d1d1f';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('wow', 0, 0);
+            } else {
+              ctx.font = `${p.size}px serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('👀', 0, 0);
+            }
+
+            ctx.restore();
+          }
+
+          // Stop after total duration
+          if (elapsed < TOTAL_DURATION + 500) {
+            rafId = requestAnimationFrame(animate);
           }
         }
-      }, 3000);
 
-      // Phase 3: Iris-close exit after greeting shown
+        animate();
+
+        // Phase 2: Show wave greeting after bombardment fades
+        setTimeout(() => {
+          cancelAnimationFrame(rafId);
+          ctx.clearRect(0, 0, W, H);
+
+          if (introStage) {
+            introStage.classList.add('visible');
+            const waveEmoji = introStage.querySelector('.intro-wave-emoji');
+            const welcomeText = introStage.querySelector('.intro-welcome-text');
+            if (waveEmoji) {
+              waveEmoji.classList.add('pop');
+              setTimeout(() => waveEmoji.classList.add('wave'), 600);
+            }
+            if (welcomeText) {
+              setTimeout(() => welcomeText.classList.add('show'), 300);
+            }
+          }
+        }, TOTAL_DURATION);
+      }
+
+      // Phase 3: Iris-close exit
       overlay.addEventListener('animationend', (e: AnimationEvent) => {
         if (e.animationName === 'introExit') {
           overlay.classList.add('finished');
