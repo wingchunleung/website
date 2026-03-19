@@ -83,6 +83,7 @@ const navItems = [
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--header-shadow, none);
   }
 
   /* dark mode removed — light only */
@@ -256,11 +257,19 @@ const navItems = [
 </style>
 
 <script>
-  // Scroll-based header styling
+  // Scroll-based header styling with progressive shadow
   const header = document.getElementById('site-header');
   if (header) {
     const onScroll = () => {
-      header.classList.toggle('scrolled', window.scrollY > 50);
+      const y = window.scrollY;
+      header.classList.toggle('scrolled', y > 50);
+      // Progressive shadow depth
+      if (y > 50) {
+        const depth = Math.min(y / 300, 1);
+        header.style.setProperty('--header-shadow', `0 1px ${4 + depth * 8}px rgba(0,0,0,${0.02 + depth * 0.04})`);
+      } else {
+        header.style.removeProperty('--header-shadow');
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
