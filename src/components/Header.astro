@@ -19,6 +19,7 @@ const navItems = [
 ---
 
 <header id="site-header" class="site-header" role="banner">
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   <nav class="container nav-container" role="navigation" aria-label="Main navigation">
     <a href={`${base}/`} class="nav-logo" aria-label="Wing Chun Leung — Home">
       <span class="logo-text">WCL</span>
@@ -76,6 +77,17 @@ const navItems = [
     z-index: var(--z-nav);
     transition: background-color var(--duration-normal) var(--ease-out),
                 backdrop-filter var(--duration-normal) var(--ease-out);
+  }
+
+  .scroll-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-vermillion), var(--color-celadon));
+    z-index: 10;
+    transition: width 50ms linear;
   }
 
   .site-header.scrolled {
@@ -257,8 +269,9 @@ const navItems = [
 </style>
 
 <script>
-  // Scroll-based header styling with progressive shadow
+  // Scroll-based header styling with progressive shadow + progress bar
   const header = document.getElementById('site-header');
+  const progressBar = document.getElementById('scroll-progress');
   if (header) {
     const onScroll = () => {
       const y = window.scrollY;
@@ -269,6 +282,12 @@ const navItems = [
         header.style.setProperty('--header-shadow', `0 1px ${4 + depth * 8}px rgba(0,0,0,${0.02 + depth * 0.04})`);
       } else {
         header.style.removeProperty('--header-shadow');
+      }
+      // Reading progress bar
+      if (progressBar) {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = maxScroll > 0 ? (y / maxScroll) * 100 : 0;
+        progressBar.style.width = `${progress}%`;
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
