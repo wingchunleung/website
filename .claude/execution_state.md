@@ -1,6 +1,6 @@
 # Execution State
 
-## Current Status: Phase D (Implementation) — Iteration 2
+## Current Status: Phase D (Implementation) — Iteration 4 (Continuous)
 
 ### Completed
 - [x] Phase A: Deep research (11 HCI PDFs analyzed)
@@ -12,10 +12,15 @@
 - [x] Claude project structure set up (.claude/skills, rules, docs)
 
 ### In Progress
-- [x] Polish remaining pages — entrance animations added to all subpages
-- [x] Premium hero — 4-layer canvas particle network with data pulses
-- [ ] Add GSAP for enhanced scroll animations
+- [x] Polish remaining pages — entrance animations, base path fixes
+- [x] Premium hero — 4-layer canvas + cinematic 3-phase intro
+- [x] Fix 404 links — all pages accessible via /website/ prefix
+- [x] Experience logo strip — HKUST, Carta, Costco, UW with branded colors
+- [x] Branded journey timeline — company colors on step numbers/lines
+- [x] Org badges on work cards — visual company identification
+- [ ] GSAP for enhanced scroll animations
 - [ ] Self-host fonts for performance
+- [ ] About page visual redesign — less text, more visual
 - [x] GitHub Pages deployment — live at wingchunleung.github.io/website/
 
 ### Pending
