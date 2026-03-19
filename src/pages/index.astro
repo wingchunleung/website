@@ -34,8 +34,8 @@ const featuredWork = [
     metricLabel: 'RMB AUM context',
     org: 'HKUST',
     orgColor: '#003366',
-    description: 'Multi-agent system for macro analysis, asset allocation, and investment decision support at HKUST Business School.',
-    tags: ['Asset Allocation', 'Macro Strategy', 'Research'],
+    description: 'Ongoing — building a multi-agent system for macro analysis, asset allocation, and investment decision support at HKUST Business School.',
+    tags: ['Asset Allocation', 'Macro Strategy', 'In Progress'],
   },
   {
     title: 'Equity & Stock Option Advisory',
@@ -87,17 +87,15 @@ const featuredWork = [
     <HeroCanvas />
 
     <div class="hero-content">
-      <p class="hero-kicker">Finance × Technology</p>
+      <div class="hero-wave" aria-hidden="true">
+        <span class="wave-hand">👋</span>
+      </div>
 
       <h1 class="hero-greeting">
         <span class="greeting-mask">
-          <span class="greeting-text">From Data to <em>Decisions</em></span>
+          <span class="greeting-text">Welcome to my site</span>
         </span>
       </h1>
-
-      <p class="hero-sub">
-        Speed. Insight. Intelligence.
-      </p>
 
       <div class="hero-cta-wrap">
         <a href="#intro" class="btn-hero">
@@ -127,11 +125,11 @@ const featuredWork = [
         <h2 class="intro-name">Wing Chun Leung</h2>
         <div class="intro-divider" aria-hidden="true"></div>
         <p class="intro-tagline">
-          Making finance faster.
-          <strong>Making decisions smarter.</strong>
+          Turning data into
+          <strong>investment insight.</strong>
         </p>
         <p class="intro-bio">
-          Traditional finance is slow, manual, and fragmented. I build systems that transform it — AI-driven investment research at HKUST, equity and options advisory at Carta, financial automation at Costco. Streamlined, intelligent, real-time.
+          Investment decisions require synthesizing large amounts of information under time constraints. I combine structured analysis with scalable tools to improve consistency and depth — from AI-driven macro research at HKUST, to equity and options advisory at Carta, to financial systems automation at Costco.
         </p>
         <div class="intro-actions">
           <a href={`${base}/about`} class="btn-primary">Learn more</a>
@@ -251,7 +249,7 @@ const featuredWork = [
     <div class="container">
       <div class="section-header" data-animate="reveal">
         <span class="section-label">Selected Work</span>
-        <h2>What I've delivered</h2>
+        <h2>Selected Work</h2>
       </div>
 
       <div class="work-grid">
@@ -443,29 +441,36 @@ const featuredWork = [
     gap: var(--space-4);
   }
 
-  /* ── Hero kicker + subtitle ──────────────────────────────────────── */
-  .hero-kicker {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-vermillion);
+  /* ── Hero wave hand ─────────────────────────────────────────────── */
+  .hero-wave {
+    opacity: 0;
+    transform: scale(0.3);
+    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2.6s forwards;
     margin-bottom: var(--space-3);
-    opacity: 0;
-    animation: heroRevealFade 0.8s var(--ease-out) 2.6s forwards;
   }
 
-  .hero-sub {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--color-wash);
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-5);
-    opacity: 0;
-    animation: heroRevealFade 0.8s var(--ease-out) 3.2s forwards;
+  .wave-hand {
+    display: inline-block;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    transform-origin: 70% 70%;
+    animation: waveMotion 2s ease-in-out 3.4s 2;
   }
 
-  @keyframes heroRevealFade {
-    to { opacity: 1; }
+  @keyframes handPop {
+    0% { opacity: 0; transform: scale(0.3); }
+    60% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes waveMotion {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(10deg); }
+    60% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
   }
 
   /* ── Text mask reveal ────────────────────────────────────────────── */
