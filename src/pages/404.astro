@@ -1,0 +1,124 @@
+---
+/**
+ * 404 Page
+ * HCI: H9 (Error Recovery) — help users find their way back
+ * HCI: H4 (Freedom) — multiple exit paths
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Page Not Found — Wing Chun Leung">
+  <Header slot="header" />
+
+  <section class="error-page">
+    <div class="container content">
+      <span class="error-code">404</span>
+      <h1>Page not found</h1>
+      <p class="error-text">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <div class="error-actions">
+        <a href="/" class="btn-primary">Go home</a>
+        <a href="/contact" class="btn-outline">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 72px;
+  }
+
+  .error-code {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 15vw, 10rem);
+    font-weight: var(--weight-light);
+    color: var(--color-border);
+    line-height: 1;
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  .error-page h1 {
+    margin-bottom: var(--space-3);
+  }
+
+  .error-text {
+    color: var(--color-text-secondary);
+    margin-inline: auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .error-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background var(--duration-normal) var(--ease-out);
+    min-height: 44px;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-vermillion);
+  }
+
+  .btn-primary::after { display: none; }
+
+  .btn-outline {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color var(--duration-normal) var(--ease-out),
+                color var(--duration-normal) var(--ease-out);
+    min-height: 44px;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--color-vermillion);
+    color: var(--color-vermillion);
+  }
+
+  .btn-outline::after { display: none; }
+
+  @media (prefers-color-scheme: dark) {
+    .btn-primary {
+      background: var(--color-paper);
+      color: var(--color-ink);
+    }
+    .btn-primary:hover {
+      background: var(--color-vermillion);
+      color: var(--color-paper);
+    }
+  }
+</style>
