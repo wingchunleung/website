@@ -112,14 +112,5 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   .btn-outline::after { display: none; }
 
-  @media (prefers-color-scheme: dark) {
-    .btn-primary {
-      background: var(--color-paper);
-      color: var(--color-ink);
-    }
-    .btn-primary:hover {
-      background: var(--color-vermillion);
-      color: var(--color-paper);
-    }
-  }
+  /* dark mode removed — light only */
 </style>

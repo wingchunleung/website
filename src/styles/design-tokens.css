@@ -114,25 +114,9 @@
   --z-overlay: 1000;
 }
 
-/* ── Dark Mode ("Night Ink") ─────────────────────────────────────────── */
-/* Paper darkens to ink, ink lightens to paper; vermillion glows unchanged */
-
-/* Dark mode available but light is the primary experience */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1d1d1f;
-    --color-surface: #2d2d2f;
-    --color-text: #f5f5f7;
-    --color-text-secondary: #86868b;
-    --color-border: #424245;
-    --color-link: #f5f5f7;
-    --color-link-hover: var(--color-vermillion);
-
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
-  }
-}
+/* ── Dark Mode DISABLED ─────────────────────────────────────────────── */
+/* Light theme is the ONLY theme. User explicitly wants bright, clean,
+   Apple/LVMH-level design. No dark backgrounds anywhere. */
 
 /* ── Reduced Motion ──────────────────────────────────────────────────── */
 /* HCI: H4 (Freedom) + H5 (Flexibility) — respect user preferences */

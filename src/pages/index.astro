@@ -185,19 +185,19 @@ const featuredWork = [
       <span class="section-label" style="text-align:center;display:block;margin-bottom:var(--space-4)">Experience</span>
       <div class="logo-row">
         <div class="logo-item">
-          <span class="logo-text-mark" style="--brand: #003366">HKUST</span>
+          <img src={`${base}/logos/hkust.svg`} alt="HKUST" class="logo-img" loading="lazy" width="120" height="24" />
           <span class="logo-role">Research Assistant</span>
         </div>
         <div class="logo-item">
-          <span class="logo-text-mark" style="--brand: #1a1a1a">carta</span>
+          <img src={`${base}/logos/carta.svg`} alt="Carta" class="logo-img" loading="lazy" width="110" height="28" />
           <span class="logo-role">PE Analyst</span>
         </div>
         <div class="logo-item">
-          <span class="logo-text-mark" style="--brand: #e31837">COSTCO</span>
+          <img src={`${base}/logos/costco.svg`} alt="Costco Wholesale" class="logo-img" loading="lazy" width="140" height="30" />
           <span class="logo-role">Financial Systems</span>
         </div>
         <div class="logo-item">
-          <span class="logo-text-mark" style="--brand: #4b2e83">UW</span>
+          <img src={`${base}/logos/uw.svg`} alt="University of Washington" class="logo-img" loading="lazy" width="36" height="32" />
           <span class="logo-role">BBA Finance & IS</span>
         </div>
       </div>
@@ -523,17 +523,6 @@ const featuredWork = [
 
   .btn-hero::after { display: none; }
 
-  @media (prefers-color-scheme: dark) {
-    .btn-hero {
-      background: rgba(245, 245, 247, 0.95);
-      color: #1d1d1f;
-    }
-    .btn-hero:hover {
-      background: var(--color-vermillion);
-      color: #fff;
-    }
-  }
-
   /* ── Scroll indicator (Apple-style) ─────────────────────────────── */
   .scroll-cue {
     position: absolute;
@@ -669,18 +658,18 @@ const featuredWork = [
     gap: 6px;
   }
 
-  .logo-text-mark {
-    font-family: var(--font-body);
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
-    font-weight: var(--weight-semibold);
-    letter-spacing: 0.04em;
-    color: var(--brand, var(--color-text));
-    opacity: 0.7;
+  .logo-img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.6;
     transition: opacity var(--duration-normal) var(--ease-out);
+    filter: grayscale(0.3);
   }
 
-  .logo-item:hover .logo-text-mark {
+  .logo-item:hover .logo-img {
     opacity: 1;
+    filter: grayscale(0);
   }
 
   .logo-role {
@@ -1017,17 +1006,6 @@ const featuredWork = [
   }
 
   .btn-outline::after { display: none; }
-
-  @media (prefers-color-scheme: dark) {
-    .btn-primary {
-      background: #f5f5f7;
-      color: #1d1d1f;
-    }
-    .btn-primary:hover {
-      background: var(--color-vermillion);
-      color: #fff;
-    }
-  }
 </style>
 
 <script>
