@@ -190,23 +190,100 @@ const education = [
     </div>
   </section>
 
-  <!-- Bio -->
-  <section class="bio-section" aria-label="Personal">
-    <div class="container content">
-      <div class="section-header centered" data-animate="reveal">
-        <span class="section-label">The Human</span>
-        <h2>Beyond the resume</h2>
+  <!-- Speaking -->
+  <section class="speaking-section" aria-label="Speaking engagements">
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Speaking</span>
+        <h2>Guest Speaker</h2>
       </div>
-      <div class="bio-content" data-animate="reveal">
-        <p>
-          Born and raised in <strong>Hong Kong</strong>, educated in the <strong>United States</strong>,
-          now back home working at the intersection of finance and technology. I speak English, Cantonese, and Mandarin.
-        </p>
-        <p>
-          I've been a guest speaker five times — at universities, high schools, and community organizations.
-          I've mentored interns, tutored students, and led multiple student organizations.
-          I believe the most important skill is the ability to make others better.
-        </p>
+      <div class="speaking-grid" data-animate="reveal">
+        <div class="speaking-card">
+          <span class="speaking-org">University of Washington</span>
+          <span class="speaking-topic">UW CSSA × LikeABoss Event</span>
+          <span class="speaking-date">Oct 2023</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
+          <span class="speaking-topic">Guest Speaker — Finance</span>
+          <span class="speaking-date">Jul 2021</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Edmonds College</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Nov 2020</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Litz USA Students Service</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Jul 2020</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
+          <span class="speaking-topic">Guest Speaker — Finance</span>
+          <span class="speaking-date">Jul 2018</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Middlesex Elementary School</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Nov 2017</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership -->
+  <section class="leadership-section" aria-label="Leadership">
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Leadership</span>
+        <h2>Club Leadership</h2>
+      </div>
+      <div class="speaking-grid" data-animate="reveal">
+        <div class="speaking-card">
+          <span class="speaking-org">UW Blockchain Society</span>
+          <span class="speaking-topic">CFO</span>
+          <span class="speaking-date">University of Washington</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">CISB International Business Program</span>
+          <span class="speaking-topic">US Track President</span>
+          <span class="speaking-date">University of Washington</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Finance Society</span>
+          <span class="speaking-topic">President</span>
+          <span class="speaking-date">Edmonds College</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Badminton Club</span>
+          <span class="speaking-topic">President</span>
+          <span class="speaking-date">Edmonds College</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mentoring -->
+  <section class="mentoring-section" aria-label="Mentoring">
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Mentoring</span>
+        <h2>Mentor & Adviser</h2>
+      </div>
+      <div class="speaking-grid" data-animate="reveal">
+        <div class="speaking-card">
+          <span class="speaking-org">Carta — Equity Advisory Team</span>
+          <span class="speaking-topic">Mentor for New Hire</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Carta — PE Fund Administration</span>
+          <span class="speaking-topic">Technical Adviser</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Costco Wholesale</span>
+          <span class="speaking-topic">Intern Mentor</span>
+        </div>
       </div>
     </div>
   </section>
@@ -559,31 +636,80 @@ const education = [
   }
 
   /* ── Bio section ───────────────────────────────────────────────────── */
-  .bio-section {
+  /* ── Speaking + Leadership ────────────────────────────────────────── */
+  .speaking-section, .leadership-section, .mentoring-section {
     padding: var(--section-gap) 0;
   }
 
-  .bio-content {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-    opacity: 0; transform: translateY(30px);
+  .speaking-section { background: var(--color-surface); }
+  .leadership-section { background: var(--color-bg); }
+  .mentoring-section { background: var(--color-surface); }
+
+  .speaking-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    max-width: 800px;
+    opacity: 0; transform: translateY(20px);
   }
 
-  .bio-content.visible {
+  .speaking-grid.visible {
     opacity: 1; transform: translateY(0);
-    transition: opacity 0.8s var(--ease-out) 0.1s, transform 0.8s var(--ease-out) 0.1s;
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   }
 
-  .bio-content p {
-    color: var(--color-wash);
-    margin-bottom: var(--space-3);
-    line-height: var(--leading-relaxed);
+  @media (min-width: 640px) {
+    .speaking-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .bio-content strong {
-    color: var(--color-text);
+  @media (min-width: 1024px) {
+    .speaking-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .speaking-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    border-left: 2px solid var(--color-vermillion);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .speaking-section .speaking-card {
+    background: var(--color-bg);
+  }
+
+  .mentoring-section .speaking-card {
+    background: var(--color-bg);
+  }
+
+  .leadership-section .speaking-card {
+    background: var(--color-surface);
+    border-left-color: var(--color-celadon);
+  }
+
+  .speaking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .speaking-org {
     font-weight: var(--weight-medium);
+    font-size: var(--text-small);
+  }
+
+  .speaking-topic {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+  }
+
+  .speaking-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-wash);
   }
 </style>
 
