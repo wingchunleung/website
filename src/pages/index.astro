@@ -1131,21 +1131,49 @@ const featuredWork = [
     }
   }
 
-  // ── Scroll-reveal animation ──
-  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
-  if (revealElements.length > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
+  // ── GSAP ScrollTrigger for premium scroll reveals ──
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Reveal all [data-animate="reveal"] elements with GSAP
+  gsap.utils.toArray('[data-animate="reveal"]').forEach((el) => {
+    const element = el as HTMLElement;
+    const delay = parseFloat(element.style.getPropertyValue('--delay') || '0');
+
+    gsap.fromTo(element,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      }
     );
-    revealElements.forEach((el) => observer.observe(el));
+  });
+
+  // Animate intro divider expansion
+  const divider = document.querySelector('.intro-divider');
+  if (divider) {
+    gsap.fromTo(divider,
+      { width: 0 },
+      {
+        width: 48,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.intro-content',
+          start: 'top 75%',
+        },
+      }
+    );
   }
 
   // ── 3D tilt on work cards (desktop only) ──
