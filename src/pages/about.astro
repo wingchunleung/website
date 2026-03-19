@@ -61,14 +61,14 @@ const education = [
     degree: 'MSc Artificial Intelligence',
     period: 'Expected graduation 2027',
     color: '#003366',
-    detail: '2× Scholarship Recipient · RA in AI & Asset Management (Business School)',
+    detail: '2× Scholarship Recipient · RA in AI & Asset Management',
   },
   {
     org: 'University of Washington',
     degree: 'BBA Finance & Information Systems',
     period: 'Graduated 2022',
     color: '#4b2e83',
-    detail: 'Dean\'s List · Double Major · CFO of UW Blockchain Society · Track President, International Business Program',
+    detail: 'Dean\'s List · Double Major · 2× C-Suite in Student Organizations',
   },
 ];
 
@@ -90,49 +90,52 @@ const education = [
     </div>
   </section>
 
-  <!-- Background — places lived & languages -->
-  <section class="places-section" aria-label="Background">
+  <!-- Locations — separate section with larger photos -->
+  <section class="locations-section" aria-label="Locations">
     <div class="container">
-      <div class="places-row" data-animate="reveal">
-        <div class="places-group">
-          <span class="places-label">Locations</span>
-          <div class="places-items">
-            <div class="place-card place-card--photo">
-              <img src={`${base}/logos/hk.webp`} alt="Hong Kong" class="place-photo" loading="lazy" />
-              <span class="place-name">Hong Kong, China</span>
-            </div>
-            <div class="place-card place-card--photo">
-              <img src={`${base}/logos/seattle.png`} alt="Seattle" class="place-photo" loading="lazy" />
-              <span class="place-name">Washington, USA</span>
-              <span class="place-detail">7 years</span>
-            </div>
-            <div class="place-card place-card--photo">
-              <img src={`${base}/logos/north-carolina.jpg`} alt="North Carolina" class="place-photo" loading="lazy" />
-              <span class="place-name">North Carolina, USA</span>
-              <span class="place-detail">1 year</span>
-            </div>
-          </div>
+      <div class="section-header centered" data-animate="reveal">
+        <span class="section-label">Locations</span>
+      </div>
+      <div class="locations-grid" data-animate="reveal">
+        <div class="location-card">
+          <img src={`${base}/logos/hk.webp`} alt="Hong Kong" class="location-photo" loading="lazy" />
+          <span class="location-name">Hong Kong, China</span>
         </div>
-        <div class="places-divider" aria-hidden="true"></div>
-        <div class="places-group">
-          <span class="places-label">Languages</span>
-          <div class="places-items">
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
-              <span class="place-name">English</span>
-              <span class="place-detail">Fluent</span>
-            </div>
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127469;&#127472;</span>
-              <span class="place-name">Cantonese</span>
-              <span class="place-detail">Native</span>
-            </div>
-            <div class="place-card">
-              <span class="place-emoji" aria-hidden="true">&#127464;&#127475;</span>
-              <span class="place-name">Mandarin</span>
-              <span class="place-detail">Native</span>
-            </div>
-          </div>
+        <div class="location-card">
+          <img src={`${base}/logos/seattle.png`} alt="Washington" class="location-photo" loading="lazy" />
+          <span class="location-name">Washington, USA</span>
+          <span class="location-detail">7 years</span>
+        </div>
+        <div class="location-card">
+          <img src={`${base}/logos/north-carolina.jpg`} alt="North Carolina" class="location-photo" loading="lazy" />
+          <span class="location-name">North Carolina, USA</span>
+          <span class="location-detail">1 year</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Languages — separate section -->
+  <section class="languages-section" aria-label="Languages">
+    <div class="container">
+      <div class="section-header centered" data-animate="reveal">
+        <span class="section-label">Languages</span>
+      </div>
+      <div class="languages-grid" data-animate="reveal">
+        <div class="lang-card">
+          <span class="lang-flag" aria-hidden="true">&#127482;&#127480;</span>
+          <span class="lang-name">English</span>
+          <span class="lang-level">Fluent</span>
+        </div>
+        <div class="lang-card">
+          <span class="lang-flag" aria-hidden="true">&#127469;&#127472;</span>
+          <span class="lang-name">Cantonese</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-card">
+          <span class="lang-flag" aria-hidden="true">&#127464;&#127475;</span>
+          <span class="lang-name">Mandarin</span>
+          <span class="lang-level">Native</span>
         </div>
       </div>
     </div>
@@ -258,99 +261,105 @@ const education = [
 
   @keyframes pageReveal { to { opacity: 1; transform: translateY(0); } }
 
-  /* ── Places & Languages ──────────────────────────────────────────── */
-  .places-section {
+  /* ── Locations ────────────────────────────────────────────────────── */
+  .locations-section {
     padding: var(--space-6) 0;
     border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
   }
 
-  .places-row {
+  .locations-grid {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    gap: var(--space-6);
+    gap: var(--space-5);
     flex-wrap: wrap;
     opacity: 0; transform: translateY(20px);
   }
 
-  .places-row.visible {
+  .locations-grid.visible {
     opacity: 1; transform: translateY(0);
     transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   }
 
-  .places-group {
+  .location-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-3);
+    text-align: center;
+    gap: 6px;
+    width: 200px;
   }
 
-  .places-label {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-vermillion);
+  .location-photo {
+    width: 200px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .location-card:hover .location-photo {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-md);
+  }
+
+  .location-name {
     font-weight: var(--weight-medium);
+    font-size: var(--text-small);
   }
 
-  .places-items {
+  .location-detail {
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+  }
+
+  /* ── Languages ──────────────────────────────────────────────────── */
+  .languages-section {
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .languages-grid {
     display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
     justify-content: center;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    opacity: 0; transform: translateY(20px);
   }
 
-  .places-divider {
-    width: 1px;
-    height: 60px;
-    background: var(--color-border);
-    align-self: center;
+  .languages-grid.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   }
 
-  @media (max-width: 640px) {
-    .places-divider { display: none; }
-    .places-row { gap: var(--space-5); }
-  }
-
-  .place-card {
+  .lang-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 4px;
-  }
-
-  .place-card--photo {
-    width: 140px;
-  }
-
-  .place-photo {
-    width: 120px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--radius-md);
-    margin-bottom: 4px;
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    min-width: 120px;
     transition: transform var(--duration-normal) var(--ease-out);
   }
 
-  .place-card:hover .place-photo {
-    transform: scale(1.05);
+  .lang-card:hover {
+    transform: translateY(-2px);
   }
 
-  .place-emoji {
-    font-size: 1.5rem;
+  .lang-flag {
+    font-size: 1.75rem;
     line-height: 1;
-    margin-bottom: 4px;
   }
 
-  .place-name {
+  .lang-name {
     font-weight: var(--weight-medium);
     font-size: var(--text-small);
   }
 
-  .place-detail {
+  .lang-level {
     font-size: var(--text-caption);
     color: var(--color-wash);
   }
