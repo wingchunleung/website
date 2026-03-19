@@ -812,6 +812,18 @@ const featuredWork = [
 
   .step-content {
     max-width: var(--max-content);
+    background: var(--color-bg);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--step-accent, var(--color-vermillion));
+    transition: box-shadow var(--duration-normal) var(--ease-out),
+                transform var(--duration-normal) var(--ease-out);
+  }
+
+  .step-content:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
   .step-meta {
