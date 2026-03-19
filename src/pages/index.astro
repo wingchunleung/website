@@ -69,13 +69,22 @@ const featuredWork = [
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
     <div class="intro-stage">
-      <div class="intro-icon">
-        <span class="intro-wave-emoji">👋</span>
+      <!-- Phase 1: Rapid "wow" sequence -->
+      <div class="intro-wow-sequence" id="wowSequence">
+        <span class="wow-text wow-1">🤩</span>
+        <span class="wow-text wow-2">✨</span>
+        <span class="wow-text wow-3">🔥</span>
+        <span class="wow-text wow-4">💫</span>
+        <span class="wow-text wow-5">⚡</span>
       </div>
-      <div class="intro-text">
-        <span class="intro-line">
-          <span class="intro-line-inner">Welcome</span>
-        </span>
+      <!-- Phase 2: "Guess who?" tease -->
+      <div class="intro-tease" id="introTease">
+        <span class="tease-text">guess who's here...</span>
+      </div>
+      <!-- Phase 3: Wave + Welcome -->
+      <div class="intro-final" id="introFinal">
+        <span class="intro-wave-emoji">👋</span>
+        <span class="intro-welcome-text">Welcome to my site</span>
       </div>
     </div>
   </div>
@@ -177,38 +186,6 @@ const featuredWork = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       MARQUEE — Scrolling text ticker (premium agency signal)
-       ═══════════════════════════════════════════════════════════════════ -->
-  <div class="marquee-band" aria-hidden="true">
-    <div class="marquee-track">
-      <span class="marquee-text">Finance</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Capital Markets</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Technology</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Private Equity</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Asset Management</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">AI Research</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Finance</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Capital Markets</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Technology</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Private Equity</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">Asset Management</span>
-      <span class="marquee-dot"></span>
-      <span class="marquee-text">AI Research</span>
-      <span class="marquee-dot"></span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════════════
        KEY HIGHLIGHTS — Compact credibility markers (scan in <5 seconds)
        ═══════════════════════════════════════════════════════════════════ -->
   <section class="highlights" aria-label="Key highlights">
@@ -304,7 +281,7 @@ const featuredWork = [
     pointer-events: none;
     will-change: clip-path, opacity;
     clip-path: inset(0 0 0 0);
-    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 2.4s forwards;
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 3.8s forwards;
   }
 
   .intro-overlay.finished { display: none; }
@@ -338,42 +315,83 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  .intro-icon {
+  /* Phase 1: Wow emojis — rapid fire pop-in */
+  .intro-wow-sequence {
+    display: flex;
+    gap: var(--space-3);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .wow-text {
     opacity: 0;
-    transform: scale(0.2) rotate(-30deg);
-    animation: introIconPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+    transform: scale(0) rotate(-20deg);
+  }
+
+  .wow-1 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards; }
+  .wow-2 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards; }
+  .wow-3 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; }
+  .wow-4 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s forwards; }
+  .wow-5 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1.0s forwards; }
+
+  @keyframes wowPop {
+    0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+    60% { opacity: 1; transform: scale(1.3) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  /* Phase 2: Tease text */
+  .intro-tease {
+    opacity: 0;
+  }
+
+  .tease-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: var(--weight-light);
+    color: var(--color-wash);
+    font-style: italic;
+    animation: teaseFade 0.6s ease-out 1.4s forwards;
+    opacity: 0;
+  }
+
+  @keyframes teaseFade {
+    to { opacity: 1; }
+  }
+
+  /* Phase 3: Wave + Welcome (final) */
+  .intro-final {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    opacity: 0;
   }
 
   .intro-wave-emoji {
     display: inline-block;
-    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     transform-origin: 70% 70%;
-    animation: introWaveMotion 0.8s ease-in-out 1s 1;
+    opacity: 0;
+    animation:
+      introWavePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards,
+      introWaveMotion 0.8s ease-in-out 2.8s 1;
   }
 
-  .intro-text {
+  .intro-welcome-text {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: var(--weight-light);
     letter-spacing: -0.02em;
     color: var(--color-text);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: introFinalText 0.7s ease-out 2.6s forwards;
   }
 
-  .intro-line {
-    display: block;
-    overflow: hidden;
-  }
-
-  .intro-line-inner {
-    display: block;
-    transform: translateY(120%);
-    animation: introTextUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
-  }
-
-  @keyframes introIconPop {
-    0% { opacity: 0; transform: scale(0.2) rotate(-30deg); }
-    50% { opacity: 1; transform: scale(1.15) rotate(8deg); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  @keyframes introWavePop {
+    0% { opacity: 0; transform: scale(0.3); }
+    60% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
   }
 
   @keyframes introWaveMotion {
@@ -384,6 +402,10 @@ const featuredWork = [
     60% { transform: rotate(-4deg); }
     75% { transform: rotate(10deg); }
     100% { transform: rotate(0deg); }
+  }
+
+  @keyframes introFinalText {
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes introTextUp {
@@ -433,7 +455,7 @@ const featuredWork = [
   .hero-wave {
     opacity: 0;
     transform: scale(0.3);
-    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2.6s forwards;
+    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 4.2s forwards;
     margin-bottom: var(--space-3);
   }
 
@@ -441,7 +463,7 @@ const featuredWork = [
     display: inline-block;
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     transform-origin: 70% 70%;
-    animation: waveMotion 2s ease-in-out 3.4s 2;
+    animation: waveMotion 2s ease-in-out 5s 2;
   }
 
   @keyframes handPop {
@@ -486,7 +508,7 @@ const featuredWork = [
   .greeting-text {
     display: block;
     transform: translateY(110%);
-    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 3.1s forwards;
+    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 4.5s forwards;
   }
 
   @keyframes textReveal {
@@ -497,7 +519,7 @@ const featuredWork = [
   .hero-cta-wrap {
     opacity: 0;
     transform: translateY(16px);
-    animation: ctaReveal 0.8s var(--ease-out) 3.6s forwards;
+    animation: ctaReveal 0.8s var(--ease-out) 5.2s forwards;
   }
 
   @keyframes ctaReveal {
