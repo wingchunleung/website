@@ -8,6 +8,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -15,7 +16,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <Header slot="header" />
 
   <section class="error-page">
-    <div class="container content">
+    <HeroCanvas />
+    <div class="container content error-content">
       <span class="error-code">404</span>
       <h1>Page not found</h1>
       <p class="error-text">
@@ -33,12 +35,19 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <style>
   .error-page {
+    position: relative;
     min-height: calc(100vh - 200px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    overflow: hidden;
     padding-top: 72px;
+  }
+
+  .error-content {
+    position: relative;
+    z-index: 2;
   }
 
   .error-code {
