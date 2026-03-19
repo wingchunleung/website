@@ -68,9 +68,13 @@ const featuredWork = [
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
-    <!-- Phase 1: Canvas-based floating wow/eyes bombardment -->
-    <canvas id="wowCanvas" class="wow-canvas"></canvas>
-    <!-- Phase 2: Wave + Welcome (fades in after bombardment) -->
+    <!-- Phase 1: DOM-based wow/eyes bombardment (CSS animated) -->
+    <div class="wow-container" id="wowContainer"></div>
+    <!-- Phase 2: Tease -->
+    <div class="intro-tease" id="introTease">
+      <span class="tease-text">see who this is</span>
+    </div>
+    <!-- Phase 3: Wave + Welcome -->
     <div class="intro-stage" id="introStage">
       <span class="intro-wave-emoji">👋</span>
       <span class="intro-welcome-text">Welcome to my site</span>
@@ -269,7 +273,7 @@ const featuredWork = [
     pointer-events: none;
     will-change: clip-path, opacity;
     clip-path: inset(0 0 0 0);
-    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 7.5s forwards;
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 9s forwards;
   }
 
   .intro-overlay.finished { display: none; }
@@ -303,17 +307,88 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  /* Canvas for wow/eyes bombardment */
-  .wow-canvas {
+  /* Wow/eyes bombardment container */
+  .wow-container {
     position: absolute;
     inset: 0;
     z-index: 1;
-    width: 100%;
-    height: 100%;
+    overflow: hidden;
     pointer-events: none;
   }
 
-  /* Wave + Welcome greeting (appears after chaos) */
+  .wow-particle {
+    position: absolute;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: wowFloat var(--dur, 3s) ease-out var(--delay, 0s) forwards;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .wow-particle.is-text {
+    font-weight: 900;
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #ff6b35, #e63946, #ff006e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .wow-particle.is-emoji {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
+
+  @keyframes wowFloat {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) rotate(var(--rot-start, 0deg)) scale(0.3);
+    }
+    12% {
+      opacity: 1;
+      transform: translate(calc(var(--dx) * 0.1), calc(var(--dy) * 0.08)) rotate(calc(var(--rot-start, 0deg) + 5deg)) scale(1.15);
+    }
+    35% {
+      opacity: 1;
+      transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.3)) rotate(calc(var(--rot-end, 15deg) * 0.5)) scale(var(--sc, 1));
+    }
+    70% {
+      opacity: 0.6;
+      transform: translate(calc(var(--dx) * 0.75), calc(var(--dy) * 0.7)) rotate(calc(var(--rot-end, 15deg) * 0.8)) scale(calc(var(--sc, 1) * 0.85));
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy)) rotate(var(--rot-end, 15deg)) scale(0.4);
+    }
+  }
+
+  /* Tease text */
+  .intro-tease {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+  }
+
+  .intro-tease.visible {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  }
+
+  .intro-tease.hidden {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+
+  .tease-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: var(--weight-light);
+    color: var(--color-wash);
+    font-style: italic;
+  }
+
+  /* Wave + Welcome greeting (appears after tease) */
   .intro-stage {
     position: relative;
     z-index: 2;
@@ -426,7 +501,7 @@ const featuredWork = [
   .hero-wave {
     opacity: 0;
     transform: scale(0.3);
-    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 8s forwards;
+    animation: handPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 9.5s forwards;
     margin-bottom: var(--space-3);
   }
 
@@ -434,7 +509,7 @@ const featuredWork = [
     display: inline-block;
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     transform-origin: 70% 70%;
-    animation: waveMotion 2s ease-in-out 8.8s 2;
+    animation: waveMotion 2s ease-in-out 10.3s 2;
   }
 
   @keyframes handPop {
@@ -479,7 +554,7 @@ const featuredWork = [
   .greeting-text {
     display: block;
     transform: translateY(110%);
-    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 8.3s forwards;
+    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 9.8s forwards;
   }
 
   @keyframes textReveal {
@@ -490,7 +565,7 @@ const featuredWork = [
   .hero-cta-wrap {
     opacity: 0;
     transform: translateY(16px);
-    animation: ctaReveal 0.8s var(--ease-out) 9s forwards;
+    animation: ctaReveal 0.8s var(--ease-out) 10.5s forwards;
   }
 
   @keyframes ctaReveal {
@@ -1151,9 +1226,9 @@ const featuredWork = [
 </style>
 
 <script>
-  // ── Intro: Canvas wow/eyes bombardment → wave greeting ──
+  // ── Intro: DOM-based wow/eyes bombardment → wave greeting ──
   const overlay = document.getElementById('intro-overlay');
-  const wowCanvas = document.getElementById('wowCanvas') as HTMLCanvasElement;
+  const wowContainer = document.getElementById('wowContainer');
   const introStage = document.getElementById('introStage');
 
   if (overlay) {
@@ -1167,122 +1242,69 @@ const featuredWork = [
     } else {
       sessionStorage.setItem('intro-seen', '1');
 
-      // ── Canvas wow/eyes particle system ──
-      if (wowCanvas) {
-        const ctx = wowCanvas.getContext('2d')!;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const W = wowCanvas.offsetWidth;
-        const H = wowCanvas.offsetHeight;
-        wowCanvas.width = W * dpr;
-        wowCanvas.height = H * dpr;
-        ctx.scale(dpr, dpr);
+      const introTease = document.getElementById('introTease');
 
-        const texts = ['wow', '👀'];
-        const particles: Array<{
-          x: number; y: number; vx: number; vy: number;
-          text: string; size: number; opacity: number;
-          rotation: number; rotSpeed: number; life: number; maxLife: number;
-        }> = [];
+      // ── Phase 1: BIG wow/eyes particles filling the screen ──
+      const TOTAL = 40; // fewer but BIGGER
+      const SPAWN_WINDOW = 3500;
+      let spawned = 0;
 
-        let startTime = Date.now();
-        const SPAWN_DURATION = 4000;  // spawn for 4 seconds
-        const FADE_START = 4500;      // start fading at 4.5s
-        const TOTAL_DURATION = 5500;  // total bombardment phase
+      function spawnWow() {
+        if (!wowContainer || spawned >= TOTAL) return;
+        const el = document.createElement('span');
+        const isText = Math.random() > 0.35; // 65% wow, 35% 👀
 
-        function spawnParticle() {
-          const isWow = Math.random() > 0.4; // 60% wow, 40% eyes
-          particles.push({
-            x: Math.random() * W,
-            y: H * 0.3 + Math.random() * H * 0.6,
-            vx: -1.5 + Math.random() * 3,
-            vy: -1 - Math.random() * 2.5,
-            text: isWow ? 'wow' : '👀',
-            size: isWow ? (18 + Math.random() * 28) : (24 + Math.random() * 32),
-            opacity: 0,
-            rotation: -0.3 + Math.random() * 0.6,
-            rotSpeed: -0.02 + Math.random() * 0.04,
-            life: 0,
-            maxLife: 60 + Math.random() * 90,
-          });
+        el.className = `wow-particle ${isText ? 'is-text' : 'is-emoji'}`;
+        el.textContent = isText ? 'wow' : '👀';
+
+        // Random position — fill the whole screen
+        el.style.left = `${5 + Math.random() * 85}vw`;
+        el.style.top = `${10 + Math.random() * 75}vh`;
+
+        // MUCH bigger sizes — screen filling
+        const size = isText ? (3 + Math.random() * 4) : (3.5 + Math.random() * 4.5);
+        el.style.fontSize = `${size}rem`;
+
+        el.style.setProperty('--dx', `${-80 + Math.random() * 160}px`);
+        el.style.setProperty('--dy', `${-(100 + Math.random() * 200)}px`);
+        el.style.setProperty('--rot-start', `${-20 + Math.random() * 40}deg`);
+        el.style.setProperty('--rot-end', `${-30 + Math.random() * 60}deg`);
+        el.style.setProperty('--sc', `${0.8 + Math.random() * 0.8}`);
+        const dur = 3 + Math.random() * 2.5;
+        el.style.setProperty('--dur', `${dur}s`);
+        el.style.setProperty('--delay', '0s');
+
+        wowContainer.appendChild(el);
+        spawned++;
+        setTimeout(() => el.remove(), dur * 1000 + 300);
+      }
+
+      // Burst: 10 big ones immediately
+      for (let i = 0; i < 10; i++) {
+        setTimeout(spawnWow, i * 40);
+      }
+      // Steady: rest over spawn window
+      const remaining = TOTAL - 10;
+      const interval = (SPAWN_WINDOW - 400) / remaining;
+      for (let i = 0; i < remaining; i++) {
+        setTimeout(spawnWow, 400 + i * interval);
+      }
+
+      // Phase 2: After 4.5s, fade particles → show "see who this is"
+      setTimeout(() => {
+        if (wowContainer) {
+          wowContainer.style.transition = 'opacity 0.8s ease-out';
+          wowContainer.style.opacity = '0';
         }
-
-        let globalAlpha = 1;
-        let rafId: number;
-
-        function animate() {
-          const elapsed = Date.now() - startTime;
-          ctx.clearRect(0, 0, W, H);
-
-          // Spawn new particles
-          if (elapsed < SPAWN_DURATION) {
-            const spawnRate = Math.min(4, 1 + elapsed / 500); // accelerate spawning
-            for (let i = 0; i < spawnRate; i++) spawnParticle();
-          }
-
-          // Global fade after FADE_START
-          if (elapsed > FADE_START) {
-            globalAlpha = Math.max(0, 1 - (elapsed - FADE_START) / (TOTAL_DURATION - FADE_START));
-          }
-
-          ctx.globalAlpha = globalAlpha;
-
-          // Update and draw particles
-          for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.life++;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.rotation += p.rotSpeed;
-
-            // Fade in first 15 frames, fade out last 20 frames
-            if (p.life < 15) {
-              p.opacity = p.life / 15;
-            } else if (p.life > p.maxLife - 20) {
-              p.opacity = Math.max(0, (p.maxLife - p.life) / 20);
-            } else {
-              p.opacity = 1;
-            }
-
-            // Remove dead particles
-            if (p.life >= p.maxLife || p.y < -50) {
-              particles.splice(i, 1);
-              continue;
-            }
-
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rotation);
-            ctx.globalAlpha = p.opacity * globalAlpha;
-
-            if (p.text === 'wow') {
-              ctx.font = `bold ${p.size}px Inter, sans-serif`;
-              ctx.fillStyle = '#1d1d1f';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText('wow', 0, 0);
-            } else {
-              ctx.font = `${p.size}px serif`;
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText('👀', 0, 0);
-            }
-
-            ctx.restore();
-          }
-
-          // Stop after total duration
-          if (elapsed < TOTAL_DURATION + 500) {
-            rafId = requestAnimationFrame(animate);
-          }
-        }
-
-        animate();
-
-        // Phase 2: Show wave greeting after bombardment fades
         setTimeout(() => {
-          cancelAnimationFrame(rafId);
-          ctx.clearRect(0, 0, W, H);
+          if (introTease) introTease.classList.add('visible');
+        }, 600);
+      }, 4500);
 
+      // Phase 3: After 6.5s, hide tease → show wave greeting
+      setTimeout(() => {
+        if (introTease) introTease.classList.add('hidden');
+        setTimeout(() => {
           if (introStage) {
             introStage.classList.add('visible');
             const waveEmoji = introStage.querySelector('.intro-wave-emoji');
@@ -1295,8 +1317,8 @@ const featuredWork = [
               setTimeout(() => welcomeText.classList.add('show'), 300);
             }
           }
-        }, TOTAL_DURATION);
-      }
+        }, 500);
+      }, 6500);
 
       // Phase 3: Iris-close exit
       overlay.addEventListener('animationend', (e: AnimationEvent) => {
