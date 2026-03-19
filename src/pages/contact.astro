@@ -1,0 +1,186 @@
+---
+/**
+ * Contact Page
+ * HCI: H8 (Error Prevention) — clear, direct contact paths
+ * HCI: H3 (Minimalism) — only essential information
+ * Fitts's Law — large, easy-to-reach CTAs
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Contact — Wing Chun Leung" description="Get in touch with Wing Chun Leung.">
+  <Header slot="header" />
+
+  <section class="page-hero">
+    <div class="container content">
+      <span class="section-label">Contact</span>
+      <h1>Let's talk</h1>
+      <p class="page-subtitle">
+        Whether you're interested in AI research, fintech opportunities, speaking engagements, or just want to connect — I'd love to hear from you.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="container content">
+      <div class="contact-methods" data-animate="reveal">
+        <a href="mailto:wingchunleung8@gmail.com" class="contact-card">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">wingchunleung8@gmail.com</span>
+          <span class="contact-cta">Send an email &rarr;</span>
+        </a>
+
+        <a href="https://linkedin.com/in/wingchunleung" class="contact-card" target="_blank" rel="noopener noreferrer">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-value">wingchunleung</span>
+          <span class="contact-cta">Connect &rarr;</span>
+        </a>
+
+        <a href="https://github.com/wingchunleung" class="contact-card" target="_blank" rel="noopener noreferrer">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">wingchunleung</span>
+          <span class="contact-cta">View code &rarr;</span>
+        </a>
+      </div>
+
+      <div class="contact-location" data-animate="reveal">
+        <span class="section-label">Based in</span>
+        <p class="location-text">Hong Kong SAR</p>
+        <p class="location-detail">
+          Currently at HKUST, Clear Water Bay<br />
+          Open to opportunities worldwide
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-top: calc(72px + var(--section-gap));
+    padding-bottom: var(--space-6);
+  }
+
+  .page-hero h1 {
+    font-size: var(--text-display);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-subtitle {
+    color: var(--color-text-secondary);
+    max-width: 50ch;
+  }
+
+  .contact-section {
+    padding-bottom: var(--section-gap);
+  }
+
+  .contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .contact-methods.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: border-color var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out),
+                transform var(--duration-normal) var(--ease-out);
+    min-height: 44px;
+  }
+
+  .contact-card::after { display: none; }
+
+  .contact-card:hover {
+    border-color: var(--color-vermillion);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    color: var(--color-text);
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
+  }
+
+  .contact-value {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-light);
+  }
+
+  .contact-cta {
+    font-size: var(--text-small);
+    color: var(--color-vermillion);
+    margin-top: var(--space-1);
+  }
+
+  .contact-location {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .contact-location.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .location-text {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-light);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .location-detail {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+  }
+</style>
+
+<script>
+  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
+  if (revealElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    revealElements.forEach((el) => observer.observe(el));
+  }
+</script>

@@ -1,0 +1,182 @@
+/* ==========================================================================
+   Ink & Signal — Global Styles
+   ========================================================================== */
+
+@import './design-tokens.css';
+
+/* ── Reset & Base ────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle paper grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── Accessibility ───────────────────────────────────────────────────── */
+
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 0.5rem 1.5rem;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: var(--text-small);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────── */
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+
+p {
+  max-width: 65ch;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-wash);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────── */
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--duration-normal) var(--ease-out);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+/* Ink brush underline effect */
+.text-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-vermillion);
+  transition: width var(--duration-normal) ease-out;
+}
+
+.text-link:hover::after {
+  width: 100%;
+}
+
+/* Focus visible */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-vermillion);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Images ──────────────────────────────────────────────────────────── */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────── */
+
+.container {
+  width: 100%;
+  max-width: var(--max-container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.content {
+  max-width: var(--max-content);
+  margin-inline: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Selection ───────────────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(199, 62, 29, 0.15);
+  color: var(--color-ink);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-wash); }

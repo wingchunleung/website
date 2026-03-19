@@ -1,0 +1,256 @@
+---
+/**
+ * Projects Page
+ * HCI: H6 (Recognition) — impact metrics visible, scannable cards
+ * HCI: Gestalt Similarity — consistent card design
+ * HCI: Progressive disclosure — summary cards → detail pages
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const projects = [
+  {
+    title: 'LLM Macro Allocation Pipeline',
+    metric: 'RMB 5T+ AUM',
+    period: '2026 — Present',
+    org: 'HKUST Business School',
+    description: 'Building a multi-agent LLM system for macro cycle analysis and asset allocation. The pipeline uses pairwise tournament ranking and dual-ranker Borda aggregation to synthesize qualitative reasoning from multiple language models into actionable investment signals.',
+    tags: ['LLM', 'Multi-Agent', 'Finance', 'Python', 'NLP'],
+    highlight: true,
+  },
+  {
+    title: 'PE Advisory Workflow Redesign',
+    metric: '70% faster',
+    period: '2024 — 2025',
+    org: 'Carta',
+    description: 'Redesigned the financial projection workflow from Bloomberg Terminal to Google Sheets, reducing processing time from 30+ minutes to under 8 minutes. Built LLM-powered data extraction tools to replace inconsistent contractor work.',
+    tags: ['Process Design', 'LLM', 'Google Sheets', 'Bloomberg'],
+  },
+  {
+    title: 'LLM Email Response Generator',
+    metric: '4.8/5.0 satisfaction',
+    period: '2024 — 2025',
+    org: 'Carta',
+    description: 'Built an LLM-powered email response generator for PE advisory client inquiries, standardizing communication quality across the team and significantly improving response time.',
+    tags: ['LLM', 'NLP', 'Client Communication'],
+  },
+  {
+    title: 'Payroll Automation System',
+    metric: '99% time reduction',
+    period: '2023 — 2024',
+    org: 'Costco Wholesale',
+    description: 'Transformed a 4-hour manual payroll process into a single-click automated system using Python and SQL. The solution eliminated human error and freed the team to focus on higher-value analysis.',
+    tags: ['Python', 'SQL', 'Automation', 'Payroll'],
+  },
+  {
+    title: 'Payroll Expense Forecasting',
+    metric: '97% accuracy',
+    period: '2023 — 2024',
+    org: 'Costco Wholesale',
+    description: 'Developed a payroll expense forecasting model achieving 97% prediction accuracy, enabling better budget planning and resource allocation across departments.',
+    tags: ['Forecasting', 'Python', 'SQL', 'Finance'],
+  },
+  {
+    title: 'Revenue Accounting Automation',
+    metric: '40 hrs/week saved',
+    period: '2022',
+    org: 'Costco Wholesale',
+    description: 'Built VBA-based process improvements during an internship that saved approximately 40 hours per week of manual work across the revenue accounting team.',
+    tags: ['VBA', 'Excel', 'Process Improvement'],
+  },
+];
+---
+
+<BaseLayout title="Projects — Wing Chun Leung" description="Selected projects by Wing Chun Leung — LLM systems, financial automation, and process optimization.">
+  <Header slot="header" />
+
+  <section class="page-hero">
+    <div class="container content">
+      <span class="section-label">Projects</span>
+      <h1>Building systems<br />that think</h1>
+      <p class="page-subtitle">
+        From payroll automation to LLM-driven macro analysis — each project is about making complex systems more intelligent.
+      </p>
+    </div>
+  </section>
+
+  <section class="projects-section">
+    <div class="container">
+      <div class="projects-list">
+        {projects.map((project, i) => (
+          <article
+            class:list={['project-card', { highlight: project.highlight }]}
+            data-animate="reveal"
+            style={`transition-delay: ${i * 80}ms`}
+          >
+            <div class="project-header">
+              <span class="project-metric">{project.metric}</span>
+              <div class="project-meta">
+                <span class="project-org">{project.org}</span>
+                <span class="project-period">{project.period}</span>
+              </div>
+            </div>
+            <h2 class="project-title">{project.title}</h2>
+            <p class="project-description">{project.description}</p>
+            <div class="project-tags">
+              {project.tags.map((tag) => (
+                <span class="project-tag">{tag}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-top: calc(72px + var(--section-gap));
+    padding-bottom: var(--space-6);
+  }
+
+  .page-hero h1 {
+    font-size: var(--text-display);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-subtitle {
+    color: var(--color-text-secondary);
+    max-width: 50ch;
+  }
+
+  .projects-section {
+    padding-bottom: var(--section-gap);
+  }
+
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 900px;
+  }
+
+  .project-card {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out),
+                transform var(--duration-normal) var(--ease-out);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .project-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out),
+                border-color var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-wash);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .project-card.highlight {
+    border-color: var(--color-vermillion);
+    background: var(--color-surface);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-metric {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-light);
+    color: var(--color-vermillion);
+    line-height: 1;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+  }
+
+  .project-org {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .project-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+  }
+
+  .project-title {
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-semibold);
+    margin-bottom: var(--space-2);
+  }
+
+  .project-description {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-3);
+    max-width: 65ch;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+</style>
+
+<script>
+  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
+  if (revealElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
+    );
+    revealElements.forEach((el) => observer.observe(el));
+  }
+</script>

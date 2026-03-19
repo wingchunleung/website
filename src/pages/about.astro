@@ -1,0 +1,231 @@
+---
+/**
+ * About Page — Three-part narrative
+ * HCI: Reflective level — meaning, identity, personal story
+ * Structure: The Professional, The Bridge-Builder, The Human
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="About — Wing Chun Leung" description="Learn about Wing Chun Leung — bridging finance and AI, from Hong Kong to HKUST.">
+  <Header slot="header" />
+
+  <section class="page-hero">
+    <div class="container content">
+      <span class="section-label">About</span>
+      <h1>The person behind<br />the systems</h1>
+    </div>
+  </section>
+
+  <section class="about-section" aria-label="Professional background">
+    <div class="container content">
+      <article class="about-block" data-animate="reveal">
+        <span class="section-label">The Professional</span>
+        <p class="about-lead">
+          I'm a builder at the intersection of finance and artificial intelligence. Currently pursuing an MSc in AI at the Hong Kong University of Science and Technology, where I research LLM-driven macro allocation as a Research Assistant under Prof. Yi Yang.
+        </p>
+        <p>
+          Before returning to academia, I worked at <strong>Carta</strong> as a Private Equity Analyst, where I redesigned financial projection workflows and built LLM-powered tools that transformed how the advisory team served clients. At <strong>Costco</strong>, I turned manual processes into automated systems — including reducing a 4-hour payroll task to a single button click.
+        </p>
+        <p>
+          I graduated from the <strong>University of Washington</strong> with a double major in Finance and Information Systems, and a 3.78 GPA. I started my US education at Edmonds College, earning straight A's and commencement honors.
+        </p>
+      </article>
+
+      <article class="about-block" data-animate="reveal">
+        <span class="section-label">The Bridge-Builder</span>
+        <p>
+          Every role I've held has been about the same impulse: making complex systems more intelligent and more human. At Costco, I asked "what if this 4-hour task could be one click?" At Carta, "what if an LLM could do what inconsistent contractors couldn't?" At HKUST, "what if language models could reason about global macro cycles?"
+        </p>
+        <p>
+          The thread connecting these questions is the belief that <strong>the most valuable work happens at boundaries</strong> — between disciplines, between cultures, between what exists and what's possible. Finance gives me the questions. Technology gives me the tools. The bridge is where the interesting problems live.
+        </p>
+      </article>
+
+      <article class="about-block" data-animate="reveal">
+        <span class="section-label">The Human</span>
+        <p>
+          I was born and raised in Hong Kong, spent my formative college years in the United States, and have now returned home. I speak English, Cantonese, and Mandarin. I'm a Christian who attends church weekly.
+        </p>
+        <p>
+          I've been a guest speaker five times — at universities, high schools, and community organizations — because I believe in giving back what others gave me. I've mentored interns, tutored students in math and economics, and served as president of multiple student organizations.
+        </p>
+        <p>
+          Outside of work, I value deep friendships, thoughtful conversations, and the occasional badminton match.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="skills-section" aria-label="Skills and expertise">
+    <div class="container content">
+      <span class="section-label">Expertise</span>
+      <div class="skills-grid" data-animate="reveal">
+        <div class="skill-group">
+          <h3>AI & Engineering</h3>
+          <ul>
+            <li>Large Language Models</li>
+            <li>Multi-Agent Systems</li>
+            <li>Python / SQL</li>
+            <li>NLP & Text Analysis</li>
+            <li>Machine Learning</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>Finance</h3>
+          <ul>
+            <li>Macro Analysis</li>
+            <li>Private Equity</li>
+            <li>Financial Modeling</li>
+            <li>Asset Allocation</li>
+            <li>Payroll Systems</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>Leadership</h3>
+          <ul>
+            <li>Public Speaking (5x)</li>
+            <li>Mentorship</li>
+            <li>Process Design</li>
+            <li>Cross-functional Teams</li>
+            <li>Bilingual Communication</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-top: calc(72px + var(--section-gap));
+    padding-bottom: var(--space-8);
+  }
+
+  .page-hero h1 {
+    font-size: var(--text-display);
+    margin-top: var(--space-3);
+  }
+
+  .about-section {
+    padding-bottom: var(--section-gap);
+  }
+
+  .about-block {
+    margin-bottom: var(--space-8);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .about-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .about-block .section-label {
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  .about-lead {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-3);
+  }
+
+  .about-block p {
+    margin-bottom: var(--space-3);
+    color: var(--color-text-secondary);
+  }
+
+  .about-block p strong {
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .about-block .about-lead {
+    color: var(--color-text);
+  }
+
+  /* Skills */
+  .skills-section {
+    padding: var(--section-gap) 0;
+    background: var(--color-surface);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .skills-grid.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .skill-group h3 {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-h3);
+  }
+
+  .skill-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .skill-group li {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    padding-left: var(--space-3);
+    position: relative;
+  }
+
+  .skill-group li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 6px;
+    height: 1px;
+    background: var(--color-vermillion);
+  }
+</style>
+
+<script>
+  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
+  if (revealElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    );
+    revealElements.forEach((el) => observer.observe(el));
+  }
+</script>

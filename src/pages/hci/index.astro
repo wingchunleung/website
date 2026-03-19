@@ -1,0 +1,443 @@
+---
+/**
+ * HCI Course Page — ARIN5301
+ * This page uses CELADON accent instead of vermillion
+ * It must demonstrate HCI competence — the audience knows HCI
+ *
+ * HCI: Meta-reflexive — this page both describes and enacts HCI principles
+ * HCI: H1 (Consistency) — same layout system, different accent color
+ * HCI: H6 (Recognition) — assignments clearly listed and deep-linkable
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const assignments = [
+  {
+    number: '01',
+    title: 'Assignment 1',
+    description: 'Coming soon — check back for the first HCI assignment.',
+    date: 'TBD',
+    status: 'upcoming' as const,
+  },
+];
+
+const principles = [
+  {
+    category: 'Usability Heuristics',
+    items: [
+      { name: 'Consistency', description: 'Internal, external, and metaphorical consistency across the interface.' },
+      { name: 'Mapping', description: 'Match between system and real world — use language users understand.' },
+      { name: 'Minimalism', description: 'Every extra element competes with relevant information.' },
+      { name: 'Freedom', description: 'User control — undo, redo, emergency exits.' },
+      { name: 'Flexibility', description: 'Accelerators for experts, support for novices.' },
+      { name: 'Recognition', description: 'Make options visible rather than requiring recall.' },
+      { name: 'Visibility', description: 'Keep users informed about system status.' },
+      { name: 'Error Prevention', description: 'Prevent errors before they occur through constraints.' },
+      { name: 'Error Recovery', description: 'Help users recognize, diagnose, and recover from errors.' },
+      { name: 'Help', description: 'Provide help and documentation when needed.' },
+    ],
+  },
+  {
+    category: 'Gestalt Principles',
+    items: [
+      { name: 'Proximity', description: 'Close elements are perceived as related groups.' },
+      { name: 'Similarity', description: 'Similar elements are perceived as belonging together.' },
+      { name: 'Continuation', description: 'Elements on a line or curve are seen as related.' },
+      { name: 'Closure', description: 'The mind completes incomplete shapes.' },
+      { name: 'Figure-Ground', description: 'Users distinguish foreground from background.' },
+      { name: 'Common Fate', description: 'Elements moving together are grouped.' },
+      { name: 'Symmetry', description: 'Balanced elements are perceived as unified.' },
+    ],
+  },
+  {
+    category: 'Design Levels',
+    items: [
+      { name: 'Visceral', description: 'Immediate emotional reaction — sensation, first impression.' },
+      { name: 'Behavioral', description: 'Usability and function — does it work well?' },
+      { name: 'Reflective', description: 'Meaning and self-image — what does it say about me?' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="HCI — Wing Chun Leung"
+  description="ARIN5301 Human-Computer Interaction coursework by Wing Chun Leung at HKUST."
+  accent="celadon"
+>
+  <Header slot="header" />
+
+  <section class="page-hero hci-hero">
+    <div class="container content">
+      <span class="section-label">ARIN5301</span>
+      <h1>Human-Computer<br />Interaction</h1>
+      <p class="page-subtitle">
+        Coursework and explorations from Prof. Xiaojuan Ma's HCI course at HKUST.
+        This page is itself a demonstration of the principles it describes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       ASSIGNMENTS
+       HCI: H2 (Mapping) — structured by assignment, not by lecture
+       HCI: H4 (Freedom) — each assignment is deep-linkable
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="assignments-section" aria-label="Course assignments">
+    <div class="container content">
+      <span class="section-label">Assignments</span>
+      <h2>Coursework</h2>
+
+      <div class="assignments-list">
+        {assignments.map((assignment) => (
+          <article class="assignment-card" data-animate="reveal">
+            <div class="assignment-number">{assignment.number}</div>
+            <div class="assignment-content">
+              <h3 class="assignment-title">{assignment.title}</h3>
+              <p class="assignment-description">{assignment.description}</p>
+              <div class="assignment-meta">
+                <span class="assignment-date">{assignment.date}</span>
+                <span class:list={['assignment-status', assignment.status]}>
+                  {assignment.status === 'upcoming' ? 'Upcoming' : 'Published'}
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="assignments-note">
+        Assignments will be posted here as they are completed throughout the semester.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       HCI PRINCIPLES REFERENCE
+       Meta-reflexive: this section demonstrates the principles it lists
+       Gestalt: Proximity — principles grouped by category
+       Gestalt: Similarity — consistent card design within categories
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="principles-section" aria-label="HCI principles reference">
+    <div class="container">
+      <div class="content">
+        <span class="section-label">Reference</span>
+        <h2>HCI Principles Applied to This Site</h2>
+        <p class="principles-intro">
+          Every design decision on this website is grounded in HCI theory from ARIN5301.
+          Below are the key principles and how they are applied.
+        </p>
+      </div>
+
+      <div class="principles-grid">
+        {principles.map((group) => (
+          <div class="principle-group" data-animate="reveal">
+            <h3 class="group-title">{group.category}</h3>
+            <ul class="principle-list">
+              {group.items.map((item) => (
+                <li class="principle-item">
+                  <span class="principle-name">{item.name}</span>
+                  <span class="principle-desc">{item.description}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       DESIGN DECISIONS
+       Shows how this site applies HCI — meta-demonstration
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="design-notes-section" aria-label="Design decisions">
+    <div class="container content">
+      <span class="section-label">Design Notes</span>
+      <h2>How this site practices HCI</h2>
+
+      <div class="design-notes" data-animate="reveal">
+        <article class="design-note">
+          <h3>Color as Identity</h3>
+          <p>
+            The warm "Ink Stone" palette draws from traditional Chinese ink painting materials — connecting cultural identity to visual design. The celadon accent on this page distinguishes course content from the main site while maintaining system consistency (H1).
+          </p>
+        </article>
+
+        <article class="design-note">
+          <h3>Typography as Hierarchy</h3>
+          <p>
+            Three typefaces serve three roles: Cormorant Garamond for display (emotional, visceral), Inter for body (readable, behavioral), JetBrains Mono for metadata (technical, informational). This three-tier system supports Recognition over Recall (H6).
+          </p>
+        </article>
+
+        <article class="design-note">
+          <h3>Whitespace as Design</h3>
+          <p>
+            Generous section spacing (96-128px) creates distinct visual "rooms" — applying Gestalt Proximity to group related content and reduce cognitive load. The content column is limited to 720px for optimal 65-75 character line length.
+          </p>
+        </article>
+
+        <article class="design-note">
+          <h3>Motion as Feedback</h3>
+          <p>
+            Scroll-reveal animations provide Visibility of System Status (H7) — confirming that new content has loaded. All animations respect <code>prefers-reduced-motion</code> for accessibility (H5 Flexibility).
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* HCI page uses celadon accent */
+  .hci-hero {
+    background: var(--color-surface);
+  }
+
+  .page-hero {
+    padding-top: calc(72px + var(--section-gap));
+    padding-bottom: var(--space-8);
+  }
+
+  .page-hero h1 {
+    font-size: var(--text-display);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-subtitle {
+    color: var(--color-text-secondary);
+    max-width: 55ch;
+  }
+
+  /* Assignments */
+  .assignments-section {
+    padding: var(--section-gap) 0;
+  }
+
+  .assignments-section h2 {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .assignments-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .assignment-card {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .assignment-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .assignment-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-h2);
+    color: var(--color-celadon);
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    min-width: 2ch;
+  }
+
+  .assignment-title {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-1);
+  }
+
+  .assignment-description {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+  }
+
+  .assignment-meta {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .assignment-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+  }
+
+  .assignment-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .assignment-status.upcoming {
+    color: var(--color-celadon);
+    background: rgba(125, 158, 140, 0.1);
+  }
+
+  .assignment-status.published {
+    color: var(--color-vermillion);
+    background: rgba(199, 62, 29, 0.1);
+  }
+
+  .assignments-note {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+    font-style: italic;
+  }
+
+  /* Principles */
+  .principles-section {
+    padding: var(--section-gap) 0;
+    background: var(--color-surface);
+  }
+
+  .principles-section h2 {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .principles-intro {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-6);
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    max-width: var(--max-container);
+  }
+
+  @media (min-width: 768px) {
+    .principles-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .principle-group {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .principle-group.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .group-title {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .principle-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .principle-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .principle-name {
+    font-weight: var(--weight-medium);
+    font-size: var(--text-small);
+    color: var(--color-celadon);
+  }
+
+  .principle-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+
+  /* Design Notes */
+  .design-notes-section {
+    padding: var(--section-gap) 0;
+  }
+
+  .design-notes-section h2 {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .design-notes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .design-notes.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .design-note h3 {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-2);
+  }
+
+  .design-note p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    line-height: var(--leading-relaxed);
+  }
+
+  .design-note code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--color-surface);
+    padding: 0.1em 0.3em;
+    border-radius: var(--radius-sm);
+  }
+</style>
+
+<script>
+  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
+  if (revealElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    revealElements.forEach((el) => observer.observe(el));
+  }
+</script>

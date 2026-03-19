@@ -1,0 +1,572 @@
+---
+/**
+ * Homepage — "Ink & Signal"
+ *
+ * HCI Principles Applied:
+ * - Visceral: Ink-wash hero with elegant typography creates immediate emotional impression
+ * - Behavioral: Clear scroll flow, progressive disclosure, 5-10-60s engagement layers
+ * - Reflective: Cultural identity through ink/paper motifs, bridge narrative
+ * - Gestalt Proximity: Sections grouped by generous spacing
+ * - Gestalt Continuation: Vertical scroll flow guides the eye
+ * - H3 (Minimalism): Each viewport shows 2-3 focal elements max
+ * - H7 (Visibility): Scroll indicator, section labels
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const journeySteps = [
+  {
+    label: '01',
+    place: 'Hong Kong',
+    period: '1999 — 2017',
+    heading: 'Where it began',
+    text: 'Born and raised in Hong Kong. A city where East meets West, tradition meets innovation — shaping a perspective that would define everything that followed.',
+  },
+  {
+    label: '02',
+    place: 'Washington, USA',
+    period: '2018 — 2022',
+    heading: 'Building the foundation',
+    text: 'From community college with a 4.0 GPA to the University of Washington, double-majoring in Finance and Information Systems. Leading the Blockchain Society as CFO, tutoring peers, and discovering that the most interesting problems live between disciplines.',
+  },
+  {
+    label: '03',
+    place: 'Costco Wholesale',
+    period: '2023 — 2024',
+    heading: 'Systems thinking',
+    text: 'Turned a 4-hour manual payroll process into a single button click using Python and SQL — a 99% time reduction. Built forecasting models with 97% accuracy. Learned that the best technology disappears into the workflow.',
+  },
+  {
+    label: '04',
+    place: 'Carta',
+    period: '2024 — 2025',
+    heading: 'Scaling impact',
+    text: 'Redesigned the financial projection workflow from Bloomberg Terminal to Google Sheets, cutting processing time by 70%. Built LLM-powered tools for data extraction and client communication. Client satisfaction: 4.8/5.0.',
+  },
+  {
+    label: '05',
+    place: 'HKUST',
+    period: '2025 — Present',
+    heading: 'The synthesis',
+    text: 'Returned to Hong Kong for an MSc in Artificial Intelligence. Now researching LLM-driven macro allocation — building multi-agent systems that reason about global markets. The bridge between finance and AI, made real.',
+  },
+];
+
+const featuredWork = [
+  {
+    title: 'LLM Macro Allocation Pipeline',
+    metric: 'RMB 5T+ AUM',
+    description: 'Multi-agent LLM system for macro cycle analysis and asset allocation. Research assistantship at HKUST Business School.',
+    tags: ['AI Research', 'Multi-Agent', 'Finance'],
+  },
+  {
+    title: 'Financial Workflow Automation',
+    metric: '70% faster',
+    description: 'Redesigned Carta\'s PE advisory projection workflow, replacing Bloomberg Terminal processes with automated Google Sheets pipelines.',
+    tags: ['Process Design', 'LLM', 'Carta'],
+  },
+  {
+    title: 'Payroll System Optimization',
+    metric: '99% reduction',
+    description: 'Transformed a 4-hour manual payroll task into a single-click automated process using Python and SQL at Costco.',
+    tags: ['Automation', 'Python', 'SQL'],
+  },
+];
+---
+
+<BaseLayout title="Wing Chun Leung — Finance × AI">
+  <Header slot="header" />
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       HERO SECTION
+       HCI: Visceral level — immediate emotional impression
+       HCI: H3 (Minimalism) — name, tagline, scroll cue only
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Introduction">
+    <!-- Ink wash background canvas -->
+    <div class="hero-ink" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-name" data-animate="hero-name">
+        Wing Chun Leung
+      </h1>
+      <p class="hero-tagline" data-animate="hero-tagline">
+        Finance speaks one language. AI speaks another.<br />
+        <span class="tagline-emphasis">I build the bridge.</span>
+      </p>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" data-animate="scroll-indicator" aria-hidden="true">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       JOURNEY SECTION — Scroll-driven narrative
+       HCI: Progressive disclosure — one story beat per scroll
+       Gestalt: Proximity — each step is a discrete visual group
+       Gestalt: Continuation — vertical timeline guides the eye
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="journey" aria-label="Career journey">
+    <div class="container">
+      <span class="section-label">The Journey</span>
+      <h2 class="journey-heading">From Hong Kong to the frontier of AI</h2>
+
+      <div class="journey-timeline">
+        {journeySteps.map((step) => (
+          <article class="journey-step" data-animate="reveal">
+            <div class="step-marker">
+              <span class="step-number">{step.label}</span>
+              <div class="step-line" aria-hidden="true"></div>
+            </div>
+            <div class="step-content">
+              <div class="step-meta">
+                <span class="step-place">{step.place}</span>
+                <span class="step-period">{step.period}</span>
+              </div>
+              <h3 class="step-heading">{step.heading}</h3>
+              <p class="step-text">{step.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       FEATURED WORK
+       HCI: H6 (Recognition) — impact metrics immediately visible
+       5-10s engagement layer — quantified achievements scannable
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="featured-work" aria-label="Featured projects">
+    <div class="container">
+      <span class="section-label">Selected Work</span>
+      <h2 class="work-heading">Things I've built</h2>
+
+      <div class="work-grid">
+        {featuredWork.map((work) => (
+          <article class="work-card" data-animate="reveal">
+            <span class="work-metric">{work.metric}</span>
+            <h3 class="work-title">{work.title}</h3>
+            <p class="work-description">{work.description}</p>
+            <div class="work-tags">
+              {work.tags.map((tag) => (
+                <span class="work-tag">{tag}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="work-cta">
+        <a href="/projects" class="btn-outline">View all projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       CONTACT TEASER
+       HCI: H8 (Error Prevention) — clear, direct contact paths
+       Fitts's Law — large, easy-to-click CTA
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="contact-teaser" aria-label="Get in touch">
+    <div class="container content">
+      <span class="section-label">Get in Touch</span>
+      <h2 class="contact-heading">Let's connect</h2>
+      <p class="contact-text">
+        Whether you're interested in AI research, fintech, or just want to say hello — I'd love to hear from you.
+      </p>
+      <a href="mailto:wingchunleung8@gmail.com" class="btn-primary">Say hello</a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* ── Hero ───────────────────────────────────────────────────────────── */
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-ink {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background: radial-gradient(
+      ellipse at 60% 40%,
+      var(--color-wash) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 var(--gutter);
+  }
+
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: var(--weight-light);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-4);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s var(--ease-out) 0.3s forwards;
+  }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--color-wash);
+    line-height: var(--leading-normal);
+    max-width: 500px;
+    margin-inline: auto;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s var(--ease-out) 0.8s forwards;
+  }
+
+  .tagline-emphasis {
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: var(--space-6);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    animation: fadeUp 0.5s var(--ease-out) 1.6s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: var(--color-border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-vermillion);
+    animation: scrollPulse 2s var(--ease-in-out) infinite;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scrollPulse {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: 100%; }
+  }
+
+  /* ── Journey ────────────────────────────────────────────────────────── */
+
+  .journey {
+    padding: var(--section-gap) 0;
+  }
+
+  .journey-heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .journey-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .journey-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .journey-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .step-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-1);
+  }
+
+  .step-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-vermillion);
+    font-weight: var(--weight-medium);
+  }
+
+  .step-line {
+    width: 1px;
+    flex: 1;
+    min-height: 40px;
+    background: var(--color-border);
+  }
+
+  .step-content {
+    max-width: var(--max-content);
+  }
+
+  .step-meta {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .step-place {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .step-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+  }
+
+  .step-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-light);
+    margin-bottom: var(--space-2);
+  }
+
+  .step-text {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* ── Featured Work ──────────────────────────────────────────────────── */
+
+  .featured-work {
+    padding: var(--section-gap) 0;
+    background: var(--color-surface);
+  }
+
+  .work-heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .work-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .work-card {
+    background: var(--color-bg);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .work-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out),
+                transform var(--duration-reveal) var(--ease-out);
+  }
+
+  .work-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .work-metric {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: var(--weight-light);
+    color: var(--color-vermillion);
+    display: block;
+    margin-bottom: var(--space-3);
+    line-height: 1;
+  }
+
+  .work-title {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-2);
+  }
+
+  .work-description {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-3);
+  }
+
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .work-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .work-cta {
+    text-align: center;
+  }
+
+  /* ── Contact Teaser ─────────────────────────────────────────────────── */
+
+  .contact-teaser {
+    padding: var(--section-gap) 0;
+    text-align: center;
+  }
+
+  .contact-heading {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .contact-text {
+    color: var(--color-text-secondary);
+    margin-inline: auto;
+    margin-bottom: var(--space-5);
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────────────── */
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background var(--duration-normal) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-vermillion);
+    color: var(--color-paper);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary::after { display: none; }
+
+  .btn-outline {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color var(--duration-normal) var(--ease-out),
+                color var(--duration-normal) var(--ease-out);
+    min-height: 44px;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--color-vermillion);
+    color: var(--color-vermillion);
+  }
+
+  .btn-outline::after { display: none; }
+
+  @media (prefers-color-scheme: dark) {
+    .btn-primary {
+      background: var(--color-paper);
+      color: var(--color-ink);
+    }
+    .btn-primary:hover {
+      background: var(--color-vermillion);
+      color: var(--color-paper);
+    }
+  }
+</style>
+
+<script>
+  // Scroll-reveal animation using IntersectionObserver
+  // HCI: H7 (Visibility) — content appears as user reaches it
+  // Gestalt: Common Fate — staggered children animate together
+  const revealElements = document.querySelectorAll('[data-animate="reveal"]');
+
+  if (revealElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    revealElements.forEach((el) => observer.observe(el));
+  }
+</script>

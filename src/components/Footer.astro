@@ -1,0 +1,91 @@
+---
+/**
+ * Footer
+ * HCI: H1 (Consistency) — same footer on every page
+ * Minimal, warm, with vermillion seal mark
+ */
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p class="footer-name">Wing Chun Leung</p>
+      <p class="footer-tagline">Finance &middot; AI &middot; Hong Kong</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="mailto:wingchunleung8@gmail.com" class="footer-link text-link" aria-label="Email">Email</a>
+      <a href="https://linkedin.com/in/wingchunleung" class="footer-link text-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)">LinkedIn</a>
+      <a href="https://github.com/wingchunleung" class="footer-link text-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in new tab)">GitHub</a>
+    </div>
+
+    <p class="footer-copy">
+      <span class="seal-mark" aria-hidden="true">&#21360;</span>
+      &copy; {year}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: var(--space-8) 0 var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .footer-content {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  .footer-name {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-light);
+  }
+
+  .footer-tagline {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .footer-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
+  }
+
+  .footer-link:hover {
+    color: var(--color-text);
+  }
+
+  .footer-copy {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+  }
+
+  .seal-mark {
+    color: var(--color-vermillion);
+    font-size: 1.25em;
+    vertical-align: middle;
+    margin-right: var(--space-1);
+  }
+</style>

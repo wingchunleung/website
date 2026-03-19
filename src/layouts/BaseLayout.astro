@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  accent?: 'vermillion' | 'celadon';
+}
+
+const {
+  title,
+  description = 'Wing Chun Leung — bridging finance and AI. MSc Artificial Intelligence at HKUST.',
+  accent = 'vermillion',
+} = Astro.props;
+
+const accentColor = accent === 'celadon' ? '#7d9e8c' : '#c73e1d';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f5f0e8" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
+    <!-- Preload fonts for performance (no FOUT) -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      as="style"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <!-- Accent color override for HCI page -->
+    {accent === 'celadon' && (
+      <style is:inline>
+        :root {
+          --color-accent: #7d9e8c;
+          --color-link-hover: #7d9e8c;
+        }
+      </style>
+    )}
+  </head>
+  <body>
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <slot name="header" />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+  </body>
+</html>
