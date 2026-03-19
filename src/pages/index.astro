@@ -712,6 +712,19 @@ const featuredWork = [
   .journey {
     padding: var(--section-gap) 0;
     background: var(--color-stone);
+    position: relative;
+  }
+
+  /* Smooth gradient transition from white into grey */
+  .journey::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--color-bg), var(--color-stone));
+    pointer-events: none;
   }
 
   .journey-timeline {
@@ -920,6 +933,18 @@ const featuredWork = [
     padding: var(--section-gap) 0;
     background: var(--color-stone);
     text-align: center;
+    position: relative;
+  }
+
+  .contact-teaser::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--color-bg), var(--color-stone));
+    pointer-events: none;
   }
 
   .contact-text {
