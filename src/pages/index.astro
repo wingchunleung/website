@@ -68,24 +68,12 @@ const featuredWork = [
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
-    <div class="intro-stage">
-      <!-- Phase 1: Rapid "wow" sequence -->
-      <div class="intro-wow-sequence" id="wowSequence">
-        <span class="wow-text wow-1">🤩</span>
-        <span class="wow-text wow-2">✨</span>
-        <span class="wow-text wow-3">🔥</span>
-        <span class="wow-text wow-4">💫</span>
-        <span class="wow-text wow-5">⚡</span>
-      </div>
-      <!-- Phase 2: "Guess who?" tease -->
-      <div class="intro-tease" id="introTease">
-        <span class="tease-text">guess who's here...</span>
-      </div>
-      <!-- Phase 3: Wave + Welcome -->
-      <div class="intro-final" id="introFinal">
-        <span class="intro-wave-emoji">👋</span>
-        <span class="intro-welcome-text">Welcome to my site</span>
-      </div>
+    <!-- Phase 1: Floating emoji chaos (JS-generated) -->
+    <div class="emoji-chaos" id="emojiChaos"></div>
+    <!-- Phase 2: Wave + Welcome (fades in after chaos clears) -->
+    <div class="intro-stage" id="introStage">
+      <span class="intro-wave-emoji">👋</span>
+      <span class="intro-welcome-text">Welcome to my site</span>
     </div>
   </div>
 
@@ -315,56 +303,44 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  /* Phase 1: Wow emojis — rapid fire pop-in */
-  .intro-wow-sequence {
-    display: flex;
-    gap: var(--space-3);
-    font-size: clamp(2rem, 5vw, 3.5rem);
+  /* Floating emoji chaos container */
+  .emoji-chaos {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
   }
 
-  .wow-text {
+  .floating-emoji {
+    position: absolute;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     opacity: 0;
-    transform: scale(0) rotate(-20deg);
+    animation: floatUp var(--float-duration, 2s) ease-out var(--float-delay, 0s) forwards;
+    will-change: transform, opacity;
   }
 
-  .wow-1 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards; }
-  .wow-2 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards; }
-  .wow-3 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; }
-  .wow-4 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s forwards; }
-  .wow-5 { animation: wowPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1.0s forwards; }
-
-  @keyframes wowPop {
-    0% { opacity: 0; transform: scale(0) rotate(-20deg); }
-    60% { opacity: 1; transform: scale(1.3) rotate(5deg); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(30px) scale(0.5) rotate(var(--float-rot, 0deg)); }
+    20% { opacity: 1; transform: translateY(-20px) scale(1.1) rotate(calc(var(--float-rot, 0deg) + 10deg)); }
+    70% { opacity: 0.8; transform: translateY(-80px) scale(1) rotate(calc(var(--float-rot, 0deg) - 5deg)); }
+    100% { opacity: 0; transform: translateY(-150px) scale(0.7) rotate(calc(var(--float-rot, 0deg) + 15deg)); }
   }
 
-  /* Phase 2: Tease text */
-  .intro-tease {
-    opacity: 0;
-  }
-
-  .tease-text {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 3vw, 2rem);
-    font-weight: var(--weight-light);
-    color: var(--color-wash);
-    font-style: italic;
-    animation: teaseFade 0.6s ease-out 1.4s forwards;
-    opacity: 0;
-  }
-
-  @keyframes teaseFade {
-    to { opacity: 1; }
-  }
-
-  /* Phase 3: Wave + Welcome (final) */
-  .intro-final {
+  /* Wave + Welcome greeting (appears after chaos) */
+  .intro-stage {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     opacity: 0;
+  }
+
+  .intro-stage.visible {
+    opacity: 1;
+    transition: opacity 0.6s ease-out;
   }
 
   .intro-wave-emoji {
@@ -372,9 +348,15 @@ const featuredWork = [
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     transform-origin: 70% 70%;
     opacity: 0;
-    animation:
-      introWavePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards,
-      introWaveMotion 0.8s ease-in-out 2.8s 1;
+    transform: scale(0.3);
+  }
+
+  .intro-wave-emoji.pop {
+    animation: introWavePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .intro-wave-emoji.wave {
+    animation: introWaveMotion 0.8s ease-in-out;
   }
 
   .intro-welcome-text {
@@ -385,7 +367,10 @@ const featuredWork = [
     color: var(--color-text);
     opacity: 0;
     transform: translateY(15px);
-    animation: introFinalText 0.7s ease-out 2.6s forwards;
+  }
+
+  .intro-welcome-text.show {
+    animation: introFinalText 0.7s ease-out forwards;
   }
 
   @keyframes introWavePop {
@@ -1180,11 +1165,13 @@ const featuredWork = [
 </style>
 
 <script>
-  // ── Intro overlay: show once per session, then remove ──
+  // ── Intro overlay: floating emoji chaos → wave greeting ──
   const overlay = document.getElementById('intro-overlay');
+  const chaosContainer = document.getElementById('emojiChaos');
+  const introStage = document.getElementById('introStage');
+
   if (overlay) {
     if (sessionStorage.getItem('intro-seen')) {
-      // Skip intro on return visits within session
       overlay.remove();
       document.querySelectorAll('.hero-wave, .greeting-text, .hero-cta-wrap, .scroll-cue').forEach(el => {
         (el as HTMLElement).style.animation = 'none';
@@ -1193,6 +1180,53 @@ const featuredWork = [
       });
     } else {
       sessionStorage.setItem('intro-seen', '1');
+
+      // Phase 1: Spawn floating emojis for ~3 seconds
+      const emojis = ['🤩', '👀', '✨', '🔥', '💫', '⚡', '😎', '👀', '🤩', '✨', '👀', '💫'];
+      let spawnCount = 0;
+      const maxSpawns = 30;
+
+      function spawnEmoji() {
+        if (!chaosContainer || spawnCount >= maxSpawns) return;
+        const el = document.createElement('span');
+        el.className = 'floating-emoji';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = `${10 + Math.random() * 80}%`;
+        el.style.top = `${30 + Math.random() * 50}%`;
+        el.style.setProperty('--float-duration', `${1.2 + Math.random() * 1.5}s`);
+        el.style.setProperty('--float-delay', '0s');
+        el.style.setProperty('--float-rot', `${-20 + Math.random() * 40}deg`);
+        el.style.fontSize = `${1.5 + Math.random() * 2}rem`;
+        chaosContainer.appendChild(el);
+        spawnCount++;
+        // Remove after animation
+        setTimeout(() => el.remove(), 3000);
+      }
+
+      // Spawn emojis rapidly for 2.5 seconds
+      const spawnInterval = setInterval(spawnEmoji, 80);
+      setTimeout(() => clearInterval(spawnInterval), 2500);
+
+      // Phase 2: After 3s, fade out chaos + show wave greeting
+      setTimeout(() => {
+        if (chaosContainer) chaosContainer.style.opacity = '0';
+        if (chaosContainer) chaosContainer.style.transition = 'opacity 0.5s ease-out';
+
+        if (introStage) {
+          introStage.classList.add('visible');
+          const waveEmoji = introStage.querySelector('.intro-wave-emoji');
+          const welcomeText = introStage.querySelector('.intro-welcome-text');
+          if (waveEmoji) {
+            waveEmoji.classList.add('pop');
+            setTimeout(() => waveEmoji.classList.add('wave'), 600);
+          }
+          if (welcomeText) {
+            setTimeout(() => welcomeText.classList.add('show'), 300);
+          }
+        }
+      }, 3000);
+
+      // Phase 3: Iris-close exit after greeting shown
       overlay.addEventListener('animationend', (e: AnimationEvent) => {
         if (e.animationName === 'introExit') {
           overlay.classList.add('finished');
