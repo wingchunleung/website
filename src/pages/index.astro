@@ -1187,6 +1187,22 @@ const featuredWork = [
     );
   }
 
+  // ── Hero parallax: fade + translate as user scrolls past ──
+  const heroContent = document.querySelector('.hero-content') as HTMLElement;
+  if (heroContent) {
+    gsap.to(heroContent, {
+      opacity: 0,
+      y: -60,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.3,
+      },
+    });
+  }
+
   // ── 3D tilt on work cards (desktop only) ──
   if (window.innerWidth >= 768) {
     document.querySelectorAll('.work-card').forEach((card) => {
