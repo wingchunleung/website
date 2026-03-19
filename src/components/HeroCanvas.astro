@@ -323,85 +323,121 @@
     }
   }
 
-  // ── Draw ────────────────────────────────────────────────────────────
-  function draw() {
-    ctx!.clearRect(0, 0, width, height);
+  // ── Pre-render glow sprites (PERF: avoid createRadialGradient per frame) ──
+  const glowSprites = new Map<string, HTMLCanvasElement>();
+  function getGlowSprite(r: number, g: number, b: number): HTMLCanvasElement {
+    const key = `${r},${g},${b}`;
+    if (glowSprites.has(key)) return glowSprites.get(key)!;
+    const size = 64;
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    const gc = c.getContext('2d')!;
+    const grad = gc.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.6)`);
+    grad.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, 0.15)`);
+    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+    gc.fillStyle = grad;
+    gc.fillRect(0, 0, size, size);
+    glowSprites.set(key, c);
+    return c;
+  }
 
-    // Draw connections
+  // White glow for data pulse cores
+  const pulseGlowSprite = (() => {
+    const size = 32;
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    const gc = c.getContext('2d')!;
+    const grad = gc.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    grad.addColorStop(0.3, 'rgba(255, 255, 255, 0.3)');
+    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    gc.fillStyle = grad;
+    gc.fillRect(0, 0, size, size);
+    return c;
+  })();
+
+  // ── Draw (optimized) ───────────────────────────────────────────────
+  function draw() {
+    const c = ctx!;
+    c.clearRect(0, 0, width, height);
+
+    // Draw connections — batched by opacity level, curved lines
+    c.lineWidth = 0.7;
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const a = particles[i];
         const b = particles[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const distSq = dx * dx + dy * dy;
+        const maxDistSq = CONFIG.connectionDistance * CONFIG.connectionDistance;
 
-        if (dist < CONFIG.connectionDistance) {
+        if (distSq < maxDistSq) {
+          const dist = Math.sqrt(distSq);
           const opacity = (1 - dist / CONFIG.connectionDistance) * CONFIG.lineOpacityBase;
+          const r = (a.color.r + b.color.r) >> 1;
+          const g = (a.color.g + b.color.g) >> 1;
+          const bl = (a.color.b + b.color.b) >> 1;
 
-          // Blend colors between connected particles
-          const r = (a.color.r + b.color.r) / 2;
-          const g = (a.color.g + b.color.g) / 2;
-          const bl = (a.color.b + b.color.b) / 2;
+          // Subtle curve for organic fiber-optic feel
+          const midX = (a.x + b.x) / 2;
+          const midY = (a.y + b.y) / 2 + (a.x - b.x) * 0.08;
 
-          ctx!.beginPath();
-          ctx!.moveTo(a.x, a.y);
-          ctx!.lineTo(b.x, b.y);
-          ctx!.strokeStyle = `rgba(${r}, ${g}, ${bl}, ${opacity})`;
-          ctx!.lineWidth = 0.8;
-          ctx!.stroke();
+          c.beginPath();
+          c.moveTo(a.x | 0, a.y | 0);
+          c.quadraticCurveTo(midX | 0, midY | 0, b.x | 0, b.y | 0);
+          c.strokeStyle = `rgba(${r},${g},${bl},${opacity})`;
+          c.stroke();
         }
       }
     }
 
-    // Draw data pulses — bright dots traveling along connections
+    // Draw data pulses — pre-rendered glow sprites
     for (const pulse of dataPulses) {
       if (!pulse.active) continue;
       const a = particles[pulse.fromIdx];
       const b = particles[pulse.toIdx];
       if (!a || !b) continue;
 
-      const px = a.x + (b.x - a.x) * pulse.progress;
-      const py = a.y + (b.y - a.y) * pulse.progress;
+      const t = pulse.progress;
+      // Follow the same curve as the connection
+      const midX = (a.x + b.x) / 2;
+      const midY = (a.y + b.y) / 2 + (a.x - b.x) * 0.08;
+      // Quadratic bezier at t
+      const u = 1 - t;
+      const px = u * u * a.x + 2 * u * t * midX + t * t * b.x;
+      const py = u * u * a.y + 2 * u * t * midY + t * t * b.y;
 
-      // Outer glow
-      const glow = ctx!.createRadialGradient(px, py, 0, px, py, CONFIG.pulseGlow);
-      glow.addColorStop(0, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0.6)`);
-      glow.addColorStop(0.4, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0.15)`);
-      glow.addColorStop(1, `rgba(${pulse.color.r}, ${pulse.color.g}, ${pulse.color.b}, 0)`);
-      ctx!.beginPath();
-      ctx!.arc(px, py, CONFIG.pulseGlow, 0, Math.PI * 2);
-      ctx!.fillStyle = glow;
-      ctx!.fill();
+      // Color glow
+      const sprite = getGlowSprite(pulse.color.r, pulse.color.g, pulse.color.b);
+      const gs = CONFIG.pulseGlow * 2;
+      c.globalAlpha = 0.8;
+      c.drawImage(sprite, px - gs, py - gs, gs * 2, gs * 2);
+      c.globalAlpha = 1;
 
-      // Core bright dot
-      ctx!.beginPath();
-      ctx!.arc(px, py, CONFIG.pulseSize, 0, Math.PI * 2);
-      ctx!.fillStyle = `rgba(255, 255, 255, 0.9)`;
-      ctx!.fill();
+      // White core
+      c.drawImage(pulseGlowSprite, px - CONFIG.pulseSize * 3, py - CONFIG.pulseSize * 3, CONFIG.pulseSize * 6, CONFIG.pulseSize * 6);
     }
 
-    // Draw particles with glow
+    // Draw particles with pre-rendered glow
     for (const p of particles) {
       const pulse = 0.7 + 0.3 * Math.sin(p.pulsePhase);
       const size = p.size * pulse;
       const opacity = p.opacity * pulse;
 
-      // Glow
-      const gradient = ctx!.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * CONFIG.glowSize);
-      gradient.addColorStop(0, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${opacity * 0.6})`);
-      gradient.addColorStop(0.5, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${opacity * 0.2})`);
-      gradient.addColorStop(1, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, 0)`);
-      ctx!.beginPath();
-      ctx!.arc(p.x, p.y, size * CONFIG.glowSize, 0, Math.PI * 2);
-      ctx!.fillStyle = gradient;
-      ctx!.fill();
+      // Glow sprite
+      const sprite = getGlowSprite(p.color.r, p.color.g, p.color.b);
+      const gs = size * CONFIG.glowSize;
+      c.globalAlpha = opacity;
+      c.drawImage(sprite, p.x - gs, p.y - gs, gs * 2, gs * 2);
+      c.globalAlpha = 1;
 
       // Core dot
-      ctx!.beginPath();
-      ctx!.arc(p.x, p.y, size * 0.5, 0, Math.PI * 2);
-      ctx!.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${opacity})`;
-      ctx!.fill();
+      c.beginPath();
+      c.arc(p.x | 0, p.y | 0, size * 0.5, 0, Math.PI * 2);
+      c.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},${opacity})`;
+      c.fill();
     }
   }
 
