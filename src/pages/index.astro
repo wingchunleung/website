@@ -31,35 +31,40 @@ const journeySteps = [
     place: 'Hong Kong',
     period: '1999 — 2017',
     heading: 'Where it began',
+    accent: '#c73e1d',
     text: 'Born and raised in Hong Kong. A city where East meets West, tradition meets innovation — shaping a perspective that would define everything that followed.',
   },
   {
     label: '02',
-    place: 'Washington, USA',
+    place: 'University of Washington',
     period: '2018 — 2022',
     heading: 'Building the foundation',
-    text: 'From community college with a 4.0 GPA to the University of Washington, double-majoring in Finance and Information Systems. Leading the Blockchain Society as CFO, tutoring peers, and discovering that the most interesting problems live between disciplines.',
+    accent: '#4b2e83',
+    text: 'From community college (4.0 GPA) to UW, double-majoring in Finance and Information Systems. CFO of the Blockchain Society. Discovering that the most interesting problems live between disciplines.',
   },
   {
     label: '03',
     place: 'Costco Wholesale',
     period: '2023 — 2024',
     heading: 'Systems thinking',
-    text: 'Turned a 4-hour manual payroll process into a single button click using Python and SQL — a 99% time reduction. Built forecasting models with 97% accuracy. Learned that the best technology disappears into the workflow.',
+    accent: '#e31837',
+    text: 'Turned a 4-hour manual payroll process into a single button click — 99% time reduction. Built forecasting models with 97% accuracy. The best technology disappears into the workflow.',
   },
   {
     label: '04',
     place: 'Carta',
     period: '2024 — 2025',
     heading: 'Scaling impact',
-    text: 'Redesigned the financial projection workflow from Bloomberg Terminal to Google Sheets, cutting processing time by 70%. Built LLM-powered tools for data extraction and client communication. Client satisfaction: 4.8/5.0.',
+    accent: '#1a1a1a',
+    text: 'Redesigned the PE advisory projection workflow, cutting processing time by 70%. Built LLM-powered tools for data extraction. Client satisfaction: 4.8/5.0.',
   },
   {
     label: '05',
     place: 'HKUST',
     period: '2025 — Present',
     heading: 'The synthesis',
-    text: 'Returned to Hong Kong for an MSc in Artificial Intelligence. Now researching LLM-driven macro allocation — building multi-agent systems that reason about global markets. The bridge between finance and AI, made real.',
+    accent: '#003366',
+    text: 'Returned to Hong Kong for an MSc in AI. Researching LLM-driven macro allocation — building multi-agent systems that reason about global markets. The bridge between finance and AI, made real.',
   },
 ];
 
@@ -200,7 +205,7 @@ const featuredWork = [
 
       <div class="journey-timeline">
         {journeySteps.map((step, i) => (
-          <article class="journey-step" data-animate="reveal" style={`--delay: ${i * 0.08}s`}>
+          <article class="journey-step" data-animate="reveal" style={`--delay: ${i * 0.08}s; --step-accent: ${step.accent}`}>
             <div class="step-marker">
               <span class="step-number">{step.label}</span>
               <div class="step-line" aria-hidden="true"></div>
@@ -645,15 +650,16 @@ const featuredWork = [
   .step-number {
     font-family: var(--font-mono);
     font-size: var(--text-caption);
-    color: var(--color-vermillion);
+    color: var(--step-accent, var(--color-vermillion));
     font-weight: var(--weight-medium);
   }
 
   .step-line {
-    width: 1px;
+    width: 2px;
     flex: 1;
     min-height: 40px;
-    background: var(--color-border);
+    background: linear-gradient(to bottom, var(--step-accent, var(--color-border)), var(--color-border));
+    border-radius: 1px;
   }
 
   .step-content {
