@@ -103,29 +103,41 @@ const featuredWork = [
   <Header slot="header" />
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       HERO — Immersive, premium, animated particle network
-       Full-screen canvas with flowing data-network effect
-       Text overlay: welcoming message, no name
-       HCI: Visceral level — immediate emotional engagement through motion
+       INTRO OVERLAY — The "brand moment" (plays once, then reveals hero)
+       Separate layer above everything. Clip-path iris close reveals page.
+       HCI: Visceral — cinematic first impression creates emotional engagement
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
+    <div class="intro-bg"></div>
+    <div class="intro-stage">
+      <div class="intro-icon">
+        <span class="intro-wave-emoji">👋</span>
+      </div>
+      <div class="intro-text">
+        <span class="intro-line">
+          <span class="intro-line-inner">Welcome</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       HERO — Immersive particle network (revealed after intro overlay)
        ═══════════════════════════════════════════════════════════════════ -->
   <section class="hero" aria-label="Welcome">
-    <!-- Animated particle network background -->
     <HeroCanvas />
 
     <div class="hero-content">
-      <!-- Phase 1: Waving hand entrance -->
       <div class="hero-wave" aria-hidden="true">
         <span class="wave-hand">👋</span>
       </div>
 
-      <!-- Phase 2: Greeting text with mask reveal -->
       <h1 class="hero-greeting">
         <span class="greeting-mask">
-          <span class="greeting-text greeting-1">Welcome to my page</span>
+          <span class="greeting-text">Welcome to my page</span>
         </span>
       </h1>
 
-      <!-- Phase 3: Explore CTA -->
       <div class="hero-cta-wrap">
         <a href="#intro" class="btn-hero">
           <span>Explore</span>
@@ -136,7 +148,6 @@ const featuredWork = [
       </div>
     </div>
 
-    <!-- Scroll indicator -->
     <div class="scroll-cue" aria-hidden="true">
       <div class="scroll-line-track">
         <div class="scroll-line-fill"></div>
@@ -285,7 +296,104 @@ const featuredWork = [
 
 <style>
   /* ══════════════════════════════════════════════════════════════════════
-     HERO — Full viewport, bright, welcoming
+     INTRO OVERLAY — Brand moment layer (plays once, reveals hero)
+     ══════════════════════════════════════════════════════════════════════ */
+
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    will-change: clip-path, opacity;
+    clip-path: inset(0 0 0 0);
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 2.4s forwards;
+  }
+
+  .intro-overlay.finished { display: none; }
+
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg);
+  }
+
+  .intro-stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .intro-icon {
+    opacity: 0;
+    transform: scale(0.2) rotate(-30deg);
+    animation: introIconPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+  }
+
+  .intro-wave-emoji {
+    display: inline-block;
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    transform-origin: 70% 70%;
+    animation: introWaveMotion 0.8s ease-in-out 1s 1;
+  }
+
+  .intro-text {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .intro-line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .intro-line-inner {
+    display: block;
+    transform: translateY(120%);
+    animation: introTextUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+  }
+
+  @keyframes introIconPop {
+    0% { opacity: 0; transform: scale(0.2) rotate(-30deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(8deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes introWaveMotion {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(14deg); }
+    30% { transform: rotate(-8deg); }
+    45% { transform: rotate(14deg); }
+    60% { transform: rotate(-4deg); }
+    75% { transform: rotate(10deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  @keyframes introTextUp {
+    from { transform: translateY(120%); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes introExit {
+    0% { clip-path: inset(0 0 0 0); opacity: 1; }
+    60% { clip-path: inset(3% 3% 3% 3% round 24px); opacity: 1; }
+    100% { clip-path: inset(50% 50% 50% 50% round 24px); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro-overlay { display: none; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     HERO — Full viewport, revealed after intro
      ══════════════════════════════════════════════════════════════════════ */
 
   .hero {
@@ -313,17 +421,18 @@ const featuredWork = [
   }
 
   /* ── Phase 1: Waving hand entrance (0-2s) ────────────────────────── */
+  /* Hero elements start animating AFTER intro overlay exits (~2.8s) */
   .hero-wave {
     opacity: 0;
     transform: scale(0.3) rotate(-20deg);
-    animation: handEntrance 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+    animation: handEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2.8s forwards;
   }
 
   .wave-hand {
     display: inline-block;
     font-size: clamp(3.5rem, 7vw, 5rem);
     transform-origin: 70% 70%;
-    animation: waveMotion 2.5s ease-in-out 1.4s 2;
+    animation: waveMotion 2s ease-in-out 3.6s 2;
   }
 
   @keyframes handEntrance {
@@ -343,7 +452,7 @@ const featuredWork = [
     100% { transform: rotate(0deg); }
   }
 
-  /* ── Phase 2: Text mask reveal (1.5-3s) ──────────────────────────── */
+  /* ── Text mask reveal ────────────────────────────────────────────── */
   .hero-greeting {
     font-family: var(--font-display);
     font-size: clamp(2.8rem, 6.5vw, 5rem);
@@ -362,10 +471,8 @@ const featuredWork = [
   .greeting-text {
     display: block;
     transform: translateY(110%);
-    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 3.1s forwards;
   }
-
-  .greeting-1 { animation-delay: 1.6s; }
 
   @keyframes textReveal {
     to { transform: translateY(0); }
@@ -375,7 +482,7 @@ const featuredWork = [
   .hero-cta-wrap {
     opacity: 0;
     transform: translateY(16px);
-    animation: ctaReveal 0.8s var(--ease-out) 2.8s forwards;
+    animation: ctaReveal 0.8s var(--ease-out) 3.6s forwards;
   }
 
   @keyframes ctaReveal {
@@ -434,7 +541,7 @@ const featuredWork = [
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    animation: ctaReveal 0.6s var(--ease-out) 3.2s forwards;
+    animation: ctaReveal 0.6s var(--ease-out) 4s forwards;
     z-index: 2;
   }
 
@@ -451,7 +558,7 @@ const featuredWork = [
     height: 30px;
     background: var(--color-vermillion);
     border-radius: 1px;
-    animation: scrollLine 2s var(--ease-in-out) infinite 3.5s;
+    animation: scrollLine 2s var(--ease-in-out) infinite 4.5s;
   }
 
   @keyframes scrollLine {
@@ -924,7 +1031,29 @@ const featuredWork = [
 </style>
 
 <script>
-  // Scroll-reveal animation
+  // ── Intro overlay: show once per session, then remove ──
+  const overlay = document.getElementById('intro-overlay');
+  if (overlay) {
+    if (sessionStorage.getItem('intro-seen')) {
+      // Skip intro on return visits within session
+      overlay.remove();
+      document.querySelectorAll('.hero-wave, .greeting-text, .hero-cta-wrap, .scroll-cue').forEach(el => {
+        (el as HTMLElement).style.animation = 'none';
+        (el as HTMLElement).style.opacity = '1';
+        (el as HTMLElement).style.transform = 'none';
+      });
+    } else {
+      sessionStorage.setItem('intro-seen', '1');
+      overlay.addEventListener('animationend', (e: AnimationEvent) => {
+        if (e.animationName === 'introExit') {
+          overlay.classList.add('finished');
+          setTimeout(() => overlay.remove(), 200);
+        }
+      });
+    }
+  }
+
+  // ── Scroll-reveal animation ──
   const revealElements = document.querySelectorAll('[data-animate="reveal"]');
   if (revealElements.length > 0) {
     const observer = new IntersectionObserver(
