@@ -592,6 +592,10 @@ const featuredWork = [
                 transform 1s var(--ease-out);
   }
 
+  .intro-content.visible .intro-divider {
+    width: 48px;
+  }
+
   .intro-greeting {
     font-family: var(--font-mono);
     font-size: var(--text-small);
@@ -611,11 +615,12 @@ const featuredWork = [
   }
 
   .intro-divider {
-    width: 48px;
+    width: 0;
     height: 2px;
     background: var(--color-vermillion);
     margin: 0 auto var(--space-5);
     border-radius: 1px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
   }
 
   .intro-tagline {
