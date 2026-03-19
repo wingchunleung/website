@@ -866,7 +866,7 @@ const featuredWork = [
   }
 
   .work-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) perspective(800px) rotateY(var(--tilt-x, 0deg)) rotateX(var(--tilt-y, 0deg));
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
   }
 
@@ -1109,5 +1109,24 @@ const featuredWork = [
       { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
     );
     revealElements.forEach((el) => observer.observe(el));
+  }
+
+  // ── 3D tilt on work cards (desktop only) ──
+  if (window.innerWidth >= 768) {
+    document.querySelectorAll('.work-card').forEach((card) => {
+      card.addEventListener('pointermove', (e: PointerEvent) => {
+        const el = card as HTMLElement;
+        const rect = el.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        el.style.setProperty('--tilt-x', `${x * 6}deg`);
+        el.style.setProperty('--tilt-y', `${-y * 6}deg`);
+      });
+      card.addEventListener('pointerleave', () => {
+        const el = card as HTMLElement;
+        el.style.setProperty('--tilt-x', '0deg');
+        el.style.setProperty('--tilt-y', '0deg');
+      });
+    });
   }
 </script>
