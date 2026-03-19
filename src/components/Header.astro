@@ -8,18 +8,19 @@
  */
 
 const pathname = Astro.url.pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const navItems = [
-  { label: 'About', href: '/about' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'HCI', href: '/hci' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'About', href: `${base}/about` },
+  { label: 'Projects', href: `${base}/projects` },
+  { label: 'HCI', href: `${base}/hci` },
+  { label: 'Contact', href: `${base}/contact` },
 ];
 ---
 
 <header id="site-header" class="site-header" role="banner">
   <nav class="container nav-container" role="navigation" aria-label="Main navigation">
-    <a href="/" class="nav-logo" aria-label="Wing Chun Leung — Home">
+    <a href={`${base}/`} class="nav-logo" aria-label="Wing Chun Leung — Home">
       <span class="logo-text">WCL</span>
     </a>
 

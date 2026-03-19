@@ -8,6 +8,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Page Not Found — Wing Chun Leung">
@@ -21,8 +22,8 @@ import Footer from '../components/Footer.astro';
         The page you're looking for doesn't exist or has been moved.
       </p>
       <div class="error-actions">
-        <a href="/" class="btn-primary">Go home</a>
-        <a href="/contact" class="btn-outline">Get in touch</a>
+        <a href={`${base}/`} class="btn-primary">Go home</a>
+        <a href={`${base}/contact`} class="btn-outline">Get in touch</a>
       </div>
     </div>
   </section>

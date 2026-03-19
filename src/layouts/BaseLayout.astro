@@ -41,7 +41,7 @@ const accentColor = accent === 'celadon' ? '#7d9e8c' : '#c73e1d';
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
     <title>{title}</title>
 
     <!-- Accent color override for HCI page -->
