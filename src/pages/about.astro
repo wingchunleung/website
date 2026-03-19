@@ -34,8 +34,24 @@ const experience = [
     role: 'Financial Systems Analyst',
     period: '2023 — 2024',
     color: '#e31837',
-    highlight: 'Built SQL pipelines for reporting, audit support, and forecasting',
-    metrics: ['~80 hrs/month saved', '~100% automation', 'Ad hoc reporting'],
+    highlight: 'Automated financial reporting, audit support, and expense forecasting',
+    metrics: ['~80 hrs/month saved', '~99% automation', 'Financial planning'],
+  },
+  {
+    org: 'Camelotta Advisors',
+    role: 'Investment Analyst Intern',
+    period: '2022',
+    color: '#2d5a3d',
+    highlight: 'Investment research and analysis for HNW client portfolios',
+    metrics: ['Wealth management', '$180M+ AUM', 'Options & hedging'],
+  },
+  {
+    org: 'Costco',
+    role: 'Revenue Accounting Intern',
+    period: '2022',
+    color: '#e31837',
+    highlight: 'Automated reconciliation and journal entry workflows',
+    metrics: ['~40 hrs/month saved', 'Revenue accounting', 'Process improvement'],
   },
 ];
 
@@ -293,11 +309,15 @@ const education = [
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-4);
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
+    .exp-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
     .exp-grid { grid-template-columns: repeat(3, 1fr); }
   }
 

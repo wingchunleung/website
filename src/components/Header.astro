@@ -51,22 +51,23 @@ const navItems = [
     </button>
   </nav>
 
-  <!-- Mobile menu overlay -->
-  <div id="mobile-menu" class="mobile-menu" role="dialog" aria-label="Navigation menu" hidden>
-    <ul class="mobile-nav-links" role="list">
-      {navItems.map((item) => (
-        <li>
-          <a
-            href={item.href}
-            class:list={['mobile-nav-link', { active: pathname.startsWith(item.href) }]}
-          >
-            {item.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
 </header>
+
+<!-- Mobile menu overlay — OUTSIDE header to avoid backdrop-filter inheritance -->
+<div id="mobile-menu" class="mobile-menu" role="dialog" aria-label="Navigation menu" hidden>
+  <ul class="mobile-nav-links" role="list">
+    {navItems.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          class:list={['mobile-nav-link', { active: pathname.startsWith(item.href) }]}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
 
 <style>
   .site-header {
