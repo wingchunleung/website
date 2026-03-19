@@ -215,8 +215,10 @@ const navItems = [
     align-items: center;
     justify-content: center;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity var(--duration-normal) var(--ease-out);
+    transition: opacity var(--duration-normal) var(--ease-out),
+                visibility var(--duration-normal);
   }
 
   .mobile-menu[hidden] {
@@ -225,6 +227,7 @@ const navItems = [
 
   .mobile-menu.open {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
