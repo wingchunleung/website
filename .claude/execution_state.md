@@ -1,61 +1,59 @@
 # Execution State
 
-## Current Status: Phase D (Implementation) — Iteration 8 (Continuous 24/7)
+## Current Status: Phase D (Implementation) — Iteration 10 (Continuous 24/7)
 
-### Completed
-- [x] Phase A: Deep research (11 HCI PDFs analyzed)
-- [x] Phase B: 8-agent design panel (all proposals in design/decisions/)
-- [x] Phase C: Design synthesis (FINAL-DESIGN-SYNTHESIS.md)
-- [x] Phase D v1: Initial build (5 pages + 404, dark theme)
-- [x] Phase D v2: Homepage redesign (bright, welcoming, Apple/Carta quality)
-- [x] Repo transferred to wingchunleung account
-- [x] Claude project structure set up (.claude/skills, rules, docs)
+### Total Commits: 31+
+### Build Size: 264KB (target: <500KB)
+### Live URL: https://wingchunleung.github.io/website/
 
-### Completed (Iteration 5-8)
-- [x] Dark mode REMOVED entirely — light only, bright Apple/LVMH design
-- [x] Real SVG logos for HKUST, Carta, Costco, UW, Edmonds
-- [x] Cinematic intro overlay — iris-close clip-path reveal
-- [x] About page redesigned — stats strip, experience cards, education cards
-- [x] Projects page redesigned — featured hero card + 3-col grid
-- [x] Contact page redesigned — card-based with arrow icons
-- [x] Stripe-style spotlight glow on project + experience cards
-- [x] Shimmer sweep hover effect on cards
+### Completed Features
+- [x] 4-layer particle canvas hero (gradient + SVG lines + particles + overlay)
+- [x] Cinematic intro overlay with iris-close clip-path reveal
+- [x] Session-based intro (plays once, skipped on revisit)
+- [x] All dark mode REMOVED — light only (Apple/LVMH aesthetic)
+- [x] Real SVG logos (HKUST, Carta, Costco, UW, Edmonds)
+- [x] Stripe-style spotlight glow on ALL card types
+- [x] 3D perspective tilt on work cards
+- [x] Shimmer sweep hover effect
 - [x] CSS scroll-driven animations (animation-timeline: view())
 - [x] Smooth gradient transitions between sections
+- [x] Branded company colors on timeline + cards
+- [x] About: stats strip, experience cards, education cards
+- [x] Projects: featured hero card + 3-col grid + spotlight glow
+- [x] Contact: card-based with arrow icons + spotlight
+- [x] HCI: celadon accent, assignment cards, principle hover
+- [x] Back-to-top button in footer
+- [x] Intro section CTAs (Learn more + Get in touch)
+- [x] Journey steps as premium branded cards
+- [x] JSON-LD structured data for SEO
+- [x] Sitemap generation (@astrojs/sitemap)
+- [x] OG image for social sharing
 - [x] Font preconnect optimization
 - [x] Page load fade-in transition
+- [x] Animated intro divider (expands on reveal)
+- [x] Timeline nodes as branded circles with ring effect
 
 ### In Progress
-- [ ] GSAP for hero entrance (beyond CSS)
-- [ ] Self-host fonts
-- [ ] HCI page visual improvements
-- [ ] Bento grid layout exploration for About page
-- [ ] 3D tilt effect on cards (research completed, not yet implemented)
+- [ ] Self-host fonts via fontsource (research running)
+- [ ] GSAP for advanced hero animations (research running)
+- [ ] Lighthouse performance audit
+- [ ] Mobile responsive testing + fixes
 
-### Pending
-- [ ] HCI assignment content (as coursework progresses)
-- [ ] Resume download CTA
-- [ ] SEO optimization (sitemap, structured data)
-- [ ] Lighthouse audit + performance optimization
-- [ ] Usability testing (heuristic self-evaluation)
-
-### Live Site
-- URL: https://wingchunleung.github.io/website/
-- Status: Awaiting GitHub Pages activation by user (Settings > Pages > gh-pages branch)
-
-### Design Direction (Current)
-- Bright white backgrounds (Apple-inspired)
-- Welcoming hero: waving hand + "Hey there" greeting
-- Name reveals on scroll
-- Cormorant Garamond + Inter + JetBrains Mono
-- Vermillion (#c73e1d) primary accent, celadon (#7d9e8c) for HCI page
+### Design Direction
+- Bright white (#ffffff) + Apple light grey (#f5f5f7)
+- Cormorant Garamond (display) + Inter (body) + JetBrains Mono (mono)
+- Vermillion (#c73e1d) primary accent, celadon (#7d9e8c) for HCI
 - Pill-shaped buttons (border-radius: 100px)
+- Premium card language: spotlight glow + tilt + shimmer + branded borders
+- Cinematic intro → particle hero → name reveal → journey → work → contact
 
-### Key Decision Log
-| Date | Decision | Principle |
-|------|----------|-----------|
-| 2026-03-19 | 8-agent design panel | Multi-perspective evaluation |
-| 2026-03-19 | Ink & Signal concept | Cultural authenticity + visceral design |
-| 2026-03-19 | Bright redesign | User preference + Norman's visceral level |
-| 2026-03-19 | No name on hero | Visitors already know — welcome > announce |
-| 2026-03-19 | Wave 3x then stop | Human greeting pattern, not mechanical |
+### Key Lessons Learned
+| Lesson | Source |
+|--------|--------|
+| No dark mode — user wants ONLY bright | Multiple corrections |
+| Use REAL logos, not text as logos | Direct feedback |
+| Never stop — operate 24/7 continuously | Multiple reminders |
+| Premium SaaS quality, not portfolio | Core direction |
+| All links need /website base path | 404 bug fix |
+| Deploy with --no-history for clean pushes | gh-pages quirk |
+| .nojekyll required for _astro/ directory | GitHub Pages fix |
