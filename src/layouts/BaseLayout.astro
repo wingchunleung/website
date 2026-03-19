@@ -3,7 +3,7 @@ import '../styles/global.css';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/cormorant-garamond';
 import '@fontsource-variable/jetbrains-mono';
-// View Transitions: pending Astro 6 API verification
+import LockScreen from '../components/LockScreen.astro';
 
 interface Props {
   title: string;
@@ -71,6 +71,7 @@ const accentColor = accent === 'celadon' ? '#7d9e8c' : '#c73e1d';
     )}
   </head>
   <body>
+    <LockScreen />
     <a href="#main-content" class="skip-to-content">Skip to content</a>
 
     <slot name="header" />

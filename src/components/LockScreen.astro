@@ -1,0 +1,323 @@
+---
+/**
+ * LockScreen — Apple-style PIN gate
+ * SHA-256 hash comparison, sessionStorage persistence
+ * Renders above everything, removes itself on unlock
+ */
+---
+
+<div class="lock-screen" id="lockScreen" role="dialog" aria-label="Enter passcode" aria-modal="true">
+  <div class="lock-content">
+    <div class="lock-brand" aria-hidden="true">
+      <span class="lock-monogram">WL</span>
+    </div>
+
+    <h1 class="lock-title">Enter Passcode</h1>
+    <p class="lock-subtitle">This portfolio is shared by invitation</p>
+
+    <div class="pin-dots" id="pinDots" aria-hidden="true">
+      <span class="pin-dot"></span>
+      <span class="pin-dot"></span>
+      <span class="pin-dot"></span>
+    </div>
+
+    <label for="pinInput" class="sr-only">3-digit passcode</label>
+    <input
+      id="pinInput"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      maxlength="3"
+      autocomplete="off"
+      class="pin-hidden-input"
+      autofocus
+    />
+
+    <p class="lock-error" id="lockError" aria-live="polite"></p>
+
+    <div class="pin-keypad" role="group" aria-label="Numeric keypad">
+      <button class="key" data-key="1">1</button>
+      <button class="key" data-key="2">2</button>
+      <button class="key" data-key="3">3</button>
+      <button class="key" data-key="4">4</button>
+      <button class="key" data-key="5">5</button>
+      <button class="key" data-key="6">6</button>
+      <button class="key" data-key="7">7</button>
+      <button class="key" data-key="8">8</button>
+      <button class="key" data-key="9">9</button>
+      <button class="key key-empty" disabled aria-hidden="true"></button>
+      <button class="key" data-key="0">0</button>
+      <button class="key key-delete" data-key="delete" aria-label="Delete">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"/>
+          <line x1="18" y1="9" x2="12" y2="15"/>
+          <line x1="12" y1="9" x2="18" y2="15"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  .lock-screen.unlocked {
+    opacity: 0;
+    transform: scale(1.03);
+    pointer-events: none;
+  }
+
+  .lock-screen.removed { display: none; }
+
+  .lock-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .lock-brand {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-stone);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-2);
+  }
+
+  .lock-monogram {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: var(--weight-light);
+    color: var(--color-ink);
+  }
+
+  .lock-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .lock-subtitle {
+    font-size: var(--text-small);
+    color: var(--color-wash);
+    text-align: center;
+  }
+
+  .pin-dots {
+    display: flex;
+    gap: 16px;
+    padding: var(--space-4) 0;
+  }
+
+  .pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-ink);
+    background: transparent;
+    transition: background 0.15s ease-out, transform 0.15s ease-out;
+  }
+
+  .pin-dot.filled {
+    background: var(--color-ink);
+    transform: scale(1.15);
+  }
+
+  .pin-dots.shake {
+    animation: pinShake 0.5s ease-out;
+  }
+
+  @keyframes pinShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-12px); }
+    30% { transform: translateX(10px); }
+    45% { transform: translateX(-8px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+  }
+
+  .pin-dot.error {
+    border-color: var(--color-vermillion);
+    background: var(--color-vermillion);
+  }
+
+  .pin-hidden-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .lock-error {
+    font-size: var(--text-small);
+    color: var(--color-vermillion);
+    min-height: 1.5em;
+    text-align: center;
+  }
+
+  .pin-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 264px;
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+
+  .key {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-stone);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    font-weight: var(--weight-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    transition: background 0.12s ease-out, transform 0.1s ease-out;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .key:active {
+    background: var(--color-border);
+    transform: scale(0.93);
+  }
+
+  .key:hover { background: var(--color-border); }
+
+  .key-empty {
+    background: transparent;
+    cursor: default;
+  }
+
+  .key-delete {
+    background: transparent;
+    color: var(--color-wash);
+  }
+
+  .key-delete:hover {
+    color: var(--color-ink);
+    background: transparent;
+  }
+
+  .key:focus-visible {
+    outline: 2px solid var(--color-vermillion);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 360px) {
+    .key { width: 60px; height: 60px; font-size: 1.25rem; }
+    .pin-keypad { gap: 8px; }
+  }
+</style>
+
+<script>
+  // SHA-256 hash of "123"
+  const PIN_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3';
+  const PIN_LENGTH = 3;
+
+  const lockScreen = document.getElementById('lockScreen');
+  const pinInput = document.getElementById('pinInput') as HTMLInputElement;
+  const dots = document.querySelectorAll('.pin-dot');
+  const dotsContainer = document.getElementById('pinDots');
+  const errorEl = document.getElementById('lockError');
+  let currentPin = '';
+
+  // Already unlocked this session?
+  if (sessionStorage.getItem('site-unlocked') === '1') {
+    lockScreen?.remove();
+  } else if (lockScreen) {
+    // Block scrolling while locked
+    document.body.style.overflow = 'hidden';
+    pinInput?.focus();
+
+    // Keyboard input via hidden field
+    pinInput?.addEventListener('input', () => {
+      currentPin = pinInput.value.replace(/\D/g, '').slice(0, PIN_LENGTH);
+      pinInput.value = currentPin;
+      updateDots();
+      if (currentPin.length === PIN_LENGTH) checkPin();
+    });
+
+    // Keypad clicks
+    document.querySelectorAll('.key[data-key]').forEach(key => {
+      key.addEventListener('click', () => {
+        const val = (key as HTMLElement).dataset.key;
+        if (val === 'delete') {
+          currentPin = currentPin.slice(0, -1);
+        } else if (currentPin.length < PIN_LENGTH) {
+          currentPin += val;
+        }
+        if (pinInput) pinInput.value = currentPin;
+        updateDots();
+        if (currentPin.length === PIN_LENGTH) checkPin();
+      });
+    });
+
+    // Keep focus for keyboard
+    lockScreen.addEventListener('click', () => pinInput?.focus());
+  }
+
+  function updateDots() {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('filled', i < currentPin.length);
+      dot.classList.remove('error');
+    });
+    if (errorEl) errorEl.textContent = '';
+  }
+
+  async function sha256(msg: string): Promise<string> {
+    const buf = new TextEncoder().encode(msg);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function checkPin() {
+    const hash = await sha256(currentPin);
+    if (hash === PIN_HASH) {
+      sessionStorage.setItem('site-unlocked', '1');
+      dots.forEach(d => d.classList.add('filled'));
+      document.body.style.overflow = '';
+      lockScreen?.classList.add('unlocked');
+      setTimeout(() => {
+        lockScreen?.classList.add('removed');
+        lockScreen?.remove();
+      }, 500);
+    } else {
+      dots.forEach(d => d.classList.add('error'));
+      dotsContainer?.classList.add('shake');
+      if (errorEl) errorEl.textContent = 'Incorrect passcode';
+      setTimeout(() => {
+        dotsContainer?.classList.remove('shake');
+        currentPin = '';
+        if (pinInput) pinInput.value = '';
+        updateDots();
+      }, 600);
+    }
+  }
+</script>

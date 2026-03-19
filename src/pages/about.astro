@@ -190,43 +190,25 @@ const education = [
     </div>
   </section>
 
-  <!-- Speaking -->
-  <section class="speaking-section" aria-label="Speaking engagements">
+  <!-- Mentoring -->
+  <section class="mentoring-section" aria-label="Mentoring">
     <div class="container">
       <div class="section-header" data-animate="reveal">
-        <span class="section-label">Speaking</span>
-        <h2>Guest Speaker</h2>
+        <span class="section-label">Mentoring</span>
+        <h2>Mentor & Adviser</h2>
       </div>
       <div class="speaking-grid" data-animate="reveal">
         <div class="speaking-card">
-          <span class="speaking-org">University of Washington</span>
-          <span class="speaking-topic">UW CSSA × LikeABoss Event</span>
-          <span class="speaking-date">Oct 2023</span>
+          <span class="speaking-org">Carta — Equity Advisory Team</span>
+          <span class="speaking-topic">Mentor for New Hire</span>
         </div>
         <div class="speaking-card">
-          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
-          <span class="speaking-topic">Guest Speaker — Finance</span>
-          <span class="speaking-date">Jul 2021</span>
+          <span class="speaking-org">Carta — PE Fund Administration</span>
+          <span class="speaking-topic">Mentor</span>
         </div>
         <div class="speaking-card">
-          <span class="speaking-org">Edmonds College</span>
-          <span class="speaking-topic">Guest Speaker</span>
-          <span class="speaking-date">Nov 2020</span>
-        </div>
-        <div class="speaking-card">
-          <span class="speaking-org">Litz USA Students Service</span>
-          <span class="speaking-topic">Guest Speaker</span>
-          <span class="speaking-date">Jul 2020</span>
-        </div>
-        <div class="speaking-card">
-          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
-          <span class="speaking-topic">Guest Speaker — Finance</span>
-          <span class="speaking-date">Jul 2018</span>
-        </div>
-        <div class="speaking-card">
-          <span class="speaking-org">Middlesex Elementary School</span>
-          <span class="speaking-topic">Guest Speaker</span>
-          <span class="speaking-date">Nov 2017</span>
+          <span class="speaking-org">Costco Wholesale</span>
+          <span class="speaking-topic">Intern Mentor</span>
         </div>
       </div>
     </div>
@@ -264,25 +246,43 @@ const education = [
     </div>
   </section>
 
-  <!-- Mentoring -->
-  <section class="mentoring-section" aria-label="Mentoring">
+  <!-- Speaking -->
+  <section class="speaking-section" aria-label="Speaking engagements">
     <div class="container">
       <div class="section-header" data-animate="reveal">
-        <span class="section-label">Mentoring</span>
-        <h2>Mentor & Adviser</h2>
+        <span class="section-label">Speaking</span>
+        <h2>Guest Speaker</h2>
       </div>
       <div class="speaking-grid" data-animate="reveal">
         <div class="speaking-card">
-          <span class="speaking-org">Carta — Equity Advisory Team</span>
-          <span class="speaking-topic">Mentor for New Hire</span>
+          <span class="speaking-org">University of Washington</span>
+          <span class="speaking-topic">UW CSSA × LikeABoss Event</span>
+          <span class="speaking-date">Oct 2023</span>
         </div>
         <div class="speaking-card">
-          <span class="speaking-org">Carta — PE Fund Administration</span>
-          <span class="speaking-topic">Technical Adviser</span>
+          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
+          <span class="speaking-topic">Guest Speaker — Finance</span>
+          <span class="speaking-date">Jul 2021</span>
         </div>
         <div class="speaking-card">
-          <span class="speaking-org">Costco Wholesale</span>
-          <span class="speaking-topic">Intern Mentor</span>
+          <span class="speaking-org">Edmonds College</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Nov 2020</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Litz USA Students Service</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Jul 2020</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">C.C.C. Mong Man Wai College</span>
+          <span class="speaking-topic">Guest Speaker — Finance</span>
+          <span class="speaking-date">Jul 2018</span>
+        </div>
+        <div class="speaking-card">
+          <span class="speaking-org">Middlesex Elementary School</span>
+          <span class="speaking-topic">Guest Speaker</span>
+          <span class="speaking-date">Nov 2017</span>
         </div>
       </div>
     </div>
@@ -641,9 +641,10 @@ const education = [
     padding: var(--section-gap) 0;
   }
 
-  .speaking-section { background: var(--color-surface); }
-  .leadership-section { background: var(--color-bg); }
-  .mentoring-section { background: var(--color-surface); }
+  /* Alternating: Education(surface) → Mentoring(white) → Leadership(surface) → Speaking(white) */
+  .mentoring-section { background: var(--color-bg); }
+  .leadership-section { background: var(--color-surface); }
+  .speaking-section { background: var(--color-bg); }
 
   .speaking-grid {
     display: grid;
@@ -678,17 +679,18 @@ const education = [
                 box-shadow var(--duration-normal) var(--ease-out);
   }
 
-  .speaking-section .speaking-card {
-    background: var(--color-bg);
-  }
-
+  /* Card bg contrasts with section bg */
   .mentoring-section .speaking-card {
-    background: var(--color-bg);
+    background: var(--color-surface);
   }
 
   .leadership-section .speaking-card {
-    background: var(--color-surface);
+    background: var(--color-bg);
     border-left-color: var(--color-celadon);
+  }
+
+  .speaking-section .speaking-card {
+    background: var(--color-surface);
   }
 
   .speaking-card:hover {
