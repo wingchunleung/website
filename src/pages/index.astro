@@ -68,21 +68,27 @@ const featuredWork = [
     title: 'LLM Macro Allocation Pipeline',
     metric: 'RMB 5T+',
     metricLabel: 'AUM scope',
-    description: 'Multi-agent LLM system for macro cycle analysis and asset allocation. Research at HKUST Business School.',
+    org: 'HKUST',
+    orgColor: '#003366',
+    description: 'Multi-agent LLM system for macro cycle analysis and asset allocation.',
     tags: ['AI Research', 'Multi-Agent', 'Finance'],
   },
   {
     title: 'Financial Workflow Automation',
     metric: '70%',
     metricLabel: 'faster',
-    description: 'Redesigned Carta\'s PE advisory projection workflow, replacing Bloomberg Terminal processes with automated pipelines.',
+    org: 'Carta',
+    orgColor: '#1a1a1a',
+    description: 'Redesigned PE advisory projection workflow, cutting Bloomberg Terminal processing time.',
     tags: ['Process Design', 'LLM', 'Carta'],
   },
   {
     title: 'Payroll System Optimization',
     metric: '99%',
     metricLabel: 'time saved',
-    description: 'Transformed a 4-hour manual payroll task into a single-click automated process using Python and SQL at Costco.',
+    org: 'Costco',
+    orgColor: '#e31837',
+    description: 'Transformed a 4-hour manual task into a single-click automated process.',
     tags: ['Automation', 'Python', 'SQL'],
   },
 ];
@@ -198,9 +204,12 @@ const featuredWork = [
       <div class="work-grid">
         {featuredWork.map((work, i) => (
           <article class="work-card" data-animate="reveal" style={`--delay: ${i * 0.1}s`}>
-            <div class="work-metric-group">
-              <span class="work-metric">{work.metric}</span>
-              <span class="work-metric-label">{work.metricLabel}</span>
+            <div class="work-card-header">
+              <span class="work-org-badge" style={`--org-color: ${work.orgColor}`}>{work.org}</span>
+              <div class="work-metric-group">
+                <span class="work-metric">{work.metric}</span>
+                <span class="work-metric-label">{work.metricLabel}</span>
+              </div>
             </div>
             <h3 class="work-title">{work.title}</h3>
             <p class="work-description">{work.description}</p>
@@ -647,8 +656,27 @@ const featuredWork = [
     box-shadow: var(--shadow-lg);
   }
 
-  .work-metric-group {
+  .work-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: var(--space-3);
+  }
+
+  .work-org-badge {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.02em;
+    color: var(--org-color, var(--color-text));
+    padding: 6px 14px;
+    border: 1.5px solid var(--org-color, var(--color-border));
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .work-metric-group {
+    text-align: right;
   }
 
   .work-metric {
