@@ -209,6 +209,34 @@ const featuredWork = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
+       MARQUEE — Scrolling text ticker (premium agency signal)
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="marquee-band" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-text">Finance</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Artificial Intelligence</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Systems Design</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">LLM Research</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Multi-Agent Systems</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Finance</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Artificial Intelligence</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Systems Design</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">LLM Research</span>
+      <span class="marquee-dot"></span>
+      <span class="marquee-text">Multi-Agent Systems</span>
+      <span class="marquee-dot"></span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
        JOURNEY — Career story timeline
        ═══════════════════════════════════════════════════════════════════ -->
   <section class="journey" aria-label="Career journey">
@@ -722,6 +750,52 @@ const featuredWork = [
   }
 
   /* ══════════════════════════════════════════════════════════════════════
+     MARQUEE — Infinite scrolling text ticker
+     ══════════════════════════════════════════════════════════════════════ */
+
+  .marquee-band {
+    padding: var(--space-4) 0;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    width: max-content;
+    animation: marqueeScroll 25s linear infinite;
+  }
+
+  .marquee-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.02em;
+    color: var(--color-wash);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .marquee-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-vermillion);
+    flex-shrink: 0;
+  }
+
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
      SECTION HEADERS — Reusable pattern
      ══════════════════════════════════════════════════════════════════════ */
 
@@ -916,6 +990,19 @@ const featuredWork = [
   .work-card:hover {
     transform: translateY(-6px) perspective(800px) rotateY(var(--tilt-x, 0deg)) rotateX(var(--tilt-y, 0deg));
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Spotlight dim: siblings dim when one card is hovered */
+  .work-grid.hovering .work-card:not(:hover) {
+    opacity: 0.55;
+    filter: saturate(0.7);
+  }
+
+  .work-card {
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out),
+                opacity 0.4s var(--ease-out),
+                filter 0.4s var(--ease-out);
   }
 
   /* Premium shine sweep on hover */
@@ -1201,6 +1288,43 @@ const featuredWork = [
     });
   }
 
+  // ── Animated metric counters on work cards ──
+  document.querySelectorAll('.work-metric').forEach((el) => {
+    const raw = (el as HTMLElement).textContent?.trim() || '';
+    const match = raw.match(/^([^\d]*)([\d,.]+)(.*)$/);
+    if (!match) return;
+    const prefix = match[1];
+    const target = parseFloat(match[2].replace(/,/g, ''));
+    const suffix = match[3];
+    const hasDecimal = match[2].includes('.');
+    const decimals = hasDecimal ? match[2].split('.')[1].length : 0;
+
+    const counter = { val: 0 };
+    ScrollTrigger.create({
+      trigger: el as HTMLElement,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(counter, {
+          val: target,
+          duration: 2,
+          ease: 'power2.out',
+          onUpdate: () => {
+            const formatted = hasDecimal ? counter.val.toFixed(decimals) : Math.round(counter.val).toString();
+            (el as HTMLElement).textContent = `${prefix}${formatted}${suffix}`;
+          },
+        });
+      },
+    });
+  });
+
+  // ── Spotlight dim siblings on work grid hover ──
+  const workGrid = document.querySelector('.work-grid');
+  if (workGrid) {
+    workGrid.addEventListener('mouseenter', () => workGrid.classList.add('hovering'));
+    workGrid.addEventListener('mouseleave', () => workGrid.classList.remove('hovering'));
+  }
+
   // ── Staggered logo strip entrance ──
   const logoItems = gsap.utils.toArray('.logo-item');
   if (logoItems.length > 0) {
@@ -1244,6 +1368,22 @@ const featuredWork = [
         const el = card as HTMLElement;
         el.style.setProperty('--tilt-x', '0deg');
         el.style.setProperty('--tilt-y', '0deg');
+      });
+    });
+
+    // ── Magnetic button effect (desktop only) ──
+    document.querySelectorAll('.btn-hero, .btn-primary').forEach((btn) => {
+      const el = btn as HTMLElement;
+      el.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        el.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+        el.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        setTimeout(() => { el.style.transition = ''; }, 500);
       });
     });
   }
