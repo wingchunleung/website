@@ -156,37 +156,32 @@ const principles = [
        Shows how this site applies HCI — meta-demonstration
        ═══════════════════════════════════════════════════════════════════ -->
   <section class="design-notes-section" aria-label="Design decisions">
-    <div class="container content">
-      <span class="section-label">Design Notes</span>
-      <h2>How this site practices HCI</h2>
+    <div class="container">
+      <div class="section-header" data-animate="reveal">
+        <span class="section-label">Design Notes</span>
+        <h2>How this site practices HCI</h2>
+      </div>
 
-      <div class="design-notes" data-animate="reveal">
-        <article class="design-note">
+      <div class="design-grid">
+        <article class="design-card" data-animate="reveal" style="--delay: 0s">
+          <span class="design-icon" aria-hidden="true">&#127912;</span>
           <h3>Color as Identity</h3>
-          <p>
-            The warm "Ink Stone" palette draws from traditional Chinese ink painting materials — connecting cultural identity to visual design. The celadon accent on this page distinguishes course content from the main site while maintaining system consistency (H1).
-          </p>
+          <p>Cultural palette connecting ink painting traditions to visual design. Celadon accent distinguishes course content (H1 Consistency).</p>
         </article>
-
-        <article class="design-note">
+        <article class="design-card" data-animate="reveal" style="--delay: 0.08s">
+          <span class="design-icon" aria-hidden="true">&#9999;&#65039;</span>
           <h3>Typography as Hierarchy</h3>
-          <p>
-            Three typefaces serve three roles: Cormorant Garamond for display (emotional, visceral), Inter for body (readable, behavioral), JetBrains Mono for metadata (technical, informational). This three-tier system supports Recognition over Recall (H6).
-          </p>
+          <p>Three typefaces for three roles: serif display, sans body, mono metadata. Supports Recognition over Recall (H6).</p>
         </article>
-
-        <article class="design-note">
+        <article class="design-card" data-animate="reveal" style="--delay: 0.16s">
+          <span class="design-icon" aria-hidden="true">&#9723;&#65039;</span>
           <h3>Whitespace as Design</h3>
-          <p>
-            Generous section spacing (96-128px) creates distinct visual "rooms" — applying Gestalt Proximity to group related content and reduce cognitive load. The content column is limited to 720px for optimal 65-75 character line length.
-          </p>
+          <p>96-128px section spacing creates visual "rooms" using Gestalt Proximity. 720px content width for optimal reading.</p>
         </article>
-
-        <article class="design-note">
+        <article class="design-card" data-animate="reveal" style="--delay: 0.24s">
+          <span class="design-icon" aria-hidden="true">&#10024;</span>
           <h3>Motion as Feedback</h3>
-          <p>
-            Scroll-reveal animations provide Visibility of System Status (H7) — confirming that new content has loaded. All animations respect <code>prefers-reduced-motion</code> for accessibility (H5 Flexibility).
-          </p>
+          <p>GSAP scroll animations provide Visibility of System Status (H7). All animations respect prefers-reduced-motion (H5).</p>
         </article>
       </div>
     </div>
@@ -424,46 +419,64 @@ const principles = [
     line-height: var(--leading-normal);
   }
 
-  /* Design Notes */
+  /* Design Notes — visual card grid */
   .design-notes-section {
     padding: var(--section-gap) 0;
   }
 
-  .design-notes-section h2 {
-    margin-top: var(--space-3);
-    margin-bottom: var(--space-5);
+  .design-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 
-  .design-notes {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-    opacity: 0;
-    transform: translateY(30px);
+  @media (min-width: 640px) {
+    .design-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .design-notes.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity var(--duration-reveal) var(--ease-out),
-                transform var(--duration-reveal) var(--ease-out);
+  .design-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    border-top: 2px solid var(--color-celadon);
+    opacity: 0; transform: translateY(30px);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
   }
 
-  .design-note h3 {
+  .design-card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .design-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .design-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .design-card h3 {
     font-size: var(--text-h3);
     margin-bottom: var(--space-2);
   }
 
-  .design-note p {
+  .design-card p {
     color: var(--color-text-secondary);
     font-size: var(--text-small);
     line-height: var(--leading-relaxed);
   }
 
-  .design-note code {
+  .design-card code {
     font-family: var(--font-mono);
     font-size: 0.85em;
-    background: var(--color-surface);
+    background: var(--color-bg);
     padding: 0.1em 0.3em;
     border-radius: var(--radius-sm);
   }
