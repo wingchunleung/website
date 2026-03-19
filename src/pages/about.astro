@@ -90,24 +90,42 @@ const education = [
     </div>
   </section>
 
-  <!-- Languages & Places — visual, artistic -->
+  <!-- Background — places lived & languages -->
   <section class="places-section" aria-label="Background">
     <div class="container">
-      <div class="places-grid" data-animate="reveal">
-        <div class="place-card">
-          <span class="place-emoji" aria-hidden="true">&#127469;&#127472;</span>
-          <span class="place-name">Hong Kong</span>
-          <span class="place-detail">Born & raised · Cantonese</span>
+      <div class="places-row" data-animate="reveal">
+        <div class="places-group">
+          <span class="places-label">Based in</span>
+          <div class="places-items">
+            <div class="place-card">
+              <span class="place-emoji" aria-hidden="true">&#127469;&#127472;</span>
+              <span class="place-name">Hong Kong</span>
+              <span class="place-detail">Born & raised</span>
+            </div>
+            <div class="place-card">
+              <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
+              <span class="place-name">United States</span>
+              <span class="place-detail">8+ years lived</span>
+            </div>
+          </div>
         </div>
-        <div class="place-card">
-          <span class="place-emoji" aria-hidden="true">&#127482;&#127480;</span>
-          <span class="place-name">United States</span>
-          <span class="place-detail">8+ years · English</span>
-        </div>
-        <div class="place-card">
-          <span class="place-emoji" aria-hidden="true">&#127464;&#127475;</span>
-          <span class="place-name">Mandarin</span>
-          <span class="place-detail">Native fluency</span>
+        <div class="places-divider" aria-hidden="true"></div>
+        <div class="places-group">
+          <span class="places-label">Languages</span>
+          <div class="places-items">
+            <div class="place-card">
+              <span class="place-name">English</span>
+              <span class="place-detail">Fluent</span>
+            </div>
+            <div class="place-card">
+              <span class="place-name">Cantonese</span>
+              <span class="place-detail">Native</span>
+            </div>
+            <div class="place-card">
+              <span class="place-name">Mandarin</span>
+              <span class="place-detail">Native</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -240,17 +258,53 @@ const education = [
     border-bottom: 1px solid var(--color-border);
   }
 
-  .places-grid {
+  .places-row {
     display: flex;
     justify-content: center;
-    gap: var(--space-5);
+    align-items: flex-start;
+    gap: var(--space-6);
     flex-wrap: wrap;
     opacity: 0; transform: translateY(20px);
   }
 
-  .places-grid.visible {
+  .places-row.visible {
     opacity: 1; transform: translateY(0);
     transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+
+  .places-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .places-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-vermillion);
+    font-weight: var(--weight-medium);
+  }
+
+  .places-items {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .places-divider {
+    width: 1px;
+    height: 60px;
+    background: var(--color-border);
+    align-self: center;
+  }
+
+  @media (max-width: 640px) {
+    .places-divider { display: none; }
+    .places-row { gap: var(--space-5); }
   }
 
   .place-card {
@@ -258,27 +312,18 @@ const education = [
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4px;
-    padding: var(--space-3) var(--space-5);
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    min-width: 140px;
-    transition: transform var(--duration-normal) var(--ease-out);
-  }
-
-  .place-card:hover {
-    transform: translateY(-2px);
+    gap: 2px;
   }
 
   .place-emoji {
-    font-size: 2rem;
+    font-size: 1.5rem;
     line-height: 1;
-    margin-bottom: var(--space-1);
+    margin-bottom: 4px;
   }
 
   .place-name {
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-small);
   }
 
   .place-detail {
