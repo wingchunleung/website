@@ -32,10 +32,10 @@ const featuredWork = [
     title: 'Macro Asset Allocation Research',
     metric: '~5T',
     metricLabel: 'RMB AUM context',
-    org: 'HKUST',
+    org: 'HKUST · In Progress',
     orgColor: '#003366',
-    description: 'Ongoing — building a multi-agent system for macro analysis, asset allocation, and investment decision support at HKUST Business School.',
-    tags: ['Asset Allocation', 'Macro Strategy', 'In Progress'],
+    description: 'Building an AI-driven framework for macro analysis, asset allocation, and investment decision support at HKUST Business School.',
+    tags: ['Asset Management', 'Macro Strategy', 'AI'],
   },
   {
     title: 'Equity & Stock Option Advisory',
@@ -254,7 +254,7 @@ const featuredWork = [
     <div class="container">
       <div class="section-header" data-animate="reveal">
         <span class="section-label">Selected Work</span>
-        <h2>Selected Work</h2>
+        <h2>Recent Impact</h2>
       </div>
 
       <div class="work-grid">
@@ -294,7 +294,7 @@ const featuredWork = [
         <h2>Let's connect</h2>
       </div>
       <p class="contact-text" data-animate="reveal">
-        Whether you're interested in AI research, fintech, or just want to say hello — I'd love to hear from you.
+        I'm always open to new conversations and opportunities — feel free to reach out.
       </p>
       <div class="contact-actions" data-animate="reveal">
         <a href="mailto:wingchunleung8@gmail.com" class="btn-primary">Say hello</a>
@@ -699,22 +699,26 @@ const featuredWork = [
   }
 
   .logo-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-5) var(--space-4);
-    max-width: 1100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-5) var(--space-6);
+    max-width: 1000px;
     margin: 0 auto;
   }
 
-  @media (min-width: 640px) {
-    .logo-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .logo-item {
+    flex: 0 0 calc(50% - var(--space-6));
   }
 
-  @media (min-width: 1024px) {
-    .logo-row {
-      grid-template-columns: repeat(5, 1fr);
+  @media (min-width: 768px) {
+    /* First 3 items take ~33% each, last 2 center below */
+    .logo-item {
+      flex: 0 0 calc(33.333% - var(--space-6));
+    }
+    .logo-item:nth-child(4),
+    .logo-item:nth-child(5) {
+      flex: 0 0 calc(33.333% - var(--space-6));
     }
   }
 
