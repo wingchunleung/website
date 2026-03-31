@@ -6,8 +6,8 @@ const $$Contact = createComponent(($$result, $$props, $$slots) => {
   const contacts = [
     {
       label: "Email",
-      value: "wingchunleung8@gmail.com",
-      href: "mailto:wingchunleung8@gmail.com",
+      value: "",
+      href: "mailto:",
       cta: "Send an email",
       external: false
     },
