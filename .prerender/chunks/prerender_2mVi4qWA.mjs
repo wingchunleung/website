@@ -2042,7 +2042,7 @@ const ACTION_QUERY_PARAMS = {
   actionName: "_action"};
 const ACTION_RPC_ROUTE_PATTERN = "/_actions/[...path]";
 
-const __vite_import_meta_env__$1 = {"ASSETS_PREFIX": undefined, "BASE_URL": "/website", "DEV": false, "MODE": "production", "PROD": true, "SITE": "https://wingchunleung.github.io", "SSR": true};
+const __vite_import_meta_env__$1 = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "SITE": "https://wingchunleung.github.io", "SSR": true};
 const codeToStatusMap = {
   // Implemented from IANA HTTP Status Code Registry
   // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
@@ -2238,7 +2238,7 @@ class BodySizeLimitError extends Error {
   }
 }
 
-const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/website", "DEV": false, "MODE": "production", "PROD": true, "SITE": "https://wingchunleung.github.io", "SSR": true};
+const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "SITE": "https://wingchunleung.github.io", "SSR": true};
 function getActionContext(context) {
   const callerInfo = getCallerInfo(context);
   const actionResultAlreadySet = Boolean(context.locals._actionPayload);

@@ -68,10 +68,10 @@ Born and raised in <strong data-astro-cid-kh7btl4r>Hong Kong</strong>, educated 
 I've been a guest speaker five times — at universities, high schools, and community organizations.
           I've mentored interns, tutored students, and led multiple student organizations.
           I believe the most important skill is the ability to make others better.
-</p> </div> </div> </section>  `, "footer": ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer", "data-astro-cid-kh7btl4r": true })}`, "header": ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "data-astro-cid-kh7btl4r": true })}` })}  ${renderScript($$result, "/home/wing/website/src/pages/about.astro?astro&type=script&index=0&lang.ts")}`;
-}, "/home/wing/website/src/pages/about.astro", void 0);
-const $$file = "/home/wing/website/src/pages/about.astro";
-const $$url = "/website/about";
+</p> </div> </div> </section>  `, "footer": ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer", "data-astro-cid-kh7btl4r": true })}`, "header": ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "data-astro-cid-kh7btl4r": true })}` })}  ${renderScript($$result, "/home/wing/src/pages/about.astro?astro&type=script&index=0&lang.ts")}`;
+}, "/home/wing/src/pages/about.astro", void 0);
+const $$file = "/home/wing/src/pages/about.astro";
+const $$url = "/about";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,

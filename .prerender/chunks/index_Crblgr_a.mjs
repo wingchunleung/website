@@ -65,11 +65,11 @@ Three typefaces serve three roles: Cormorant Garamond for display (emotional, vi
 Generous section spacing (96-128px) creates distinct visual "rooms" — applying Gestalt Proximity to group related content and reduce cognitive load. The content column is limited to 720px for optimal 65-75 character line length.
 </p> </article> <article class="design-note" data-astro-cid-6cl3lugn> <h3 data-astro-cid-6cl3lugn>Motion as Feedback</h3> <p data-astro-cid-6cl3lugn>
 Scroll-reveal animations provide Visibility of System Status (H7) — confirming that new content has loaded. All animations respect <code data-astro-cid-6cl3lugn>prefers-reduced-motion</code> for accessibility (H5 Flexibility).
-</p> </article> </div> </div> </section>  `, "footer": ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer", "data-astro-cid-6cl3lugn": true })}`, "header": ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "data-astro-cid-6cl3lugn": true })}` })}  ${renderScript($$result, "/home/wing/website/src/pages/hci/index.astro?astro&type=script&index=0&lang.ts")}`;
-}, "/home/wing/website/src/pages/hci/index.astro", void 0);
+</p> </article> </div> </div> </section>  `, "footer": ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer", "data-astro-cid-6cl3lugn": true })}`, "header": ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "data-astro-cid-6cl3lugn": true })}` })}  ${renderScript($$result, "/home/wing/src/pages/hci/index.astro?astro&type=script&index=0&lang.ts")}`;
+}, "/home/wing/src/pages/hci/index.astro", void 0);
 
-const $$file = "/home/wing/website/src/pages/hci/index.astro";
-const $$url = "/website/hci";
+const $$file = "/home/wing/src/pages/hci/index.astro";
+const $$url = "/hci";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
