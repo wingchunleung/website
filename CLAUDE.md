@@ -88,18 +88,33 @@ This is a **research-driven HCI design project**, not just a coding project.
 - **Severity Rating**: 0 (not a problem) → 4 (usability catastrophe)
 
 ## HCI Course Materials
-PDF lecture notes are stored at: `/home/wing/Documents/HCI/`
+
+PDF lecture notes are stored at: `/Users/wing/Desktop/HKUST/HCI/` (18 lectures + need-typology paper).
+
 - HCI-01: Introduction to HCI
 - HCI-02: User-Centered Design
 - HCI-03: Understanding Humans (perception, cognition, Gestalt)
 - HCI-04: Design Empathize
 - HCI-05: Design Ideate (HTA, GOMS, Activity Theory, Personas)
+- HCI-06: Prototyping
 - HCI-07: Evaluation & Questionnaire Design
 - HCI-08: Evaluation Heuristics (Nielsen's 10)
+- HCI-09: Evaluation — Usability
+- HCI-10: Evaluation — Analysis (quant + qual)
 - HCI-11: Multimodal Interaction
 - HCI-13: Human-Robot Interaction
 - HCI-14: Ubiquitous Computing
 - HCI-15: XR (Extended Reality)
+- HCI-16: CSCW + Crowd / Social Computing
+- HCI-17: Computing for Good (persuasive tech)
+- HCI-18: Lab-to-World transition
+- need-typology paper (motivational layer above usability)
+
+**Synthesised references:**
+- `docs/hci-knowledge-base.md` — comprehensive synthesis of all lectures, tagged [IN-SCOPE] / [DEFERRED] for the website
+- `docs/hci-deferred-for-writing.md` — deferred topics (HRI, XR, ubicomp, CSCW, persuasion, formal task analysis, etc.) with re-entry triggers for future term papers / projects
+- `.claude/skills/project-context/scope.md` — index of in-scope vs deferred for fast lookup
+- `.claude/skills/project-context/hci-principles.md` — working subset for daily site development
 
 ## Technical Stack
 - To be determined after HCI research phase
