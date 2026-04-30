@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://wingchunleung.github.io',
-  base: '/',
+  base: '/website',
   vite: {
     plugins: [tailwindcss()],
   },
