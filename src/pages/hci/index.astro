@@ -87,20 +87,24 @@ const insights = [
 
 const tradeoffs = [
   {
-    title: 'Welcome over information density',
-    body: 'The hero shows a greeting and a wave. No metric grid, no résumé tiles. A recruiter who wants density scrolls one screen — the trade chose visceral first impression over information per pixel.',
+    title: 'Visceral primacy over information density',
+    body: 'The hero foregrounds a greeting and a gesture rather than a saturated grid of identifiers. This privileges Norman\'s visceral level — the pre-attentive impression formed before behavioral or reflective processing engages. A denser opening would compress more facts into the initial gestalt but raise extraneous cognitive load (HCI-03) at the moment the visitor\'s mental model is still forming. Leading with person rather than credential register also supports relatedness and autonomy from the need typology before competence cues begin to compete for attention.',
+    tradeoff: 'Emotional accessibility and reduced first-screen load are gained at the cost of delayed surfacing of competence signals — behavioral evaluation begins one screen later.',
   },
   {
-    title: 'Motion vs. accessibility',
-    body: 'Reveals add behavioral feedback (H7) and a sense of rhythm. They also add ~12KB of JavaScript and risk vestibular discomfort. Mitigation: prefers-reduced-motion zeroes durations; staggers cap at 0.12s; no parallax. Motion is small by design.',
+    title: 'Motion as feedback, motion as overload',
+    body: 'Scroll-triggered reveals serve two HCI functions at once: visibility of system status (Nielsen H7) by confirming content has entered view, and Gestalt common fate by binding co-revealed elements into perceptual groups. Both rely on the visual modality being available and tolerable — an assumption that breaks for vestibular-sensitive users (WCAG 2.1 SC 2.3.3, Animation from Interactions). Multimodal redundancy from HCI-11 requires that no information arrive only through motion; animation carries delight, never meaning. The reduced-motion preference is therefore treated as an adaptive surface, not a fallback.',
+    tradeoff: 'Perceptual binding and status feedback are paid for in attentional cost and vestibular risk; restraint in animation amplitude keeps that cost universal.',
   },
   {
-    title: 'Theory inline vs. flow',
-    body: 'This page names principles (H1, H6, Gestalt) where general visitors do not need them. The cost is friction. The /hci page accepts that cost — the audience is HCI graders. Other pages keep theory invisible.',
+    title: 'Theory inline vs. attentional flow',
+    body: 'This page names principles (H1, H6, Gestalt) inline. For an HCI-literate reader the labels are recognition cues that ground each decision in a citable rule. For any other reader the same labels add extraneous cognitive load and surface noise that competes with content. The /hci page accepts the locality cost; other pages keep theory invisible to maintain a calmer attentional surface.',
+    tradeoff: 'Citable grounding for the HCI audience is gained at the cost of reading friction; the friction is contained to this page rather than spread sitewide.',
   },
   {
-    title: 'Static portfolio vs. deferred theory',
-    body: 'HRI, XR, ubicomp, persuasive tech — covered in the course, deliberately not applied here. A static portfolio doesn\'t need an autonomy spectrum or a Fogg model. Theory is parked, indexed, and ready when scope expands.',
+    title: 'Artefact scope vs. deferred theory',
+    body: 'Substantial portions of the course — the HRI autonomy spectrum, the XR irreplaceable-need test, ubiquitous computing context-awareness, persuasive-technology behaviour change — are not exercised here. A static personal site offers no artefact against which those frameworks can be applied or evaluated, and applying them speculatively would be principles without instances. Each framework is indexed for re-entry when scope expands.',
+    tradeoff: 'Theoretical breadth is set aside to keep claims falsifiable against the current artefact; the indexed-but-unused theory is preserved, not discarded.',
   },
 ];
 ---
@@ -242,6 +246,7 @@ const tradeoffs = [
           <article class="tradeoff-card" data-animate="reveal" style={`--delay: ${i * 0.06}s`}>
             <h3 class="tradeoff-title">{item.title}</h3>
             <p class="tradeoff-body">{item.body}</p>
+            <p class="tradeoff-statement"><span class="tradeoff-tag">Trade-off</span>{item.tradeoff}</p>
           </article>
         ))}
       </div>
@@ -642,6 +647,25 @@ const tradeoffs = [
     color: var(--color-text-secondary);
     font-size: var(--text-small);
     line-height: var(--leading-relaxed);
+  }
+
+  .tradeoff-statement {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tradeoff-tag {
+    display: inline-block;
+    margin-right: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-celadon);
   }
 
   /* Section 4 — Design Implications (existing pattern) */
