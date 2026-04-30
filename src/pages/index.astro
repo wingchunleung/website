@@ -68,9 +68,13 @@ const featuredWork = [
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
-    <!-- Phase 1: Floating emoji chaos (JS-generated) -->
-    <div class="emoji-chaos" id="emojiChaos"></div>
-    <!-- Phase 2: Wave + Welcome (fades in after chaos clears) -->
+    <!-- Phase 1: Free-floating eyes (organic drift, JS-spawned) -->
+    <div class="eye-container" id="eyeContainer"></div>
+    <!-- Phase 2: Tease text -->
+    <div class="intro-tease" id="introTease">
+      <span class="tease-text">see who this is</span>
+    </div>
+    <!-- Phase 3: Wave + Welcome -->
     <div class="intro-stage" id="introStage">
       <span class="intro-wave-emoji">👋</span>
       <span class="intro-welcome-text">Welcome to my site</span>
@@ -269,7 +273,7 @@ const featuredWork = [
     pointer-events: none;
     will-change: clip-path, opacity;
     clip-path: inset(0 0 0 0);
-    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 3.8s forwards;
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 6.8s forwards;
   }
 
   .intro-overlay.finished { display: none; }
@@ -303,31 +307,64 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  /* Floating emoji chaos container */
-  .emoji-chaos {
+  /* Eyes container — fills the viewport, JS spawns eyes inside */
+  .eye-container {
     position: absolute;
     inset: 0;
     z-index: 1;
-    pointer-events: none;
     overflow: hidden;
+    pointer-events: none;
   }
 
-  .floating-emoji {
+  /* Each eye is positioned absolutely; CSS variables drive a 5-waypoint
+     organic drift across both axes so the path never repeats. */
+  .eye-particle {
     position: absolute;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    line-height: 1;
+    user-select: none;
     opacity: 0;
-    animation: floatUp var(--float-duration, 2s) ease-out var(--float-delay, 0s) forwards;
     will-change: transform, opacity;
+    animation: eyeDrift var(--dur, 5s) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--delay, 0s) forwards;
   }
 
-  @keyframes floatUp {
-    0% { opacity: 0; transform: translateY(30px) scale(0.5) rotate(var(--float-rot, 0deg)); }
-    20% { opacity: 1; transform: translateY(-20px) scale(1.1) rotate(calc(var(--float-rot, 0deg) + 10deg)); }
-    70% { opacity: 0.8; transform: translateY(-80px) scale(1) rotate(calc(var(--float-rot, 0deg) - 5deg)); }
-    100% { opacity: 0; transform: translateY(-150px) scale(0.7) rotate(calc(var(--float-rot, 0deg) + 15deg)); }
+  @keyframes eyeDrift {
+    0%   { opacity: 0;   transform: translate(0, 0) scale(0.3) rotate(var(--rot-0, 0deg)); }
+    8%   { opacity: 1;   transform: translate(var(--dx-1), var(--dy-1)) scale(var(--sc, 1)) rotate(var(--rot-1, 0deg)); }
+    32%  { opacity: 1;   transform: translate(var(--dx-2), var(--dy-2)) scale(var(--sc, 1)) rotate(var(--rot-2, 0deg)); }
+    58%  { opacity: 1;   transform: translate(var(--dx-3), var(--dy-3)) scale(var(--sc, 1)) rotate(var(--rot-3, 0deg)); }
+    82%  { opacity: 0.7; transform: translate(var(--dx-4), var(--dy-4)) scale(calc(var(--sc, 1) * 0.9)) rotate(var(--rot-4, 0deg)); }
+    100% { opacity: 0;   transform: translate(var(--dx-5), var(--dy-5)) scale(0.5) rotate(var(--rot-5, 0deg)); }
   }
 
-  /* Wave + Welcome greeting (appears after chaos) */
+  /* Tease text */
+  .intro-tease {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .intro-tease.visible {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  }
+
+  .intro-tease.hidden {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+
+  .tease-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: var(--weight-light);
+    color: var(--color-wash);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  /* Wave + Welcome greeting (appears after tease) */
   .intro-stage {
     position: relative;
     z-index: 2;
@@ -1165,9 +1202,10 @@ const featuredWork = [
 </style>
 
 <script>
-  // ── Intro overlay: floating emoji chaos → wave greeting ──
+  // ── Intro overlay: free-floating eyes → "see who this is" → wave ──
   const overlay = document.getElementById('intro-overlay');
-  const chaosContainer = document.getElementById('emojiChaos');
+  const eyeContainer = document.getElementById('eyeContainer');
+  const introTease = document.getElementById('introTease');
   const introStage = document.getElementById('introStage');
 
   if (overlay) {
@@ -1181,52 +1219,85 @@ const featuredWork = [
     } else {
       sessionStorage.setItem('intro-seen', '1');
 
-      // Phase 1: Spawn floating emojis for ~3 seconds
-      const emojis = ['🤩', '👀', '✨', '🔥', '💫', '⚡', '😎', '👀', '🤩', '✨', '👀', '💫'];
-      let spawnCount = 0;
-      const maxSpawns = 30;
+      // ─── Phase 1: free-floating 👀 eyes ───
+      // Each eye gets five random waypoints in BOTH axes so its path never
+      // matches any other eye's path. No upward bias, no shared trajectory.
+      const TOTAL_EYES = 24;
+      const PHASE1_WINDOW = 3200; // spawn window in ms
+      let spawned = 0;
 
-      function spawnEmoji() {
-        if (!chaosContainer || spawnCount >= maxSpawns) return;
+      function rand(min: number, max: number) { return min + Math.random() * (max - min); }
+      function pmRand(mag: number) { return rand(-mag, mag); } // ± value, any direction
+
+      function spawnEye() {
+        if (!eyeContainer || spawned >= TOTAL_EYES) return;
         const el = document.createElement('span');
-        el.className = 'floating-emoji';
-        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.left = `${10 + Math.random() * 80}%`;
-        el.style.top = `${30 + Math.random() * 50}%`;
-        el.style.setProperty('--float-duration', `${1.2 + Math.random() * 1.5}s`);
-        el.style.setProperty('--float-delay', '0s');
-        el.style.setProperty('--float-rot', `${-20 + Math.random() * 40}deg`);
-        el.style.fontSize = `${1.5 + Math.random() * 2}rem`;
-        chaosContainer.appendChild(el);
-        spawnCount++;
-        // Remove after animation
-        setTimeout(() => el.remove(), 3000);
+        el.className = 'eye-particle';
+        el.textContent = '👀';
+
+        // Initial position — anywhere on screen
+        el.style.left = `${rand(8, 88)}vw`;
+        el.style.top = `${rand(12, 80)}vh`;
+
+        // Random size (organic variation)
+        el.style.fontSize = `${rand(2.4, 4.6)}rem`;
+
+        // Five waypoints — independent random offsets in BOTH axes
+        // mag scales the drift radius; later waypoints can wander further
+        for (let i = 1; i <= 5; i++) {
+          const mag = 60 + i * 30;
+          el.style.setProperty(`--dx-${i}`, `${pmRand(mag)}px`);
+          el.style.setProperty(`--dy-${i}`, `${pmRand(mag)}px`);
+          el.style.setProperty(`--rot-${i}`, `${pmRand(45)}deg`);
+        }
+        el.style.setProperty('--rot-0', `${pmRand(20)}deg`);
+        el.style.setProperty('--sc', `${rand(0.8, 1.4)}`);
+
+        const dur = rand(4.2, 6.5);
+        el.style.setProperty('--dur', `${dur}s`);
+        el.style.setProperty('--delay', '0s');
+
+        eyeContainer.appendChild(el);
+        spawned++;
+        setTimeout(() => el.remove(), dur * 1000 + 200);
       }
 
-      // Spawn emojis rapidly for 2.5 seconds
-      const spawnInterval = setInterval(spawnEmoji, 80);
-      setTimeout(() => clearInterval(spawnInterval), 2500);
+      // Stagger the spawn so eyes appear continuously, not in a single burst
+      for (let i = 0; i < TOTAL_EYES; i++) {
+        setTimeout(spawnEye, (i / TOTAL_EYES) * PHASE1_WINDOW + rand(0, 60));
+      }
 
-      // Phase 2: After 3s, fade out chaos + show wave greeting
+      // ─── Phase 2: after eyes have established, show "see who this is" ───
       setTimeout(() => {
-        if (chaosContainer) chaosContainer.style.opacity = '0';
-        if (chaosContainer) chaosContainer.style.transition = 'opacity 0.5s ease-out';
-
-        if (introStage) {
-          introStage.classList.add('visible');
-          const waveEmoji = introStage.querySelector('.intro-wave-emoji');
-          const welcomeText = introStage.querySelector('.intro-welcome-text');
-          if (waveEmoji) {
-            waveEmoji.classList.add('pop');
-            setTimeout(() => waveEmoji.classList.add('wave'), 600);
-          }
-          if (welcomeText) {
-            setTimeout(() => welcomeText.classList.add('show'), 300);
-          }
+        if (eyeContainer) {
+          eyeContainer.style.transition = 'opacity 0.6s ease-out';
+          eyeContainer.style.opacity = '0';
         }
-      }, 3000);
+        setTimeout(() => {
+          if (introTease) introTease.classList.add('visible');
+        }, 400);
+      }, 3500);
 
-      // Phase 3: Iris-close exit after greeting shown
+      // ─── Phase 3: hide tease, show wave + welcome ───
+      setTimeout(() => {
+        if (introTease) introTease.classList.add('hidden');
+        setTimeout(() => {
+          if (introStage) {
+            introStage.classList.add('visible');
+            const waveEmoji = introStage.querySelector('.intro-wave-emoji');
+            const welcomeText = introStage.querySelector('.intro-welcome-text');
+            if (waveEmoji) {
+              waveEmoji.classList.add('pop');
+              setTimeout(() => waveEmoji.classList.add('wave'), 600);
+            }
+            if (welcomeText) {
+              setTimeout(() => welcomeText.classList.add('show'), 300);
+            }
+          }
+        }, 450);
+      }, 5200);
+
+      // ─── Iris-close exit after sequence completes ───
       overlay.addEventListener('animationend', (e: AnimationEvent) => {
         if (e.animationName === 'introExit') {
           overlay.classList.add('finished');
