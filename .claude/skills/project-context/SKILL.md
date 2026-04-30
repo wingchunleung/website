@@ -158,14 +158,34 @@ can skip the full workflow. Use judgment.
 
 ---
 
-## 6. Deployment
+## 6. Deployment — Read CLAUDE.md "Deployment & Landing-Page Animation" first
 
-- **Repository:** github.com/wingchunleung/website (public)
-- **Branch:** `master` (source), `gh-pages` (built output)
-- **Build:** `npm run build` → `dist/` directory
-- **Deploy:** `npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll`
-- **Live URL:** https://wingchunleung.github.io/website/
-- **Base path:** `/website` (configured in astro.config.mjs)
+Hard pinned state (2026-04-30):
+- `master` HEAD: `b1f651c` (= `546fe46` content)
+- `origin/gh-pages` HEAD: `bf8a35c` — **the live site, user-approved canonical**
+- Live URL: https://wingchunleung.github.io/
+
+**Never run `npx gh-pages -d dist` without first confirming
+`git diff bf8a35c origin/gh-pages -- .` is empty.** If it isn't,
+gh-pages has hand-edited content master doesn't, and a rebuild will
+lose it. Past sessions edited gh-pages directly (sed-based passcode,
+email, path, trailing-slash fixes). Master is not always in sync.
+
+**Never auto-fix "while I'm in here" bugs in shared files**
+(`src/layouts/BaseLayout.astro`, `astro.config.mjs`,
+`public/robots.txt`, design tokens) during a single-page task. They
+trigger full rebuilds that overwrite gh-pages on next deploy.
+
+**The landing-page intro is sessionStorage-gated.** A reload after
+deploy won't re-play it — clear `sessionStorage['intro-seen']` or use
+incognito to verify.
+
+**If the intro regresses, restore gh-pages to `bf8a35c`:**
+`git push origin bf8a35c:gh-pages --force`.
+
+Mechanics (only after the divergence check):
+- Build: `npm run build` → `dist/`
+- Deploy: `npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll`
 
 ---
 
@@ -173,12 +193,13 @@ can skip the full workflow. Use judgment.
 
 When running the autonomous-coding-agent in this project:
 
-1. **Read this skill first** — understand the HCI-driven workflow
-2. **Check design/decisions/** — proposals and synthesis already exist
-3. **Reference docs/hci-knowledge-base.md** for HCI theory
-4. **Use Telegram notifications** — send updates via `/telegram send`
-5. **Commit and push periodically** — keep the repo updated
-6. **Deploy after significant changes** — rebuild and push to gh-pages
+1. **Read CLAUDE.md "Deployment & Landing-Page Animation" section first.** Skip everything below if you haven't.
+2. **Read this skill second** — understand the HCI-driven workflow
+3. **Check design/decisions/** — proposals and synthesis already exist
+4. **Reference docs/hci-knowledge-base.md** for HCI theory
+5. **Use Telegram notifications** — send updates via `/telegram send`
+6. **Commit and push to master** — but do NOT auto-deploy to gh-pages. Deploy is a separate, gated action; see CLAUDE.md.
 7. **Never skip the HCI justification** — every visual change needs a principle
 8. **Prefer bright, clean designs** — the user explicitly prefers Apple-like quality
-9. **Test in browser when possible** — verify visual output, not just code
+9. **Test in browser** — verify visual output (with cleared sessionStorage), not just code or curl
+10. **Stay in scope.** If the user asks you to edit one page, do not touch shared files (layouts, config, public/) even to fix obvious bugs. Surface separately, ask first.
