@@ -1,12 +1,13 @@
 ---
 /**
  * HCI Course Page — ARIN5301
- * This page uses CELADON accent instead of vermillion
- * It must demonstrate HCI competence — the audience knows HCI
+ * Celadon accent (rather than the vermillion used elsewhere).
  *
- * HCI: Meta-reflexive — this page both describes and enacts HCI principles
- * HCI: H1 (Consistency) — same layout system, different accent color
- * HCI: H6 (Recognition) — assignments clearly listed and deep-linkable
+ * Meta-reflexive: this page applies the principles it describes.
+ *   H1 (Consistency) — same layout system, different accent
+ *   H6 (Recognition) — assignments deep-linkable, principles named in copy
+ *   Gestalt (Proximity, Similarity) — section spacing and card patterns are
+ *     the grouping signal
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -27,37 +28,79 @@ const principles = [
   {
     category: 'Usability Heuristics',
     items: [
-      { name: 'Consistency', description: 'Internal, external, and metaphorical consistency across the interface.' },
-      { name: 'Mapping', description: 'Match between system and real world — use language users understand.' },
-      { name: 'Minimalism', description: 'Every extra element competes with relevant information.' },
-      { name: 'Freedom', description: 'User control — undo, redo, emergency exits.' },
-      { name: 'Flexibility', description: 'Accelerators for experts, support for novices.' },
-      { name: 'Recognition', description: 'Make options visible rather than requiring recall.' },
-      { name: 'Visibility', description: 'Keep users informed about system status.' },
-      { name: 'Error Prevention', description: 'Prevent errors before they occur through constraints.' },
-      { name: 'Error Recovery', description: 'Help users recognize, diagnose, and recover from errors.' },
-      { name: 'Help', description: 'Provide help and documentation when needed.' },
+      { name: 'Consistency', description: 'Internal, external, metaphorical. Patterns repeat across pages.' },
+      { name: 'Mapping', description: 'Language and order match the visitor\'s mental model.' },
+      { name: 'Minimalism', description: 'Every element earns its place. Decoration is cut.' },
+      { name: 'Freedom', description: 'Deep links, escape routes, no scroll-jack.' },
+      { name: 'Flexibility', description: 'Keyboard paths for fast use, reduced-motion respected.' },
+      { name: 'Recognition', description: 'Visible labels. Never icon-only.' },
+      { name: 'Visibility', description: 'Hover, focus, and reveal confirm state.' },
+      { name: 'Error Prevention', description: '44×44px targets, predictable URLs, trailing slashes.' },
+      { name: 'Error Recovery', description: 'A 404 page that points home.' },
+      { name: 'Help', description: 'Section labels carry context. No separate help screen.' },
     ],
   },
   {
-    category: 'Gestalt Principles',
+    category: 'Gestalt — cognitive load',
     items: [
-      { name: 'Proximity', description: 'Close elements are perceived as related groups.' },
-      { name: 'Similarity', description: 'Similar elements are perceived as belonging together.' },
-      { name: 'Continuation', description: 'Elements on a line or curve are seen as related.' },
-      { name: 'Closure', description: 'The mind completes incomplete shapes.' },
-      { name: 'Figure-Ground', description: 'Users distinguish foreground from background.' },
-      { name: 'Common Fate', description: 'Elements moving together are grouped.' },
-      { name: 'Symmetry', description: 'Balanced elements are perceived as unified.' },
+      { name: 'Proximity', description: 'Gap difference is the grouping signal.' },
+      { name: 'Similarity', description: 'Same pattern means same kind of thing.' },
+      { name: 'Continuation', description: 'Left edge anchors, baselines guide the eye.' },
+      { name: 'Closure', description: 'Partial reveals invite the scroll.' },
+      { name: 'Figure-Ground', description: 'White cards lift content off the surface.' },
+      { name: 'Common Fate', description: 'Staggered motion binds related items.' },
+      { name: 'Symmetry', description: 'Centered hero, balanced two-column on tablet.' },
     ],
   },
   {
-    category: 'Design Levels',
+    category: 'Norman\'s three levels',
     items: [
-      { name: 'Visceral', description: 'Immediate emotional reaction — sensation, first impression.' },
-      { name: 'Behavioral', description: 'Usability and function — does it work well?' },
-      { name: 'Reflective', description: 'Meaning and self-image — what does it say about me?' },
+      { name: 'Visceral', description: 'First emotion. Bright, warm, calm.' },
+      { name: 'Behavioral', description: 'Fast, predictable, readable.' },
+      { name: 'Reflective', description: 'Craft signals — type pairing, kerning, motion polish.' },
     ],
+  },
+];
+
+const insights = [
+  {
+    label: '01',
+    title: 'Gestalt is cognitive-load engineering',
+    body: 'Spacing is not decoration. The 128px between sections tells working memory "new chapter, drop the old context." Tighter gaps inside a card say "one thought." Grouping does the work the eye would otherwise have to.',
+  },
+  {
+    label: '02',
+    title: 'Needs sit above usability',
+    body: 'A site can pass every heuristic and still feel cold. Norman handles the surface; the need typology handles motivation. Autonomy (no autoplay), competence (project metrics over buzzwords), relatedness (warm tone, real photos), security (predictable links, fast load) — these are why a usable page also feels welcome.',
+  },
+  {
+    label: '03',
+    title: 'Color is never the only signal',
+    body: 'Every accent state pairs with text or shape. Animation conveys delight, never meaning — content stays intelligible with reduced motion on. 8% of male visitors are color-blind, 0.5% of female. The redundancy is the floor, not a flourish.',
+  },
+  {
+    label: '04',
+    title: 'Lab is not the world',
+    body: 'A page that works in dev can still flash unstyled on the live URL — GitHub Pages 301-redirects /about to /about/, and the round-trip costs the styles. Every change ends with a click of every nav link on production, on real mobile, before it counts as done.',
+  },
+];
+
+const tradeoffs = [
+  {
+    title: 'Welcome over information density',
+    body: 'The hero shows a greeting and a wave. No metric grid, no résumé tiles. A recruiter who wants density scrolls one screen — the trade chose visceral first impression over information per pixel.',
+  },
+  {
+    title: 'Motion vs. accessibility',
+    body: 'Reveals add behavioral feedback (H7) and a sense of rhythm. They also add ~12KB of JavaScript and risk vestibular discomfort. Mitigation: prefers-reduced-motion zeroes durations; staggers cap at 0.12s; no parallax. Motion is small by design.',
+  },
+  {
+    title: 'Theory inline vs. flow',
+    body: 'This page names principles (H1, H6, Gestalt) where general visitors do not need them. The cost is friction. The /hci page accepts that cost — the audience is HCI graders. Other pages keep theory invisible.',
+  },
+  {
+    title: 'Static portfolio vs. deferred theory',
+    body: 'HRI, XR, ubicomp, persuasive tech — covered in the course, deliberately not applied here. A static portfolio doesn\'t need an autonomy spectrum or a Fogg model. Theory is parked, indexed, and ready when scope expands.',
   },
 ];
 ---
@@ -74,16 +117,15 @@ const principles = [
       <span class="section-label">ARIN5301</span>
       <h1>Human-Computer<br />Interaction</h1>
       <p class="page-subtitle">
-        Coursework and explorations from Prof. Xiaojuan Ma's HCI course at HKUST.
-        This page is itself a demonstration of the principles it describes.
+        Coursework from Prof. Xiaojuan Ma's HCI course at HKUST.
+        This page applies what it describes.
       </p>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
        ASSIGNMENTS
-       HCI: H2 (Mapping) — structured by assignment, not by lecture
-       HCI: H4 (Freedom) — each assignment is deep-linkable
+       H4 (Freedom) — each assignment is deep-linkable
        ═══════════════════════════════════════════════════════════════════ -->
   <section class="assignments-section" aria-label="Course assignments">
     <div class="container content">
@@ -111,25 +153,25 @@ const principles = [
       </div>
 
       <p class="assignments-note">
-        My final project work will be uploaded here once completed.
+        Final project work uploads here on completion.
       </p>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       HCI PRINCIPLES REFERENCE
-       Meta-reflexive: this section demonstrates the principles it lists
-       Gestalt: Proximity — principles grouped by category
-       Gestalt: Similarity — consistent card design within categories
+       SECTION 1 — Core HCI Principles
+       Three lenses. Heuristics catch known violations; Gestalt sheds
+       cognitive load; Norman keeps emotion, function, and meaning aligned.
        ═══════════════════════════════════════════════════════════════════ -->
-  <section class="principles-section" aria-label="HCI principles reference">
+  <section class="principles-section" aria-label="Core HCI principles">
     <div class="container">
       <div class="content">
-        <span class="section-label">Reference</span>
-        <h2>HCI Principles Applied to This Site</h2>
+        <span class="section-label">Principles</span>
+        <h2>Core HCI Principles</h2>
         <p class="principles-intro">
-          Every design decision on this website is grounded in HCI theory from ARIN5301.
-          Below are the key principles and how they are applied.
+          Three lenses applied across the site. Heuristics catch known
+          violations. Gestalt sheds cognitive load. Norman's three levels
+          keep emotion, function, and meaning aligned.
         </p>
       </div>
 
@@ -152,36 +194,91 @@ const principles = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       DESIGN DECISIONS
-       Shows how this site applies HCI — meta-demonstration
+       SECTION 2 — Key Insights Applied
+       The four refinements from updated lecture material that shaped
+       how this site actually behaves.
        ═══════════════════════════════════════════════════════════════════ -->
-  <section class="design-notes-section" aria-label="Design decisions">
+  <section class="insights-section" aria-label="Key HCI insights applied to this site">
+    <div class="container">
+      <div class="content">
+        <span class="section-label">Insights</span>
+        <h2>Key insights applied here</h2>
+        <p class="section-lede">
+          Beyond the textbook list — four ideas from the course that shape
+          how the site actually behaves.
+        </p>
+      </div>
+
+      <div class="insights-grid">
+        {insights.map((item, i) => (
+          <article class="insight-card" data-animate="reveal" style={`--delay: ${i * 0.06}s`}>
+            <span class="insight-label">{item.label}</span>
+            <h3 class="insight-title">{item.title}</h3>
+            <p class="insight-body">{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       SECTION 3 — Trade-offs & Limitations
+       Every choice gives something and costs something. Naming both keeps
+       the design accountable.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="tradeoffs-section" aria-label="Design trade-offs">
+    <div class="container">
+      <div class="content">
+        <span class="section-label">Trade-offs</span>
+        <h2>What we gave up</h2>
+        <p class="section-lede">
+          Honest about what each choice cost. Theory without trade-offs
+          is just slogans.
+        </p>
+      </div>
+
+      <div class="tradeoff-grid">
+        {tradeoffs.map((item, i) => (
+          <article class="tradeoff-card" data-animate="reveal" style={`--delay: ${i * 0.06}s`}>
+            <h3 class="tradeoff-title">{item.title}</h3>
+            <p class="tradeoff-body">{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       SECTION 4 — Design Implications
+       From principle to pixel.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section class="design-notes-section" aria-label="Design implications">
     <div class="container">
       <div class="section-header" data-animate="reveal">
-        <span class="section-label">Design Notes</span>
-        <h2>How this site practices HCI</h2>
+        <span class="section-label">Implications</span>
+        <h2>How principles become pixels</h2>
       </div>
 
       <div class="design-grid">
         <article class="design-card" data-animate="reveal" style="--delay: 0s">
           <span class="design-icon" aria-hidden="true">&#127912;</span>
-          <h3>Color as Identity</h3>
-          <p>Cultural palette connecting ink painting traditions to visual design. Celadon accent distinguishes course content (H1 Consistency).</p>
+          <h3>Color as identity, not signal</h3>
+          <p>Vermillion across the site, celadon for /hci. Same pattern, different accent — H1 Consistency through structure, cultural metaphor through tone. Every accent pairs with a text label.</p>
         </article>
         <article class="design-card" data-animate="reveal" style="--delay: 0.08s">
           <span class="design-icon" aria-hidden="true">&#9999;&#65039;</span>
-          <h3>Typography as Hierarchy</h3>
-          <p>Three typefaces for three roles: serif display, sans body, mono metadata. Supports Recognition over Recall (H6).</p>
+          <h3>Typography as role assignment</h3>
+          <p>Cormorant Garamond for emotion, Inter for reading, JetBrains Mono for metadata. Three faces, three jobs — H6 Recognition through visual role, not memorized rule.</p>
         </article>
         <article class="design-card" data-animate="reveal" style="--delay: 0.16s">
           <span class="design-icon" aria-hidden="true">&#9723;&#65039;</span>
-          <h3>Whitespace as Design</h3>
-          <p>96-128px section spacing creates visual "rooms" using Gestalt Proximity. 720px content width for optimal reading.</p>
+          <h3>Whitespace as load shedding</h3>
+          <p>96–128px between sections, ≤24px inside cards. Gestalt Proximity does the grouping work so working memory doesn't have to. Content max 720px — eye comfort over real estate.</p>
         </article>
         <article class="design-card" data-animate="reveal" style="--delay: 0.24s">
           <span class="design-icon" aria-hidden="true">&#10024;</span>
-          <h3>Motion as Feedback</h3>
-          <p>GSAP scroll animations provide Visibility of System Status (H7). All animations respect prefers-reduced-motion (H5).</p>
+          <h3>Motion as feedback, not meaning</h3>
+          <p>Reveals confirm content arrived (H7). Staggers bind related items (Common Fate). prefers-reduced-motion zeroes everything — meaning never lives only in animation.</p>
         </article>
       </div>
     </div>
@@ -242,12 +339,16 @@ const principles = [
   }
   .section-header h2 { margin-top: var(--space-2); }
 
+  .section-lede {
+    color: var(--color-text-secondary);
+    margin-top: var(--space-3);
+    max-width: 60ch;
+  }
+
   /* Assignments */
   .assignments-section {
     padding: var(--section-gap) 0;
   }
-
-  /* h2 styled via .section-header */
 
   .assignments-list {
     display: flex;
@@ -339,7 +440,7 @@ const principles = [
     font-style: italic;
   }
 
-  /* Principles */
+  /* Section 1 — Principles */
   .principles-section {
     padding: var(--section-gap) 0;
     background: var(--color-surface);
@@ -353,6 +454,7 @@ const principles = [
   .principles-intro {
     color: var(--color-text-secondary);
     margin-bottom: var(--space-6);
+    max-width: 60ch;
   }
 
   .principles-grid {
@@ -419,7 +521,130 @@ const principles = [
     line-height: var(--leading-normal);
   }
 
-  /* Design Notes — visual card grid */
+  /* Section 2 — Insights */
+  .insights-section {
+    padding: var(--section-gap) 0;
+  }
+
+  .insights-section h2 {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .insights-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .insight-card {
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border-left: 2px solid var(--color-celadon);
+    border-radius: var(--radius-lg);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .insight-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .insight-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .insight-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-celadon);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .insight-title {
+    font-size: var(--text-h3);
+    margin: var(--space-2) 0 var(--space-3);
+  }
+
+  .insight-body {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* Section 3 — Trade-offs */
+  .tradeoffs-section {
+    padding: var(--section-gap) 0;
+    background: var(--color-surface);
+  }
+
+  .tradeoffs-section h2 {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .tradeoff-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .tradeoff-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .tradeoff-card {
+    padding: var(--space-5);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform var(--duration-normal) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .tradeoff-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                transform var(--duration-reveal) var(--ease-out) var(--delay, 0s),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .tradeoff-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .tradeoff-title {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-3);
+  }
+
+  .tradeoff-body {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* Section 4 — Design Implications (existing pattern) */
   .design-notes-section {
     padding: var(--section-gap) 0;
   }
