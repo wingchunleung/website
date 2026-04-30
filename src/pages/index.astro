@@ -68,9 +68,9 @@ const featuredWork = [
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
     <div class="intro-bg"></div>
-    <!-- Phase 1: Free-floating eyes (organic drift, JS-spawned) -->
-    <div class="eye-container" id="eyeContainer"></div>
-    <!-- Phase 2: Tease text -->
+    <!-- Phase 1: DOM-based wow/eyes bombardment (CSS animated) -->
+    <div class="wow-container" id="wowContainer"></div>
+    <!-- Phase 2: Tease -->
     <div class="intro-tease" id="introTease">
       <span class="tease-text">see who this is</span>
     </div>
@@ -273,7 +273,7 @@ const featuredWork = [
     pointer-events: none;
     will-change: clip-path, opacity;
     clip-path: inset(0 0 0 0);
-    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 6.8s forwards;
+    animation: introExit 1s cubic-bezier(0.65, 0, 0.35, 1) 9s forwards;
   }
 
   .intro-overlay.finished { display: none; }
@@ -307,8 +307,8 @@ const featuredWork = [
     gap: var(--space-3);
   }
 
-  /* Eyes container — fills the viewport, JS spawns eyes inside */
-  .eye-container {
+  /* Wow/eyes bombardment container */
+  .wow-container {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -316,25 +316,51 @@ const featuredWork = [
     pointer-events: none;
   }
 
-  /* Each eye is positioned absolutely; CSS variables drive a 5-waypoint
-     organic drift across both axes so the path never repeats. */
-  .eye-particle {
+  .wow-particle {
     position: absolute;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-    line-height: 1;
-    user-select: none;
     opacity: 0;
     will-change: transform, opacity;
-    animation: eyeDrift var(--dur, 5s) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--delay, 0s) forwards;
+    animation: wowFloat var(--dur, 3s) ease-out var(--delay, 0s) forwards;
+    user-select: none;
+    line-height: 1;
   }
 
-  @keyframes eyeDrift {
-    0%   { opacity: 0;   transform: translate(0, 0) scale(0.3) rotate(var(--rot-0, 0deg)); }
-    8%   { opacity: 1;   transform: translate(var(--dx-1), var(--dy-1)) scale(var(--sc, 1)) rotate(var(--rot-1, 0deg)); }
-    32%  { opacity: 1;   transform: translate(var(--dx-2), var(--dy-2)) scale(var(--sc, 1)) rotate(var(--rot-2, 0deg)); }
-    58%  { opacity: 1;   transform: translate(var(--dx-3), var(--dy-3)) scale(var(--sc, 1)) rotate(var(--rot-3, 0deg)); }
-    82%  { opacity: 0.7; transform: translate(var(--dx-4), var(--dy-4)) scale(calc(var(--sc, 1) * 0.9)) rotate(var(--rot-4, 0deg)); }
-    100% { opacity: 0;   transform: translate(var(--dx-5), var(--dy-5)) scale(0.5) rotate(var(--rot-5, 0deg)); }
+  .wow-particle.is-text {
+    font-weight: 900;
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #ff6b35, #e63946, #ff006e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .wow-particle.is-emoji {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
+
+  @keyframes wowFloat {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) rotate(var(--rot-start, 0deg)) scale(0.3);
+    }
+    12% {
+      opacity: 1;
+      transform: translate(calc(var(--dx) * 0.1), calc(var(--dy) * 0.08)) rotate(calc(var(--rot-start, 0deg) + 5deg)) scale(1.15);
+    }
+    35% {
+      opacity: 1;
+      transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.3)) rotate(calc(var(--rot-end, 15deg) * 0.5)) scale(var(--sc, 1));
+    }
+    70% {
+      opacity: 0.6;
+      transform: translate(calc(var(--dx) * 0.75), calc(var(--dy) * 0.7)) rotate(calc(var(--rot-end, 15deg) * 0.8)) scale(calc(var(--sc, 1) * 0.85));
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy)) rotate(var(--rot-end, 15deg)) scale(0.4);
+    }
   }
 
   /* Tease text */
@@ -342,7 +368,6 @@ const featuredWork = [
     position: relative;
     z-index: 2;
     opacity: 0;
-    pointer-events: none;
   }
 
   .intro-tease.visible {
@@ -361,7 +386,6 @@ const featuredWork = [
     font-weight: var(--weight-light);
     color: var(--color-wash);
     font-style: italic;
-    letter-spacing: -0.01em;
   }
 
   /* Wave + Welcome greeting (appears after tease) */
@@ -1202,10 +1226,9 @@ const featuredWork = [
 </style>
 
 <script>
-  // ── Intro overlay: free-floating eyes → "see who this is" → wave ──
+  // ── Intro: DOM-based wow/eyes bombardment → wave greeting ──
   const overlay = document.getElementById('intro-overlay');
-  const eyeContainer = document.getElementById('eyeContainer');
-  const introTease = document.getElementById('introTease');
+  const wowContainer = document.getElementById('wowContainer');
   const introStage = document.getElementById('introStage');
 
   if (overlay) {
@@ -1219,66 +1242,66 @@ const featuredWork = [
     } else {
       sessionStorage.setItem('intro-seen', '1');
 
-      // ─── Phase 1: free-floating 👀 eyes ───
-      // Each eye gets five random waypoints in BOTH axes so its path never
-      // matches any other eye's path. No upward bias, no shared trajectory.
-      const TOTAL_EYES = 24;
-      const PHASE1_WINDOW = 3200; // spawn window in ms
+      const introTease = document.getElementById('introTease');
+
+      // ── Phase 1: BIG wow/eyes particles filling the screen ──
+      const TOTAL = 40; // fewer but BIGGER
+      const SPAWN_WINDOW = 3500;
       let spawned = 0;
 
-      function rand(min: number, max: number) { return min + Math.random() * (max - min); }
-      function pmRand(mag: number) { return rand(-mag, mag); } // ± value, any direction
-
-      function spawnEye() {
-        if (!eyeContainer || spawned >= TOTAL_EYES) return;
+      function spawnWow() {
+        if (!wowContainer || spawned >= TOTAL) return;
         const el = document.createElement('span');
-        el.className = 'eye-particle';
-        el.textContent = '👀';
+        const isText = Math.random() > 0.35; // 65% wow, 35% 👀
 
-        // Initial position — anywhere on screen
-        el.style.left = `${rand(8, 88)}vw`;
-        el.style.top = `${rand(12, 80)}vh`;
+        el.className = `wow-particle ${isText ? 'is-text' : 'is-emoji'}`;
+        el.textContent = isText ? 'wow' : '👀';
 
-        // Random size (organic variation)
-        el.style.fontSize = `${rand(2.4, 4.6)}rem`;
+        // Random position — fill the whole screen
+        el.style.left = `${5 + Math.random() * 85}vw`;
+        el.style.top = `${10 + Math.random() * 75}vh`;
 
-        // Five waypoints — independent random offsets in BOTH axes
-        // mag scales the drift radius; later waypoints can wander further
-        for (let i = 1; i <= 5; i++) {
-          const mag = 60 + i * 30;
-          el.style.setProperty(`--dx-${i}`, `${pmRand(mag)}px`);
-          el.style.setProperty(`--dy-${i}`, `${pmRand(mag)}px`);
-          el.style.setProperty(`--rot-${i}`, `${pmRand(45)}deg`);
-        }
-        el.style.setProperty('--rot-0', `${pmRand(20)}deg`);
-        el.style.setProperty('--sc', `${rand(0.8, 1.4)}`);
+        // MUCH bigger sizes — screen filling
+        const size = isText ? (3 + Math.random() * 4) : (3.5 + Math.random() * 4.5);
+        el.style.fontSize = `${size}rem`;
 
-        const dur = rand(4.2, 6.5);
+        el.style.setProperty('--dx', `${-80 + Math.random() * 160}px`);
+        el.style.setProperty('--dy', `${-(100 + Math.random() * 200)}px`);
+        el.style.setProperty('--rot-start', `${-20 + Math.random() * 40}deg`);
+        el.style.setProperty('--rot-end', `${-30 + Math.random() * 60}deg`);
+        el.style.setProperty('--sc', `${0.8 + Math.random() * 0.8}`);
+        const dur = 3 + Math.random() * 2.5;
         el.style.setProperty('--dur', `${dur}s`);
         el.style.setProperty('--delay', '0s');
 
-        eyeContainer.appendChild(el);
+        wowContainer.appendChild(el);
         spawned++;
-        setTimeout(() => el.remove(), dur * 1000 + 200);
+        setTimeout(() => el.remove(), dur * 1000 + 300);
       }
 
-      // Stagger the spawn so eyes appear continuously, not in a single burst
-      for (let i = 0; i < TOTAL_EYES; i++) {
-        setTimeout(spawnEye, (i / TOTAL_EYES) * PHASE1_WINDOW + rand(0, 60));
+      // Burst: 10 big ones immediately
+      for (let i = 0; i < 10; i++) {
+        setTimeout(spawnWow, i * 40);
+      }
+      // Steady: rest over spawn window
+      const remaining = TOTAL - 10;
+      const interval = (SPAWN_WINDOW - 400) / remaining;
+      for (let i = 0; i < remaining; i++) {
+        setTimeout(spawnWow, 400 + i * interval);
       }
 
-      // ─── Phase 2: after eyes have established, show "see who this is" ───
+      // Phase 2: After 4.5s, fade particles → show "see who this is"
       setTimeout(() => {
-        if (eyeContainer) {
-          eyeContainer.style.transition = 'opacity 0.6s ease-out';
-          eyeContainer.style.opacity = '0';
+        if (wowContainer) {
+          wowContainer.style.transition = 'opacity 0.8s ease-out';
+          wowContainer.style.opacity = '0';
         }
         setTimeout(() => {
           if (introTease) introTease.classList.add('visible');
-        }, 400);
-      }, 3500);
+        }, 600);
+      }, 4500);
 
-      // ─── Phase 3: hide tease, show wave + welcome ───
+      // Phase 3: After 6.5s, hide tease → show wave greeting
       setTimeout(() => {
         if (introTease) introTease.classList.add('hidden');
         setTimeout(() => {
@@ -1294,10 +1317,10 @@ const featuredWork = [
               setTimeout(() => welcomeText.classList.add('show'), 300);
             }
           }
-        }, 450);
-      }, 5200);
+        }, 500);
+      }, 6500);
 
-      // ─── Iris-close exit after sequence completes ───
+      // Phase 3: Iris-close exit
       overlay.addEventListener('animationend', (e: AnimationEvent) => {
         if (e.animationName === 'introExit') {
           overlay.classList.add('finished');
