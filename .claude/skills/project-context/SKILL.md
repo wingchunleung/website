@@ -48,7 +48,7 @@ cultural undertones. Warm and welcoming, not dark or heavy.
 
 **Tech stack:** Astro 5.x + Tailwind CSS 4 + Preact islands + GSAP (planned)
 
-**Deployment:** GitHub Pages via GitHub Actions (repo: `wingchunleung/wingchunleung.github.io`, source: `master` branch through the deploy workflow). See CLAUDE.md for the migration status — the workflow file currently needs to be restored before pushes deploy.
+**Deployment:** GitHub Pages (wingchunleung/website, gh-pages branch)
 
 ---
 
@@ -165,48 +165,32 @@ can skip the full workflow. Use judgment.
 
 ## 6. Deployment — Read CLAUDE.md "Deployment & Landing-Page Animation" first
 
-State (2026-05-01):
-- Pages source switched from `gh-pages` branch to **GitHub Actions**
-- `master` HEAD is the source of truth — pushes are intended to build
-  and deploy via workflow
-- `origin/gh-pages` at `bf8a35c` (2026-04-09) is the **emergency
-  restore target** — last hand-validated good deploy. Do not push to it.
+Hard pinned state (2026-04-30):
+- `master` HEAD: `b1f651c` (= `546fe46` content)
+- `origin/gh-pages` HEAD: `bf8a35c` — **the live site, user-approved canonical**
 - Live URL: https://wingchunleung.github.io/
-- **Migration is incomplete:** the workflow file is missing from the
-  repo (a working version existed at commit `c4173d4`, removed by
-  `546fe46`). Until it is restored AND `astro.config.mjs` has
-  `base: '/website'` removed, master pushes do not deploy. The site
-  remains up only because GitHub keeps serving the prior good artifact.
-  Full details in CLAUDE.md.
 
-**Do not run `npx gh-pages -d dist`.** That manual deploy path is
-retired. The new path is push to `master` → workflow builds and
-deploys → wait for CDN. No deploy command from your machine.
-
-**Do not push to the `gh-pages` branch.** It is the rollback target.
-Committing to it loses the restore point.
+**Never run `npx gh-pages -d dist` without first confirming
+`git diff bf8a35c origin/gh-pages -- .` is empty.** If it isn't,
+gh-pages has hand-edited content master doesn't, and a rebuild will
+lose it. Past sessions edited gh-pages directly (sed-based passcode,
+email, path, trailing-slash fixes). Master is not always in sync.
 
 **Never auto-fix "while I'm in here" bugs in shared files**
 (`src/layouts/BaseLayout.astro`, `astro.config.mjs`,
-`public/robots.txt`, design tokens) during a single-page task. Under
-the workflow path, every push to master triggers a full rebuild and
-deploy — there is no "I'll just touch one page" any more.
+`public/robots.txt`, design tokens) during a single-page task. They
+trigger full rebuilds that overwrite gh-pages on next deploy.
 
 **The landing-page intro is sessionStorage-gated.** A reload after
 deploy won't re-play it — clear `sessionStorage['intro-seen']` or use
 incognito to verify.
 
-**If a deploy regresses the live site beyond a quick fix:** in repo
-Settings → Pages, switch Source from "GitHub Actions" back to "Deploy
-from a branch" → `gh-pages` → `/ (root)`. The site reverts to
-`bf8a35c` immediately. Once master is fixed and a clean workflow run
-completes, switch the source back to GitHub Actions.
+**If the intro regresses, restore gh-pages to `bf8a35c`:**
+`git push origin bf8a35c:gh-pages --force`.
 
-Mechanics under the workflow path:
-- Build runs in CI: `npm ci` + `npm run build`, then upload-pages-artifact + deploy-pages
-- Trigger: `git push origin master`
-- Watch: Actions tab on GitHub, or `gh run watch`
-- Local `npm run build` is for previewing only, not deploying
+Mechanics (only after the divergence check):
+- Build: `npm run build` → `dist/`
+- Deploy: `npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll`
 
 ---
 
@@ -219,7 +203,7 @@ When running the autonomous-coding-agent in this project:
 3. **Check design/decisions/** — proposals and synthesis already exist
 4. **Reference docs/hci-knowledge-base.md** for HCI theory
 5. **Use Telegram notifications** — send updates via `/telegram send`
-6. **Commit to master only on the user's request to deploy.** Pushes to master trigger the GitHub Actions deploy workflow automatically — every push ships. Do not push speculative work. Do not push to `gh-pages` (it's the rollback target). See CLAUDE.md "Deploy path migration" for the current incomplete state of the workflow.
+6. **Commit and push to master** — but do NOT auto-deploy to gh-pages. Deploy is a separate, gated action; see CLAUDE.md.
 7. **Never skip the HCI justification** — every visual change needs a principle
 8. **Prefer bright, clean designs** — the user explicitly prefers Apple-like quality
 9. **Test in browser** — verify visual output (with cleared sessionStorage), not just code or curl

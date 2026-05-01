@@ -149,54 +149,15 @@ and has been broken multiple times by well-intentioned cleanup. Read
 this section before any deploy, any build, and any edit to a shared
 file (layouts, config, public/, design tokens).
 
-## Deploy path migration (2026-05-01)
+## Pinned canonical state (as of 2026-04-30)
 
-The repo has switched from manual `npx gh-pages -d dist` deploys to
-**GitHub Actions deploys**. In repo Settings → Pages, the source is now
-"GitHub Actions" (was "Deploy from a branch → gh-pages"). Master is the
-source of truth; pushes to master are intended to build and deploy
-automatically.
-
-**Current state — partially configured. Do not assume a master push
-deploys until both items below are done:**
-
-1. **The deploy workflow file is missing from the repo.** A working
-   workflow existed at commit `c4173d4` (`.github/workflows/deploy.yml`)
-   and was removed by `546fe46` ("Remove conflicting GitHub Actions
-   deploy workflow") because it raced with the manual `npx gh-pages`
-   path. Now that the manual path is retired, the workflow can be
-   restored. Reference content: build with `actions/setup-node@v4` +
-   `npm ci` + `npm run build`, upload `dist/` via
-   `actions/upload-pages-artifact@v3`, deploy via
-   `actions/deploy-pages@v4`. Permissions: `contents: read`,
-   `pages: write`, `id-token: write`. Concurrency group `pages`,
-   `cancel-in-progress: false`.
-
-2. **`astro.config.mjs` has `base: '/website'` which no longer matches
-   the live URL.** The repo was renamed at some point and the live URL
-   is `https://wingchunleung.github.io/` (root). A build with
-   `base: '/website'` produces `/website/foo` asset paths that 404 at
-   the root URL. The `gh-pages` branch papered over this by hand-editing
-   `/website/` → `/` everywhere (commit `9033092` "Update all paths for
-   repo rename"). A fresh workflow build won't do that — `base: '/'`
-   (or removing the line entirely) is required before the first
-   workflow deploy.
-
-Until both are done, master pushes either no-op or fail. The site
-remains up only because GitHub keeps serving the prior good artifact
-(see below).
-
-## Pinned canonical state (as of 2026-05-01)
-
-| Branch / setting | SHA | Date | Role |
+| Branch | SHA | Date | Role |
 |---|---|---|---|
-| `master` | latest | rolling | source of truth — workflow builds and deploys this |
-| `origin/gh-pages` | `bf8a35c` | 2026-04-09 | **emergency restore** — last hand-validated good deploy. Do not push to it. |
-| Live URL | https://wingchunleung.github.io/ | — | served by the most recent successful Pages deployment (currently `bf8a35c` from gh-pages, until the new workflow ships its first artifact) |
-| Pages source | GitHub Actions | 2026-04-30 | switched from "Deploy from a branch → gh-pages" |
+| `master` | `b1f651c` | 2026-04-30 | source — content equivalent to `546fe46` (2026-03-31) |
+| `origin/gh-pages` | `bf8a35c` | 2026-04-09 | **live** — what the user has approved |
+| Live URL | https://wingchunleung.github.io/ | — | served from `gh-pages` |
 
-The intro animation source lives in `src/components/IntroOverlay.astro`
-(extracted from `src/pages/index.astro` for isolation):
+The intro animation source lives in `src/pages/index.astro`:
 - HTML overlay block — `<div class="intro-overlay" id="intro-overlay">` with
   `wow-container`, `intro-tease` ("see who this is"), `intro-stage` (👋 + welcome)
 - CSS keyframes & rules — `intro-overlay`, `wow-particle`, `wowFloat`,
@@ -207,87 +168,77 @@ The expected on-screen sequence: floating wow/eyes (👀 + "wow") at random
 positions and rotations → fade → "see who this is" → 👋 wave + "Welcome
 to my site" → iris-close reveals the hero.
 
-## Why the animation has broken (four confirmed failure modes)
+## Why the animation has broken (five confirmed failure modes)
 
-1. **Bundle hashes change on every build.** Each `npm run build` emits
+1. **`gh-pages` has content `master` doesn't.** Past sessions edited
+   `gh-pages` directly (sed-based: passcode, email removal, `/website/`
+   → `/` sweep, trailing-slash fixes). `master` was not always synced.
+   `npx gh-pages -d dist` overwrites the whole branch — divergent
+   content is silently lost.
+
+2. **Bundle hashes change on every build.** Each `npm run build` emits
    new `_astro/<hash>.css` / `<hash>.js`. Browsers may serve a cached
    HTML referencing a no-longer-existing bundle, or load a new HTML
-   against an old cached bundle. Either way the page misbehaves. Hard
-   refresh after every deploy.
+   against an old cached bundle. Either way the page misbehaves.
 
-2. **`sessionStorage` gates the intro.** The intro reads
+3. **`sessionStorage` gates the intro.** The intro reads
    `sessionStorage.getItem('intro-seen')` and skips itself after first
    view. Reloading to verify a deploy will *not* re-play it. To
    actually see it: DevTools → `sessionStorage.removeItem('intro-seen')`
    → reload, or use an incognito window.
 
-3. **CDN caches HTML.** GitHub Pages serves stale HTML for ~1–10 min
-   after a successful workflow run. "It didn't update" often just means
-   CDN hasn't refreshed.
+4. **CDN caches HTML.** GitHub Pages serves stale HTML for ~1–10 min
+   after a push. "It didn't update" often just means CDN hasn't
+   refreshed.
 
-4. **Shared-file cleanup leaks across pages.** Edits to
+5. **Shared-file cleanup leaks across pages.** Edits to
    `src/layouts/BaseLayout.astro`, `astro.config.mjs`, `public/robots.txt`,
    or `src/styles/design-tokens.css` propagate to every page on rebuild.
-   Under the new workflow, every push to master triggers a full rebuild
-   and deploy — there is no "I'll just touch one page" any more.
-
-(Mode #1 in earlier revisions of this file — "gh-pages has content
-master doesn't" — is retired. Hand-edits to gh-pages stop being a risk
-once the workflow is the only deploy path.)
+   Even a one-line JSON-LD URL "fix" triggers a full rebuild that
+   overwrites `gh-pages` next deploy.
 
 ## Hard rules — read every time
 
-- **No manual deploys.** `npx gh-pages -d dist` is retired. The path
-  is: push to `master` → Actions workflow builds and deploys → wait
-  for CDN. Don't run any deploy command from your machine.
-- **Every push to `master` ships.** Don't push speculative or
-  in-progress work directly to master. Use a branch + PR if you want
-  to validate before deploying.
-- **Don't push to the `gh-pages` branch.** It is the emergency restore
-  target pinned at `bf8a35c`. If you commit to it, the rollback target
-  is lost.
-- **Don't bundle "while I'm in here" cleanup of shared files** during a
-  single-page task. Edits to `BaseLayout.astro`, `astro.config.mjs`,
-  `public/robots.txt`, or design tokens propagate to every page on the
-  next workflow build. Surface as a separate item — don't bundle.
+- **Do not run `npx gh-pages -d dist` without checking for divergence first.**
+  `git diff bf8a35c origin/gh-pages -- .` (excluding asset hashes)
+  should be empty. If it isn't, `gh-pages` has content `master` doesn't
+  — rebuilding will lose it. Stop and ask.
+- **Do not "while I'm in here" cleanup shared files** during a
+  single-page task. If you spot a bug in `BaseLayout.astro`,
+  `astro.config.mjs`, `public/robots.txt`, or design tokens, surface
+  it as a separate item — don't bundle the fix.
 - **For animation edits, only touch the line ranges named above.**
-  Don't blanket-rewrite `src/components/IntroOverlay.astro` or
-  `src/pages/index.astro` — surgical region-replacement preserves
-  post-commit content.
+  Don't blanket-rewrite `src/pages/index.astro` — surgical
+  region-replacement preserves post-commit content (Speaking,
+  Leadership, Mentoring, education, etc.).
 - **Verify visually, not just via `curl`.** The intro is JS-injected at
   runtime — HTML grep can't see particles. Use a real browser,
   hard-refresh, cleared sessionStorage, on the production URL.
-- **If a deploy regresses the live site beyond a quick fix:** in repo
-  Settings → Pages, switch Source from "GitHub Actions" back to
-  "Deploy from a branch" → `gh-pages` → `/ (root)`. The site reverts
-  to `bf8a35c` immediately. Once master is fixed and a clean workflow
-  run completes, switch the source back to GitHub Actions. This is the
-  reason the gh-pages branch is preserved.
+- **If the animation regresses, restore `gh-pages` to `bf8a35c`:**
+  `git push origin bf8a35c:gh-pages --force`. That commit is the
+  user-confirmed canonical-good state.
 
 ## When a deploy is genuinely required
 
-The flow under the new path:
+1. Make the source change on `master`.
+2. `git diff bf8a35c origin/gh-pages -- .` — confirm empty (no
+   divergent content on the live branch). If non-empty, STOP and ask.
+3. `npm run build`.
+4. Spot-check: `diff <(git show bf8a35c:index.html) dist/index.html`
+   should differ only in (a) the intended change and (b) `_astro/<hash>`
+   bundle filenames.
+5. `npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll`.
+6. Wait 1–5 min for CDN.
+7. Verify in a browser: hard-refresh + `sessionStorage.removeItem('intro-seen')`
+   + reload on production.
 
-1. Make the source change on `master`. Commit.
-2. `git push origin master`. The "Deploy to GitHub Pages" workflow
-   runs automatically (on `push: branches: [master]`).
-3. Watch the run on the Actions tab, or `gh run watch`. The build step
-   runs `npm ci` + `npm run build`; the deploy step uploads `dist/`
-   and publishes via `actions/deploy-pages@v4`.
-4. Wait 1–2 min after the run succeeds for CDN to refresh.
-5. Verify on production: hard-refresh + `sessionStorage.removeItem('intro-seen')`
-   + reload at https://wingchunleung.github.io/. Click each nav link.
-
-If the run fails: read the Actions log. The fix goes in master. Do
-**not** push fixes to `gh-pages` — it is no longer the deploy target.
+If any check fails, do not proceed.
 
 ## DO NOT
 
-- Run `npx gh-pages -d dist`. That path is retired.
-- Push to the `gh-pages` branch. It's the rollback target, not a
-  deploy target.
-- Add a *second* deploy workflow alongside `deploy.yml`. Concurrent
-  workflows targeting the same Pages environment race and the
-  `concurrency: pages` group will cancel one. One workflow file is
-  enough.
-- Push speculative or unverified work to `master`. Every push deploys.
+- Auto-deploy "to verify" small changes — every redeploy risks the
+  divergence problem.
+- Treat `master` as the source of truth for the live site — it isn't.
+  `gh-pages` at `bf8a35c` is. `master` is a build input.
+- Add a GitHub Actions deploy workflow for `gh-pages` — that races
+  with the manual `npx gh-pages` workflow and breaks deploys.

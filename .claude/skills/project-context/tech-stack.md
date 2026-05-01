@@ -25,13 +25,11 @@
 - Currently loaded via Google Fonts CDN; plan to self-host for performance
 
 ## Deployment
-- **Path:** GitHub Actions workflow → GitHub Pages. Pages source is set to "GitHub Actions" in repo settings (switched from `gh-pages` branch on 2026-04-30).
-- **Trigger:** push to `master` runs `.github/workflows/deploy.yml` (currently missing from the repo — see CLAUDE.md "Deploy path migration" for restore instructions).
-- **CI build:** `npm ci` + `npm run build` + `actions/upload-pages-artifact@v3` + `actions/deploy-pages@v4`.
-- **Local build (preview only):** `npm run build` → `dist/`.
-- **Host URL:** https://wingchunleung.github.io/ (root). Repo: `wingchunleung/wingchunleung.github.io` (user-page repo).
-- **Base path:** `astro.config.mjs` currently has `base: '/website'` which does NOT match the root URL. Needs to be removed before the new workflow's first deploy. The `gh-pages` branch papered over this with hand-edits; a clean CI build will not.
-- **No manual deploy command** — `npx gh-pages -d dist` is retired.
+- **Build:** `npm run build` → `dist/`
+- **Deploy:** `npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll`
+- **Host:** GitHub Pages at wingchunleung.github.io/website/
+- **Base path:** `/website` (in astro.config.mjs)
+- `.nojekyll` file required — GitHub Pages Jekyll ignores `_astro/` directory
 
 ## Performance Budget
 | Metric | Target |
@@ -47,8 +45,7 @@
 ```bash
 export FNM_DIR="$HOME/.local/share/fnm" && export PATH="$FNM_DIR:$PATH" && eval "$(fnm env)"
 npm run dev          # Start dev server
-npm run build        # Build for production (local preview only — does not deploy)
+npm run build        # Build for production
 npm run preview      # Preview production build
-git push origin master   # Triggers the deploy workflow on GitHub Actions
-gh run watch         # (optional) Watch the most recent workflow run
+npx gh-pages -d dist -b gh-pages --dotfiles --nojekyll  # Deploy
 ```
