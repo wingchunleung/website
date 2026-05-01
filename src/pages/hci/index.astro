@@ -2,13 +2,24 @@
 /**
  * HCI Course Page — ARIN5301 (Prof. Xiaojuan Ma, HKUST)
  *
- * Three sections: hero → coursework (assignments with TOC) → principles.
+ * Three sections: hero → coursework (assignments with phases) → principles.
+ *
+ * A "phase" is a deliverable. It can carry a project title, a video or PDF
+ * artifact, a multi-paragraph description, and acknowledgments. Two render
+ * modes:
+ *   - Rich phase (artifact.inline === true): the iframe is always visible
+ *     directly inside the card; the description collapses to ~3 lines with a
+ *     "Show more" toggle (H3 minimalist on small screens, H4 user control).
+ *   - Disclosure phase (artifact present, inline !== true): native <details>
+ *     keeps the artifact behind a click-to-expand row.
+ *   - Static phase (no artifact): plain row with an Upcoming pill.
  *
  * HCI principles enacted:
  * - H1 Consistency — celadon accent is the only deviation; tokens unchanged
  * - H2 Mapping — page organised by assignment (TA's mental model)
- * - H4 Freedom — anchor-link TOC for assignments, deep-linkable URLs
- * - H6 Recognition — canonical principle names as in-page landmarks
+ * - H3 Minimalism — long descriptions truncate to 3 lines on every viewport
+ * - H4 Freedom — show-more is reversible; details disclosure is opt-in
+ * - H6 Recognition — phase status pills surface state without recall
  * - HCI-11 multimodal redundancy — colour never carries meaning alone
  */
 
@@ -16,15 +27,102 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
-const assignments = [
+type Artifact =
+  | {
+      type: 'pdf' | 'video';
+      src: string;                 // embed URL (used by the iframe)
+      href: string;                // direct/external URL (used by "open in new tab")
+      cta?: string;                // CTA wording for the disclosure variant
+      inline?: boolean;            // if true, embed renders always-visible
+    }
+  | {
+      type: 'slides';
+      slides: string[];            // list of pre-rendered slide image URLs
+      href: string;                // direct/external URL (PDF download fallback)
+      cta?: string;
+      inline?: boolean;
+    };
+
+type Phase = {
+  label: string;
+  title?: string;
+  projectTitle?: string;
+  status: 'completed' | 'upcoming';
+  note?: string;
+  description?: string;            // paragraphs separated by \n\n
+  acknowledgments?: string[];
+  artifact?: Artifact;
+};
+
+type Assignment = {
+  slug: string;
+  number: string;
+  title: string;
+  description?: string;            // brief assignment-level intro
+  phases: Phase[];
+};
+
+const assignments: Assignment[] = [
   {
     slug: 'final-project',
     number: '01',
-    title: 'Final Project',
-    description: 'My HCI final project submission will be posted here once submitted.',
-    date: 'TBD',
-    status: 'upcoming' as const,
-    emptyStateNote: 'If this slot is still empty when you grade, please reach me via the contact page.',
+    title: 'Final Project (Individual)',
+    phases: [
+      {
+        label: 'Phase 1',
+        title: 'Video paper',
+        projectTitle: 'The Good, the Bad, the Trade-off',
+        status: 'completed',
+        artifact: {
+          type: 'video',
+          src: 'https://drive.google.com/file/d/1pO1i1KePp4WZ-5EwFprDSA87u-MNMQMU/preview',
+          href: 'https://drive.google.com/file/d/1pO1i1KePp4WZ-5EwFprDSA87u-MNMQMU/view?usp=sharing',
+          inline: true,
+        },
+        description: [
+          'Kimi Claw is a 24/7 AI assistant released in February 2026. This application is built on top of OpenClaw, with full integration into Kimi’s ecosystem (using Kimi’s AI model and cloud infrastructure). Kimi Claw aims to automate complex tasks and improve users’ efficiency. However, despite its capabilities, it comes with pros and cons. Due to time constraints, the video focuses on the user desirability aspect.',
+          'In terms of pros, there are 3 main advantages. First, it offers strong automation. Users can input natural language commands, which Kimi Claw automatically translates into executable code. This eliminates the need for manual installation and implementation. Second, it is easy to set up. I recall when I set up my self-hosted OpenClaw on a virtual private server (VPS), it took me a day just to get it functional. However, Kimi Claw allows users to deploy the AI agent with just a few clicks, saving time and reducing cognitive load. Third, it has low maintenance. As OpenClaw has frequent updates, manually tracking and updating can be time-consuming. At Kimi Claw, updates are handled by the Kimi platform, and users can upgrade with a one click.',
+          'Despite the above pros, there are 2 disadvantages. First, Kimi Claw violates the invisible computing principle. Unlike the original OpenClaw, Kimi Claw shows all the reasoning for each operation. While this allows users to review its current status, it becomes overwhelming over time (e.g., dozens of messages for a single operation). Second is the over-automation issue. Unlike traditional coding, where code is visible, changes using Kimi Code occur in a black box, making it unclear what is modified or whether new issues have been introduced.',
+          'With that, we can see that, despite its strengths, Kimi Claw presents a trade-off — convenience at the expense of reduced transparency and control.',
+        ].join('\n\n'),
+        acknowledgments: [
+          'Copyright: Some images used in the video were sourced from publicly available sources via online searches (e.g., Google). All rights belong to their respective owners. This video is created for educational purposes only.',
+          'AI use: The short introduction is edited by Grammarly, an AI-powered writing tool, to refine grammar and sentence structure. All suggestions were reviewed manually to preserve tone.',
+        ],
+      },
+      {
+        label: 'Phase 2',
+        status: 'upcoming',
+        note: 'TBD',
+      },
+    ],
+  },
+  {
+    slug: 'group-project',
+    number: '02',
+    title: 'Group Project',
+    description: 'ARIN5301 Group 5 — collaborative coursework across the term.',
+    phases: [
+      {
+        label: 'Phase 1',
+        title: 'Need-finding',
+        status: 'completed',
+        note: 'Slide deck presented in class',
+        artifact: {
+          type: 'slides',
+          slides: Array.from({ length: 19 }, (_, i) =>
+            `/files/group-project-slides/slide-${String(i + 1).padStart(2, '0')}.jpg`,
+          ),
+          href: '/files/group-project-needfinding-phase1.pdf',
+          inline: true,
+        },
+      },
+      {
+        label: 'Phase 2',
+        status: 'upcoming',
+        note: 'TBD',
+      },
+    ],
   },
 ];
 
@@ -86,8 +184,6 @@ const principles = [
 
   <!-- ═══════════════════════════════════════════════════════════════════
        ASSIGNMENTS
-       HCI: H2 Mapping — structured by assignment (TA's mental model)
-       HCI: H4 Freedom — TOC + deep-linkable anchors close the execution gulf
        ═══════════════════════════════════════════════════════════════════ -->
   <section id="assignments" class="assignments-section" aria-labelledby="assignments-heading">
     <div class="container content">
@@ -116,16 +212,185 @@ const principles = [
             <div class="assignment-number" aria-hidden="true">{assignment.number}</div>
             <div class="assignment-content">
               <h3 class="assignment-title">{assignment.title}</h3>
-              <p class="assignment-description">{assignment.description}</p>
-              {assignment.emptyStateNote && (
-                <p class="assignment-empty-note">{assignment.emptyStateNote}</p>
+              {assignment.description && (
+                <p class="assignment-description">{assignment.description}</p>
               )}
-              <div class="assignment-meta">
-                <span class="assignment-date">{assignment.date}</span>
-                <span class:list={['assignment-status', assignment.status]}>
-                  {assignment.status === 'upcoming' ? 'Upcoming' : 'Published'}
-                </span>
-              </div>
+
+              <ul class="phase-list" role="list">
+                {assignment.phases.map((phase) => (
+                  <li class="phase-item">
+                    {phase.artifact?.inline ? (
+                      <div class="phase phase-rich">
+                        <div class="phase-summary phase-summary-static">
+                          <span class="phase-summary-main">
+                            <span class="phase-num">{phase.label}</span>
+                            {phase.title && <span class="phase-title">{phase.title}</span>}
+                            <span class:list={['phase-status', phase.status]}>
+                              {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                            </span>
+                          </span>
+                        </div>
+
+                        {phase.projectTitle && (
+                          <p class="phase-project-title">{phase.projectTitle}</p>
+                        )}
+
+                        {phase.artifact.type === 'video' && (
+                          <iframe
+                            class="phase-embed phase-embed-video"
+                            src={phase.artifact.src}
+                            title={`${phase.label}${phase.projectTitle ? ': ' + phase.projectTitle : ''}`}
+                            loading="lazy"
+                            allow="autoplay; fullscreen"
+                            allowfullscreen
+                          ></iframe>
+                        )}
+
+                        {phase.artifact.type === 'pdf' && (
+                          <iframe
+                            class="phase-embed phase-embed-pdf"
+                            src={phase.artifact.src}
+                            title={`${phase.label}${phase.projectTitle ? ': ' + phase.projectTitle : ''}`}
+                            loading="lazy"
+                          ></iframe>
+                        )}
+
+                        {phase.artifact.type === 'slides' && (
+                          <div
+                            class="slide-viewer"
+                            tabindex="0"
+                            data-slide-viewer
+                            data-slide-count={phase.artifact.slides.length}
+                            aria-roledescription="carousel"
+                            aria-label={`${assignment.title} — ${phase.label}${phase.title ? ': ' + phase.title : ''}`}
+                          >
+                            <div class="slide-viewer-stage">
+                              {phase.artifact.slides.map((src, i) => (
+                                <img
+                                  class:list={['slide-viewer-slide', { 'is-current': i === 0 }]}
+                                  src={src}
+                                  alt={`Slide ${i + 1} of ${phase.artifact.slides.length}`}
+                                  loading={i === 0 ? 'eager' : 'lazy'}
+                                  data-slide-index={i}
+                                  draggable="false"
+                                />
+                              ))}
+                            </div>
+                            <div class="slide-viewer-controls">
+                              <button type="button" class="slide-viewer-btn" data-slide-prev aria-label="Previous slide" disabled>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                  <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                              <span class="slide-viewer-counter" data-slide-counter>1 / {phase.artifact.slides.length}</span>
+                              <button type="button" class="slide-viewer-btn" data-slide-next aria-label="Next slide">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                  <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                              <span class="slide-viewer-hint">Use ← → keys</span>
+                            </div>
+                          </div>
+                        )}
+
+                        <a href={phase.artifact.href} target="_blank" rel="noopener noreferrer" class="phase-external">
+                          {phase.artifact.type === 'slides' ? 'Download PDF' : 'Open in new tab'}
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </a>
+
+                        {phase.description && (
+                          <div class="description-clip" data-expanded="false">
+                            <div class="description-body">
+                              {phase.description.split('\n\n').map((para) => (
+                                <p class="description-para">{para}</p>
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              class="description-toggle"
+                              aria-expanded="false"
+                              data-toggle-description
+                            >
+                              <span class="description-toggle-label">Show more</span>
+                              <svg class="description-toggle-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+
+                        {phase.acknowledgments && phase.acknowledgments.length > 0 && (
+                          <div class="phase-acknowledgments">
+                            <span class="acknowledgments-label">Acknowledgments</span>
+                            {phase.acknowledgments.map((line) => (
+                              <p class="acknowledgments-line">{line}</p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : phase.artifact ? (
+                      <details class="phase">
+                        <summary class="phase-summary">
+                          <span class="phase-summary-main">
+                            <span class="phase-num">{phase.label}</span>
+                            {phase.title && <span class="phase-title">{phase.title}</span>}
+                            <span class:list={['phase-status', phase.status]}>
+                              {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                            </span>
+                          </span>
+                          {phase.note && <span class="phase-note">{phase.note}</span>}
+                          <span class="phase-cta">
+                            <span>{phase.artifact.cta ?? 'View'}</span>
+                            <span class="phase-arrow" aria-hidden="true">
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M3 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </span>
+                          </span>
+                        </summary>
+                        <div class="phase-artifact">
+                          {phase.artifact.type === 'pdf' ? (
+                            <iframe
+                              class="phase-embed phase-embed-pdf"
+                              src={phase.artifact.src}
+                              title={`${assignment.title} — ${phase.label}${phase.title ? ': ' + phase.title : ''}`}
+                              loading="lazy"
+                            ></iframe>
+                          ) : (
+                            <iframe
+                              class="phase-embed phase-embed-video"
+                              src={phase.artifact.src}
+                              title={`${assignment.title} — ${phase.label}${phase.title ? ': ' + phase.title : ''}`}
+                              loading="lazy"
+                              allow="autoplay; fullscreen"
+                              allowfullscreen
+                            ></iframe>
+                          )}
+                          <a href={phase.artifact.href} target="_blank" rel="noopener noreferrer" class="phase-external">
+                            Open in new tab
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                              <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </a>
+                        </div>
+                      </details>
+                    ) : (
+                      <div class="phase phase-static">
+                        <span class="phase-summary-main">
+                          <span class="phase-num">{phase.label}</span>
+                          {phase.title && <span class="phase-title">{phase.title}</span>}
+                          <span class:list={['phase-status', phase.status]}>
+                            {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                          </span>
+                        </span>
+                        {phase.note && <span class="phase-note">{phase.note}</span>}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           </article>
         ))}
@@ -135,9 +400,7 @@ const principles = [
 
   <!-- ═══════════════════════════════════════════════════════════════════
        PRINCIPLES
-       Gestalt: Proximity — principles grouped by category
-       Gestalt: Similarity — consistent card design within categories
-       Miller's ~7 — each category capped at ≤10 items
+       Gestalt: Proximity + Similarity; Miller's ~7 — each cap ≤10 items
        ═══════════════════════════════════════════════════════════════════ -->
   <section id="principles" class="principles-section" aria-labelledby="principles-heading">
     <div class="container">
@@ -227,14 +490,15 @@ const principles = [
   .assignments-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-4);
     margin-bottom: var(--space-4);
   }
 
   .assignment-card {
     display: flex;
+    align-items: flex-start;
     gap: var(--space-4);
-    padding: var(--space-4) var(--space-5);
+    padding: var(--space-5);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-left: 3px solid var(--color-celadon);
@@ -246,7 +510,6 @@ const principles = [
   }
 
   .assignment-card:hover {
-    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
   }
 
@@ -266,6 +529,11 @@ const principles = [
     min-width: 2ch;
   }
 
+  .assignment-content {
+    flex: 1;
+    min-width: 0;
+  }
+
   .assignment-title {
     font-size: var(--text-h3);
     margin-bottom: var(--space-1);
@@ -274,22 +542,69 @@ const principles = [
   .assignment-description {
     font-size: var(--text-small);
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-2);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-3);
+    max-width: 65ch;
   }
 
-  .assignment-meta {
+  /* Phase list — one row per phase */
+  .phase-list {
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .phase-item + .phase-item {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .phase {
+    padding: var(--space-3) 0;
+  }
+
+  .phase-summary {
     display: flex;
-    gap: var(--space-3);
+    flex-wrap: wrap;
     align-items: center;
+    gap: var(--space-2) var(--space-3);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
   }
 
-  .assignment-date {
+  .phase-summary-static {
+    cursor: default;
+    user-select: auto;
+  }
+
+  /* Hide the default disclosure marker — we render our own arrow */
+  .phase-summary::-webkit-details-marker { display: none; }
+  .phase-summary::marker { content: ''; display: none; }
+
+  .phase-summary-main {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .phase-num {
     font-family: var(--font-mono);
     font-size: var(--text-caption);
-    color: var(--color-wash);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-celadon);
+    font-weight: var(--weight-medium);
   }
 
-  .assignment-status {
+  .phase-title {
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  .phase-status {
     font-family: var(--font-mono);
     font-size: var(--text-caption);
     letter-spacing: var(--tracking-wider);
@@ -298,22 +613,315 @@ const principles = [
     border-radius: var(--radius-sm);
   }
 
-  .assignment-status.upcoming {
+  .phase-status.completed {
     color: var(--color-celadon);
-    background: rgba(125, 158, 140, 0.1);
+    background: rgba(125, 158, 140, 0.12);
   }
 
-  .assignment-status.published {
-    color: var(--color-vermillion);
-    background: rgba(199, 62, 29, 0.1);
+  .phase-status.upcoming {
+    color: var(--color-wash);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
   }
 
-  .assignment-empty-note {
+  .phase-note {
     font-size: var(--text-small);
     color: var(--color-wash);
-    font-style: italic;
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+
+  .phase-cta {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+    color: var(--color-celadon);
+    flex-shrink: 0;
+  }
+
+  .phase-arrow {
+    display: inline-flex;
+    align-items: center;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  details[open] > .phase-summary .phase-arrow {
+    transform: rotate(90deg);
+  }
+
+  .phase-summary:hover .phase-cta {
+    color: var(--color-ink);
+  }
+
+  /* Static (non-interactive) phase row */
+  .phase-static {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    color: var(--color-wash);
+  }
+
+  /* ── Rich phase: project title + always-on embed + foldable description ── */
+  .phase-rich {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .phase-project-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: var(--weight-light);
+    color: var(--color-celadon);
+    letter-spacing: -0.01em;
+    line-height: var(--leading-snug);
+    margin: 0;
+  }
+
+  /* Artifact panel revealed when a phase is expanded */
+  .phase-artifact {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .phase-embed {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    display: block;
+  }
+
+  .phase-embed-pdf {
+    height: clamp(420px, 80vh, 760px);
+  }
+
+  .phase-embed-video {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .phase-external {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+    color: var(--color-celadon);
+  }
+
+  .phase-external::after { display: none; }
+
+  .phase-external:hover {
+    color: var(--color-ink);
+  }
+
+  /* ── Slide viewer ─────────────────────────────────────────────────────
+     Pre-rendered slide images, navigated by buttons or arrow keys when
+     the viewer holds focus. Lazy-loads beyond the first slide. */
+
+  .slide-viewer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+    outline: none;
+  }
+
+  .slide-viewer:focus-visible {
+    outline: 2px solid var(--color-celadon);
+    outline-offset: 4px;
+    border-radius: var(--radius-md);
+  }
+
+  .slide-viewer-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .slide-viewer-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .slide-viewer-slide.is-current {
+    opacity: 1;
+  }
+
+  .slide-viewer-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .slide-viewer-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-celadon);
+    cursor: pointer;
+    transition: border-color var(--duration-normal) var(--ease-out),
+                color var(--duration-normal) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+  }
+
+  .slide-viewer-btn:hover:not(:disabled) {
+    border-color: var(--color-celadon);
+    color: var(--color-ink);
+    transform: translateY(-1px);
+  }
+
+  .slide-viewer-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .slide-viewer-counter {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-wash);
+    min-width: 4ch;
+    text-align: center;
+  }
+
+  .slide-viewer-hint {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
+    margin-left: auto;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 480px) {
+    .slide-viewer-hint { display: none; }
+  }
+
+  /* ── Description clip / show-more pattern ───────────────────────────── */
+  .description-clip {
+    margin-top: var(--space-2);
+  }
+
+  .description-body {
+    max-height: 5.4em;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .description-clip[data-expanded="true"] .description-body {
+    max-height: none;
+  }
+
+  .description-body::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 2.4em;
+    background: linear-gradient(to bottom, transparent, var(--color-surface));
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .description-clip[data-expanded="true"] .description-body::after {
+    opacity: 0;
+  }
+
+  .description-para {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: 65ch;
+  }
+
+  .description-para + .description-para {
+    margin-top: var(--space-3);
+  }
+
+  .description-toggle {
+    background: none;
+    border: none;
+    padding: var(--space-2) 0 0;
+    margin: 0;
+    font: inherit;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-celadon);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .description-toggle:hover {
+    color: var(--color-ink);
+  }
+
+  .description-toggle-arrow {
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .description-clip[data-expanded="true"] .description-toggle-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* ── Phase-level acknowledgments (small print) ──────────────────────── */
+  .phase-acknowledgments {
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    max-width: 65ch;
+  }
+
+  .acknowledgments-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-wash);
     margin-bottom: var(--space-2);
-    max-width: 60ch;
+  }
+
+  .acknowledgments-line {
+    font-size: var(--text-caption);
+    color: var(--color-wash);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .acknowledgments-line + .acknowledgments-line {
+    margin-top: var(--space-2);
   }
 
   /* Assignments TOC — closes the execution gulf for graders. */
@@ -462,5 +1070,80 @@ const principles = [
         scrollTrigger: { trigger: element, start: 'top 85%', toggleActions: 'play none none none' },
       }
     );
+  });
+
+  // Description show-more / show-less toggle
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-description]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.description-clip') as HTMLElement | null;
+      if (!wrap) return;
+      const expanded = wrap.getAttribute('data-expanded') === 'true';
+      wrap.setAttribute('data-expanded', String(!expanded));
+      btn.setAttribute('aria-expanded', String(!expanded));
+      const label = btn.querySelector('.description-toggle-label');
+      if (label) label.textContent = !expanded ? 'Show less' : 'Show more';
+    });
+  });
+
+  // Slide viewer — buttons + ArrowLeft/ArrowRight/Home/End when focused.
+  // Eager-loads the next slide on each step so navigation feels instant.
+  document.querySelectorAll<HTMLElement>('[data-slide-viewer]').forEach((viewer) => {
+    const slides = Array.from(viewer.querySelectorAll<HTMLImageElement>('.slide-viewer-slide'));
+    const counter = viewer.querySelector<HTMLElement>('[data-slide-counter]');
+    const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-slide-prev]');
+    const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-slide-next]');
+    const total = slides.length;
+    if (!total) return;
+    let current = 0;
+
+    const update = () => {
+      slides.forEach((img, i) => img.classList.toggle('is-current', i === current));
+      if (counter) counter.textContent = `${current + 1} / ${total}`;
+      if (prevBtn) prevBtn.disabled = current === 0;
+      if (nextBtn) nextBtn.disabled = current === total - 1;
+      // Promote next/prev to eager so the immediate step is preloaded
+      const neighbours = [slides[current + 1], slides[current - 1]];
+      neighbours.forEach((img) => {
+        if (img && img.loading === 'lazy') img.loading = 'eager';
+      });
+    };
+
+    const goPrev = () => {
+      if (current > 0) { current -= 1; update(); }
+    };
+    const goNext = () => {
+      if (current < total - 1) { current += 1; update(); }
+    };
+
+    prevBtn?.addEventListener('click', goPrev);
+    nextBtn?.addEventListener('click', goNext);
+
+    viewer.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        current = 0;
+        update();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        current = total - 1;
+        update();
+      }
+    });
+
+    // Click left half of the stage = prev, right half = next (mobile-friendly)
+    const stage = viewer.querySelector<HTMLElement>('.slide-viewer-stage');
+    stage?.addEventListener('click', (e: MouseEvent) => {
+      const rect = stage.getBoundingClientRect();
+      if (e.clientX - rect.left < rect.width / 2) goPrev();
+      else goNext();
+    });
+
+    update();
   });
 </script>
