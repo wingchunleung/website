@@ -17,15 +17,10 @@ It is automatically loaded during the agent's initialization step (Section 1,
 Step 3: "Check for project-specific context").
 
 **Supporting reference files** (read when the relevant topic arises):
-- `.claude/skills/project-context/scope.md` — **Read first.** In-scope vs deferred HCI knowledge index
-- `.claude/skills/project-context/hci-principles.md` — Working subset for daily site development (Nielsen, Gestalt-as-load, Norman, need typology, Fitts/Hick, gulfs, multimodal redundancy, lab-to-world)
+- `.claude/skills/project-context/hci-principles.md` — Nielsen's 10, Gestalt, Norman's 3 levels, quick reference
 - `.claude/skills/project-context/design-system.md` — Ink & Signal design tokens, typography, color palette, spacing
 - `.claude/skills/project-context/tech-stack.md` — Astro 5, Tailwind CSS 4, GSAP, deployment, performance budget
 - `.claude/skills/project-context/workflow.md` — 4-phase mandatory workflow, multi-agent design process
-
-**Long-form HCI reference** (don't load by default; read when writing or expanding scope):
-- `docs/hci-knowledge-base.md` — comprehensive synthesis of all 18 lectures + need-typology paper, tagged [IN-SCOPE] / [DEFERRED]
-- `docs/hci-deferred-for-writing.md` — deferred topics with re-entry triggers for future term papers / projects
 
 ---
 
