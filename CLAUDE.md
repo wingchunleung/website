@@ -124,3 +124,33 @@ PDF lecture notes are stored at: `/home/wing/Documents/HCI/`
 ├── public/                # Static assets
 └── tests/                 # Tests including usability tests
 ```
+
+## Canonical Landing-Page Intro Animation (LOCKED)
+
+The brand-moment animation that plays once per session after the lock-screen
+PIN is the **only** approved intro animation for this site. It survived 100+
+prior iterations and is the design the user has chosen to keep.
+
+**Source of truth:** `src/components/IntroOverlay.astro`. All HTML, CSS, and
+JS for the animation live there. The homepage (`src/pages/index.astro`) only
+imports and renders `<IntroOverlay />` — it must not contain inline intro
+markup, intro CSS, or intro JS.
+
+**Public contract with `LockScreen.astro`:**
+- LockScreen sets `sessionStorage 'site-unlocked' = '1'` after a correct PIN.
+- LockScreen dispatches a `window` `site-unlocked` CustomEvent in the same
+  setTimeout that removes its DOM. The IntroOverlay listens for that event.
+- The IntroOverlay sets `sessionStorage 'intro-seen' = '1'` on first run so
+  returning visits in the same session skip the animation.
+
+**Sequence (3.9 seconds total, do not modify timings without an explicit DDR):**
+- 0 ms: spawn 35 (mobile) / 65 (desktop) free-floating "wow" + 👀 particles
+- 800 ms: begin 600 ms opacity fade-out
+- 1100 ms: "see who this is 👀✨" tease pops in (back.out)
+- 2000 ms: tease fades out
+- 2300 ms: 👋 fades in, waves three times, fades out
+- 3300 ms: hero reveals + iris-close exit (clip-path)
+
+**Read `.claude/rules/intro-overlay.md` before editing the intro or the lock
+screen.** That file documents the isolation rules that keep the animation
+robust against unrelated edits elsewhere in the site.

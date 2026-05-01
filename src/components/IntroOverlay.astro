@@ -1,0 +1,334 @@
+---
+/**
+ * IntroOverlay — Landing-page brand-moment animation
+ *
+ * Reconstructs the deployed gh-pages April 2026 intro verbatim. Self-contained
+ * so that future edits to index.astro (or any other page) cannot reach into
+ * its internals and accidentally change the animation.
+ *
+ * Public contract with LockScreen (the only outside coupling):
+ *   - Reads sessionStorage 'site-unlocked' === '1' to know if the gate has
+ *     been passed already this session.
+ *   - Listens once for the window 'site-unlocked' event for the live unlock.
+ *
+ * The component also reaches FORWARD into the homepage's hero classes
+ * (.hero-wave, .greeting-text, .hero-cta-wrap, .wave-hand, .scroll-cue) to
+ * animate them into view at the same moment the iris-close fires. This is
+ * how the deployed version did it; keeping it here means the intro
+ * orchestrates the whole brand moment in one place.
+ *
+ * Sequence (first visit only — `sessionStorage 'intro-seen'` gates returning
+ * visits to skip everything):
+ *
+ *   0 ms:    spawn N particles (35 mobile / 65 desktop), free-floating motion
+ *   800 ms:  begin 600 ms opacity fade-out while motion continues
+ *   1100 ms: tease "see who this is 👀✨" pops in (back.out)
+ *   2000 ms: tease fades out
+ *   2300 ms: 👋 fades in, waves three times, fades out
+ *   3300 ms: hero reveals (wave / greeting / CTA / scroll-cue / hand wave) and
+ *            the overlay iris-closes; on complete the overlay is removed.
+ *
+ * Reduced motion: the @media block hides the overlay entirely; nothing else
+ * runs because the bypass path will not have a visible overlay to animate.
+ */
+---
+
+<div class="intro-overlay" id="intro-overlay" aria-hidden="true">
+  <div class="intro-bg"></div>
+  <div class="wow-container" id="wowContainer"></div>
+  <div class="intro-tease" id="introTease">see who this is 👀✨</div>
+  <div class="intro-wave" id="introWave">👋</div>
+</div>
+
+<style is:global>
+  /* ══════════════════════════════════════════════════════════════════════
+     INTRO OVERLAY — Brand-moment layer (plays once, reveals hero)
+     Loaded globally so the rules survive any data-astro-cid hash shift on
+     the consuming page. Elements only exist on the homepage so there is
+     no leakage to other pages.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    pointer-events: none;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .intro-overlay.finished {
+    display: none;
+  }
+
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+  }
+
+  .wow-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .intro-tease {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 9vw, 5.5rem);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .intro-wave {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    font-size: clamp(5rem, 15vw, 10rem);
+    line-height: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro-overlay {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const overlay = document.getElementById('intro-overlay');
+  const wowContainer = document.getElementById('wowContainer');
+
+  if (overlay) {
+    if (sessionStorage.getItem('intro-seen')) {
+      // Returning visit within session — skip the whole thing and reveal hero.
+      overlay.remove();
+      document
+        .querySelectorAll('.hero-wave, .greeting-text, .hero-cta-wrap, .scroll-cue')
+        .forEach((el) => {
+          const node = el as HTMLElement;
+          node.style.opacity = '1';
+          node.style.transform = 'none';
+        });
+    } else {
+      const run = () => {
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        const COUNT = isMobile ? 35 : 65;
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const rand = (a: number, b: number) => a + Math.random() * (b - a);
+
+        // Base rotation pool — distributes particles across rotation buckets so
+        // the field reads as variety rather than uniform tilt.
+        const ROTATION_POOL = [-30, -15, -5, 0, 10, 25, 40, 75, 110, 160, 200, 250, 270, 310, 340];
+
+        const nodes: HTMLSpanElement[] = [];
+        const baseX: number[] = [];
+        const baseY: number[] = [];
+        const baseRot: number[] = [];
+        const ySpeed: number[] = [];
+        const yAmp: number[] = [];
+        const yPhase: number[] = [];
+        const xSpeed: number[] = [];
+        const xAmp: number[] = [];
+        const xPhase: number[] = [];
+        const rotSpeed: number[] = [];
+        const rotAmp: number[] = [];
+        const baseOpacity: number[] = [];
+
+        for (let i = 0; i < COUNT; i++) {
+          const span = document.createElement('span');
+          const isEyes = Math.random() < 0.4;
+          span.textContent = isEyes ? '👀' : 'wow';
+
+          const sizeRem = isMobile ? rand(2.5, 5) : rand(3, 8.5);
+          Object.assign(span.style, {
+            position: 'absolute',
+            left: '0px',
+            top: '0px',
+            fontSize: sizeRem + 'rem',
+            lineHeight: '1',
+            userSelect: 'none',
+            pointerEvents: 'none',
+            willChange: 'transform',
+          });
+
+          if (isEyes) {
+            span.style.fontFamily = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+          } else {
+            Object.assign(span.style, {
+              fontWeight: '900',
+              fontFamily: 'Inter, system-ui, sans-serif',
+              background: 'linear-gradient(135deg, #ff6b35, #e63946, #ff006e)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+            });
+          }
+
+          wowContainer?.appendChild(span);
+          nodes.push(span);
+
+          baseX.push((rand(2, 98) * W) / 100);
+          baseY.push((rand(2, 95) * H) / 100);
+          baseRot.push(ROTATION_POOL[i % ROTATION_POOL.length] + rand(-20, 20));
+          ySpeed.push(rand(0.4, 1.3));
+          yAmp.push(rand(15, 50));
+          yPhase.push(rand(0, 6.28));
+          xSpeed.push(rand(0.15, 0.5));
+          xAmp.push(rand(8, 30));
+          xPhase.push(rand(0, 6.28));
+          rotSpeed.push(rand(0.2, 0.7));
+          rotAmp.push(rand(4, 14));
+          baseOpacity.push(rand(0.55, 1));
+
+          // Initial frame so particles are placed at a sensible position
+          // before the rAF loop takes over.
+          const yOff = Math.sin(yPhase[i]) * yAmp[i];
+          const xOff = Math.sin(xPhase[i]) * xAmp[i];
+          const rOff = Math.sin(yPhase[i]) * rotAmp[i];
+          span.style.transform = `translate(${baseX[i] + xOff}px,${baseY[i] + yOff}px) rotate(${baseRot[i] + rOff}deg)`;
+          span.style.opacity = String(baseOpacity[i]);
+        }
+
+        let raf = 0;
+        const startTime = performance.now();
+        let opacityScale = 1;
+
+        const step = (now: number) => {
+          const t = (now - startTime) * 0.001;
+          for (let i = 0; i < nodes.length; i++) {
+            const xOff = Math.sin(t * xSpeed[i] + xPhase[i]) * xAmp[i];
+            const yOff = Math.sin(t * ySpeed[i] + yPhase[i]) * yAmp[i];
+            const rOff = Math.sin(t * rotSpeed[i] + yPhase[i]) * rotAmp[i];
+            nodes[i].style.transform = `translate(${baseX[i] + xOff}px,${baseY[i] + yOff}px) rotate(${baseRot[i] + rOff}deg)`;
+          }
+          raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+
+        // 800 ms: cancel free-floating loop, start fade-out loop (motion continues).
+        setTimeout(() => {
+          const fadeStart = performance.now();
+          cancelAnimationFrame(raf);
+          const fadeStep = (now: number) => {
+            opacityScale = Math.max(0, 1 - (now - fadeStart) / 600);
+            const t = (now - startTime) * 0.001;
+            for (let i = 0; i < nodes.length; i++) {
+              const xOff = Math.sin(t * xSpeed[i] + xPhase[i]) * xAmp[i];
+              const yOff = Math.sin(t * ySpeed[i] + yPhase[i]) * yAmp[i];
+              const rOff = Math.sin(t * rotSpeed[i] + yPhase[i]) * rotAmp[i];
+              nodes[i].style.transform = `translate(${baseX[i] + xOff}px,${baseY[i] + yOff}px) rotate(${baseRot[i] + rOff}deg)`;
+              nodes[i].style.opacity = String(baseOpacity[i] * opacityScale);
+            }
+            if (opacityScale > 0) {
+              raf = requestAnimationFrame(fadeStep);
+            } else {
+              nodes.forEach((n) => n.remove());
+            }
+          };
+          raf = requestAnimationFrame(fadeStep);
+        }, 800);
+
+        // 1100 ms: tease pops in.
+        setTimeout(() => {
+          const tease = document.getElementById('introTease');
+          if (tease) {
+            gsap.fromTo(
+              tease,
+              { opacity: 0, scale: 0.7 },
+              { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.8)' }
+            );
+          }
+        }, 1100);
+
+        // 2000 ms: tease fades out.
+        setTimeout(() => {
+          const tease = document.getElementById('introTease');
+          if (tease) {
+            gsap.to(tease, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+          }
+        }, 2000);
+
+        // 2300 ms: 👋 fades in, waves 3×, then fades out.
+        setTimeout(() => {
+          const wave = document.getElementById('introWave');
+          if (wave) {
+            gsap.to(wave, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.4,
+              ease: 'back.out(2)',
+              onComplete: () => {
+                gsap.to(wave, {
+                  rotation: 18,
+                  duration: 0.12,
+                  repeat: 3,
+                  yoyo: true,
+                  ease: 'sine.inOut',
+                  onComplete: () => {
+                    gsap.set(wave, { rotation: 0 });
+                    gsap.to(wave, { opacity: 0, duration: 0.35, ease: 'power2.in' });
+                  },
+                });
+              },
+            });
+          }
+        }, 2300);
+
+        // 3300 ms: hero reveal + iris-close exit.
+        setTimeout(() => {
+          const heroWave = document.querySelector('.hero-wave');
+          const greeting = document.querySelector('.greeting-text');
+          const ctaWrap = document.querySelector('.hero-cta-wrap');
+          const heroHand = document.querySelector('.wave-hand');
+          const scrollCue = document.querySelector('.scroll-cue');
+
+          if (heroWave) gsap.to(heroWave, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' });
+          if (greeting) gsap.to(greeting, { y: 0, duration: 1, ease: 'power3.out', delay: 0.1 });
+          if (ctaWrap) gsap.to(ctaWrap, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.4 });
+          if (heroHand) gsap.to(heroHand, { rotation: 14, duration: 0.15, repeat: 5, yoyo: true, ease: 'sine.inOut', delay: 0.8 });
+          if (scrollCue) gsap.to(scrollCue, { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.6 });
+
+          gsap.to(overlay, {
+            clipPath: 'inset(50% 50% 50% 50% round 24px)',
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.inOut',
+            onComplete: () => {
+              overlay.classList.add('finished');
+              overlay.remove();
+            },
+          });
+        }, 3300);
+      };
+
+      sessionStorage.setItem('intro-seen', '1');
+
+      if (sessionStorage.getItem('site-unlocked') === '1') {
+        run();
+      } else {
+        window.addEventListener('site-unlocked', () => run(), { once: true });
+      }
+    }
+  }
+</script>

@@ -314,6 +314,8 @@
       setTimeout(() => {
         lockScreen?.classList.add('removed');
         lockScreen?.remove();
+        // Tell anything waiting for the gate (e.g. IntroOverlay) it can start.
+        window.dispatchEvent(new CustomEvent('site-unlocked'));
       }, 500);
     } else {
       dots.forEach(d => d.classList.add('error'));
