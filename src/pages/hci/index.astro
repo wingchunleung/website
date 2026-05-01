@@ -2,31 +2,14 @@
 /**
  * HCI Course Page — ARIN5301 (Prof. Xiaojuan Ma, HKUST)
  *
- * Audience: TA grading the course. Not a recruiter.
- * Register: lecture vocabulary, plain-language explanation, scannable rows.
+ * Three sections: hero → coursework (assignments with TOC) → principles.
  *
- * The page is meta-reflexive — it both describes HCI principles and is
- * itself the artefact under evaluation. Section order is:
- *   Hero → Assignments (with anchor TOC) → "How this page was designed"
- *   narrative → Principles reference appendix → Heuristic self-evaluation
- *   (severity 0–4 per HCI-08) → Footer
- *
- * Concept set is narrowed to what actually shaped this specific page.
- * Deferred concepts (HRI, XR, ubicomp, CSCW, persuasive tech, GOMS/HTA,
- * NASA-TLX, SUS, Activity Theory, Wizard of Oz, full fission/fusion theory)
- * live in docs/hci-deferred-for-writing.md and are excluded by design.
- *
- * Phase A research → Phase B multi-agent copy ideation → Phase C DDR-003
- * → this implementation. See design/decisions/003-hci-page-content-rewrite.md.
- *
- * HCI principles enacted (subset, full list cited inline in the narrative):
+ * HCI principles enacted:
  * - H1 Consistency — celadon accent is the only deviation; tokens unchanged
  * - H2 Mapping — page organised by assignment (TA's mental model)
  * - H4 Freedom — anchor-link TOC for assignments, deep-linkable URLs
- * - H6 Recognition — canonical principle names bolded as in-page landmarks
- * - H8 / Need-typology Security — predictable placeholder copy, not hidden
+ * - H6 Recognition — canonical principle names as in-page landmarks
  * - HCI-11 multimodal redundancy — colour never carries meaning alone
- * - HCI-08 expert inspection — single-evaluator audit at page bottom
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -42,149 +25,6 @@ const assignments = [
     date: 'TBD',
     status: 'upcoming' as const,
     emptyStateNote: 'If this slot is still empty when you grade, please reach me via the contact page.',
-  },
-];
-
-// Lecture-by-lecture narrative — each entry names a course concept and
-// the concrete decision it shaped on this specific page. Order is roughly
-// bottom-up: perception → cognition → heuristics → mental-model gulfs →
-// motivational layer → deployment. See DDR-003 for the rationale.
-const lectures = [
-  {
-    source: 'HCI-02',
-    principle: "Norman's three levels (visceral, behavioural, reflective)",
-    application: 'A calm celadon hero handles the first emotional read (visceral); the repeating card structure makes the page feel predictable in use (behavioural); the honest self-audit at the bottom is what the page says about its author (reflective).',
-  },
-  {
-    source: 'HCI-03',
-    principle: 'Gestalt as cognitive-load engineering',
-    application: 'Principles are split into three labelled groups instead of one long pile, with a wider gap between sections than within them (proximity), and every card built the same way (similarity) — so grouping reads pre-attentively rather than being parsed.',
-  },
-  {
-    source: 'HCI-03',
-    principle: "Miller's ~7 / chunking",
-    application: 'Each principle category is capped at no more than ten items, and one long flat list was broken into three smaller groups so working memory has a chance.',
-  },
-  {
-    source: 'HCI-08',
-    principle: "Nielsen's heuristics with 0–4 severity scale",
-    application: "The self-evaluation table below is structured around the ten heuristics, with the lecture's exact severity wording: 0 not-a-problem, 1 cosmetic, 2 minor, 3 major, 4 catastrophe.",
-  },
-  {
-    source: 'HCI-08',
-    principle: 'Heuristic evaluation as expert inspection (Rule of Five)',
-    application: 'The audit is a single-evaluator pass, so the page openly states it covers around 35% of likely issues; reaching ~75% would need five inspectors.',
-  },
-  {
-    source: 'UX models',
-    principle: 'Implementation ↔ Representation ↔ Mental',
-    application: 'The page is organised around assignments — which matches how a grader already thinks about coursework — rather than around lecture order, which is how the syllabus is built but not how the reader arrives.',
-  },
-  {
-    source: 'Baseline',
-    principle: 'Gulfs of execution and evaluation',
-    application: 'Every assignment has its own anchor link, which closes the execution gulf — you can jump straight to one. Status pills marked Upcoming or Published close the evaluation gulf — you can see what is actually finished.',
-  },
-  {
-    source: 'Need typology',
-    principle: 'Competence and Security',
-    application: 'Naming weaknesses out loud reads as competence rather than damage; placeholders marked TBD give the reader something steady to expect, which is the security need being met through predictability.',
-  },
-  {
-    source: 'HCI-11 (subset)',
-    principle: 'Multimodal redundancy',
-    application: 'Status pills carry a colour and a written word together, so meaning survives a colour-blind reader or a greyscale screen. Celadon never carries information on its own.',
-  },
-  {
-    source: 'HCI-18 (subset)',
-    principle: 'Lab-to-world / deploy-and-verify',
-    application: "The audit is run against the live deployed page rather than the local preview, because the lecture's point is that field findings don't always match preview findings.",
-  },
-];
-
-// Severity scale — wording lifted verbatim from HCI-08.
-const severityLegend = [
-  { score: '0', label: 'Not a problem' },
-  { score: '1', label: 'Cosmetic — fix if time allows' },
-  { score: '2', label: 'Minor — low priority' },
-  { score: '3', label: 'Major — important to fix' },
-  { score: '4', label: 'Usability catastrophe — must fix' },
-];
-
-// Heuristic self-evaluation. Single-evaluator pass conducted before this
-// revision; the remediation column states what changed in response.
-// H3 stays at 2 even after the rewrite — adding any content increases load
-// by definition, and that is the honest call. See DDR-003 §5.
-const heuristicAudit = [
-  {
-    id: 'H1',
-    name: 'Consistency & standards',
-    severity: 0,
-    justification: 'Celadon accent swap is the only deviation; layout, type, and spacing match the rest of the site.',
-    remediation: '—',
-  },
-  {
-    id: 'H2',
-    name: 'Match real-world (Mapping)',
-    severity: 1,
-    justification: 'Page is structured by assignments — the grader\'s mental model — but the section header read "Coursework" rather than course-code language.',
-    remediation: 'Header now reads "ARIN5301 deliverables".',
-  },
-  {
-    id: 'H3',
-    name: 'Aesthetic & minimalist',
-    severity: 2,
-    justification: 'The lecture-by-lecture narrative and this audit table are themselves added content on a page that argues for restraint. Honest cost.',
-    remediation: 'Tight-row format, no prose paragraphs, severity legend on the same view as the table.',
-  },
-  {
-    id: 'H4',
-    name: 'User control & freedom',
-    severity: 2,
-    justification: 'No anchor TOC for assignments — once more arrive, a grader has to scroll past everything to reach a later one.',
-    remediation: 'Anchor-link TOC at the top of Assignments.',
-  },
-  {
-    id: 'H5',
-    name: 'Flexibility & efficiency',
-    severity: 3,
-    justification: 'A time-pressed grader had no skip-to-assignments path, and no power-user shortcut to find a specific principle.',
-    remediation: 'Anchor TOC plus the site-wide skip-to-content link, plus bolded canonical names that act as in-page landmarks.',
-  },
-  {
-    id: 'H6',
-    name: 'Recognition over recall',
-    severity: 1,
-    justification: 'The principles list is read-once; the severity scale would be unrecognised by a reader who has not taken HCI-08.',
-    remediation: 'Severity legend adjacent to the audit; canonical principle names bolded throughout the narrative as recognition cues.',
-  },
-  {
-    id: 'H7',
-    name: 'Visibility of system status',
-    severity: 1,
-    justification: 'Site-wide scroll progress bar and status pills work, but no per-section indicator was added for this longer page.',
-    remediation: 'Considered, deferred — the global progress bar is sufficient for a page of this length.',
-  },
-  {
-    id: 'H8',
-    name: 'Error prevention',
-    severity: 0,
-    justification: 'No forms, no destructive actions on this page.',
-    remediation: '—',
-  },
-  {
-    id: 'H9',
-    name: 'Help users recover',
-    severity: 1,
-    justification: 'The "TBD" placeholder did not tell a grader what to do if the slot was still empty on grading day.',
-    remediation: 'Empty-state copy now points to the contact page if the slot is empty when read.',
-  },
-  {
-    id: 'H10',
-    name: 'Help & documentation',
-    severity: 2,
-    justification: 'The 0–4 severity vocabulary used in the audit was not defined for a reader unfamiliar with HCI-08.',
-    remediation: 'Severity legend box placed adjacent to the audit table.',
   },
 ];
 
@@ -239,8 +79,7 @@ const principles = [
       <span class="section-label">ARIN5301</span>
       <h1>Human-Computer<br />Interaction</h1>
       <p class="page-subtitle">
-        Coursework and explorations from Prof. Xiaojuan Ma's HCI course at HKUST.
-        This page is itself a demonstration of the principles it describes.
+        Coursework from Prof. Xiaojuan Ma's HCI course at HKUST.
       </p>
     </div>
   </section>
@@ -249,7 +88,6 @@ const principles = [
        ASSIGNMENTS
        HCI: H2 Mapping — structured by assignment (TA's mental model)
        HCI: H4 Freedom — TOC + deep-linkable anchors close the execution gulf
-       HCI: Need-typology Security — placeholders predictable, not hidden
        ═══════════════════════════════════════════════════════════════════ -->
   <section id="assignments" class="assignments-section" aria-labelledby="assignments-heading">
     <div class="container content">
@@ -296,44 +134,7 @@ const principles = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       HOW THIS PAGE WAS DESIGNED
-       Meta-reflexive narrative — names the lecture concept behind each
-       concrete decision on this specific page. One framing paragraph,
-       then ten plain-language rows. Order is bottom-up: perception →
-       cognition → heuristics → mental-model gulfs → motivational layer
-       → deployment. See DDR-003.
-       ═══════════════════════════════════════════════════════════════════ -->
-  <section id="how-designed" class="lectures-section" aria-labelledby="lectures-heading">
-    <div class="container content">
-      <div class="section-header" data-animate="reveal">
-        <span class="section-label">How this page was designed</span>
-        <h2 id="lectures-heading">Lecture concepts that shaped this page</h2>
-      </div>
-
-      <p class="lectures-intro" data-animate="reveal">
-        This page is the artefact under evaluation. Each entry below names a course
-        concept and the concrete decision it shaped on this page — read it as
-        evidence, not slogans.
-      </p>
-
-      <ol class="lectures-list" role="list">
-        {lectures.map((lecture, i) => (
-          <li class="lecture-row" data-animate="reveal" style={`--delay: ${i * 0.04}s`}>
-            <div class="lecture-source-block">
-              <span class="lecture-source">{lecture.source}</span>
-              <span class="lecture-principle">{lecture.principle}</span>
-            </div>
-            <p class="lecture-application">{lecture.application}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════
-       PRINCIPLES — REFERENCE APPENDIX
-       Demoted from "main content" to "glossary." Vocabulary used in the
-       narrative above, listed for quick lookup.
+       PRINCIPLES
        Gestalt: Proximity — principles grouped by category
        Gestalt: Similarity — consistent card design within categories
        Miller's ~7 — each category capped at ≤10 items
@@ -341,12 +142,8 @@ const principles = [
   <section id="principles" class="principles-section" aria-labelledby="principles-heading">
     <div class="container">
       <div class="content">
-        <span class="section-label">Reference appendix</span>
-        <h2 id="principles-heading">Vocabulary used above</h2>
-        <p class="principles-intro">
-          The principle names referenced in the narrative. Listed here for quick
-          lookup; not new content.
-        </p>
+        <span class="section-label">Reference</span>
+        <h2 id="principles-heading">HCI principles</h2>
       </div>
 
       <div class="principles-grid">
@@ -364,78 +161,6 @@ const principles = [
           </div>
         ))}
       </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════
-       HEURISTIC SELF-EVALUATION
-       HCI-08 expert inspection format. Single-evaluator pass conducted
-       before this revision; the remediation column shows what changed in
-       response. Severity legend precedes the table so the vocabulary is
-       established before any rating is read (H10 Help & documentation).
-       ═══════════════════════════════════════════════════════════════════ -->
-  <section id="audit" class="audit-section" aria-labelledby="audit-heading">
-    <div class="container content">
-      <div class="section-header" data-animate="reveal">
-        <span class="section-label">Heuristic self-evaluation</span>
-        <h2 id="audit-heading">Audit and response</h2>
-      </div>
-
-      <p class="audit-intro" data-animate="reveal">
-        Findings from a single-evaluator inspection conducted before this
-        revision, scored against Nielsen's ten heuristics (HCI-08). The Rule of
-        Five says one inspector catches roughly 35% of likely issues — five
-        catch around 75% — so this audit is not exhaustive. The remediation
-        column states what changed in response.
-      </p>
-
-      <aside class="severity-legend" aria-label="Severity scale (HCI-08)" data-animate="reveal">
-        <span class="severity-legend-title">Severity scale (HCI-08)</span>
-        <ul class="severity-legend-list" role="list">
-          {severityLegend.map((entry) => (
-            <li class="severity-legend-item">
-              <span class="severity-legend-score">{entry.score}</span>
-              <span class="severity-legend-label">{entry.label}</span>
-            </li>
-          ))}
-        </ul>
-      </aside>
-
-      <div class="audit-table-wrap" data-animate="reveal">
-        <table class="audit-table">
-          <thead>
-            <tr>
-              <th scope="col" class="audit-th-id">#</th>
-              <th scope="col" class="audit-th-name">Heuristic</th>
-              <th scope="col" class="audit-th-severity">Severity</th>
-              <th scope="col" class="audit-th-justification">Justification</th>
-              <th scope="col" class="audit-th-remediation">Remediation</th>
-            </tr>
-          </thead>
-          <tbody>
-            {heuristicAudit.map((row) => (
-              <tr>
-                <td class="audit-id" data-label="#">{row.id}</td>
-                <td class="audit-name" data-label="Heuristic">{row.name}</td>
-                <td class="audit-severity" data-label="Severity">
-                  <span class:list={['severity-pill', `severity-${row.severity}`]}>
-                    {row.severity}
-                  </span>
-                </td>
-                <td class="audit-justification" data-label="Justification">{row.justification}</td>
-                <td class="audit-remediation" data-label="Remediation">{row.remediation}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p class="audit-note" data-animate="reveal">
-        H3 stays at severity 2 even after this revision. Adding any content
-        increases load by definition; the trade is that without it the page
-        cannot demonstrate HCI thinking at all. The full reasoning is in
-        DDR-003 (<code>design/decisions/003-hci-page-content-rewrite.md</code>).
-      </p>
     </div>
   </section>
 
@@ -498,8 +223,6 @@ const principles = [
   .assignments-section {
     padding: var(--section-gap) 0;
   }
-
-  /* h2 styled via .section-header */
 
   .assignments-list {
     display: flex;
@@ -593,8 +316,7 @@ const principles = [
     max-width: 60ch;
   }
 
-  /* Assignments TOC — closes the execution gulf for graders.
-     H4/H5 fix landing in this revision (DDR-003 §5). */
+  /* Assignments TOC — closes the execution gulf for graders. */
   .assignments-toc {
     display: flex;
     flex-wrap: wrap;
@@ -658,11 +380,6 @@ const principles = [
 
   .principles-section h2 {
     margin-top: var(--space-3);
-    margin-bottom: var(--space-3);
-  }
-
-  .principles-intro {
-    color: var(--color-text-secondary);
     margin-bottom: var(--space-6);
   }
 
@@ -728,284 +445,6 @@ const principles = [
     font-size: var(--text-small);
     color: var(--color-text-secondary);
     line-height: var(--leading-normal);
-  }
-
-  /* ── Lectures section — "How this page was designed" ─────────────────
-     Tight-row format. Each row: source · principle · application.
-     One row per concept; ten total. Plain-language explanation paired
-     with bolded canonical names so the source signal is preserved. */
-
-  .lectures-section {
-    padding: var(--section-gap) 0;
-  }
-
-  .lectures-intro {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-6);
-    max-width: 65ch;
-  }
-
-  .lectures-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding: 0;
-    counter-reset: lecture;
-  }
-
-  .lecture-row {
-    display: grid;
-    gap: var(--space-2);
-    padding: var(--space-4) 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .lecture-row:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
-
-  @media (min-width: 768px) {
-    .lecture-row {
-      grid-template-columns: minmax(220px, 1fr) 2fr;
-      gap: var(--space-5);
-      align-items: baseline;
-    }
-  }
-
-  .lecture-source-block {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .lecture-source {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-celadon);
-  }
-
-  .lecture-principle {
-    font-family: var(--font-body);
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-small);
-    color: var(--color-text);
-    line-height: var(--leading-snug);
-  }
-
-  .lecture-application {
-    color: var(--color-text-secondary);
-    font-size: var(--text-small);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-    max-width: 65ch;
-  }
-
-  /* ── Audit section — heuristic self-evaluation ────────────────────── */
-
-  .audit-section {
-    padding: var(--section-gap) 0;
-    background: var(--color-surface);
-  }
-
-  .audit-intro {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-5);
-    max-width: 65ch;
-  }
-
-  .severity-legend {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-left: 2px solid var(--color-celadon);
-    border-radius: var(--radius-md);
-    padding: var(--space-4);
-    margin-bottom: var(--space-5);
-  }
-
-  .severity-legend-title {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-wash);
-    margin-bottom: var(--space-3);
-  }
-
-  .severity-legend-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    padding: 0;
-    margin: 0;
-  }
-
-  .severity-legend-item {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    font-size: var(--text-small);
-    color: var(--color-text-secondary);
-  }
-
-  .severity-legend-score {
-    font-family: var(--font-mono);
-    font-weight: var(--weight-semibold);
-    color: var(--color-celadon);
-    min-width: 1ch;
-  }
-
-  /* Severity pills — colour pairs with the number, never carries meaning
-     alone (HCI-11 multimodal redundancy). */
-  .severity-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.25rem;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    font-weight: var(--weight-semibold);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-  }
-
-  .severity-0 { color: var(--color-wash); }
-  .severity-1 { color: var(--color-text-secondary); }
-  .severity-2 { color: var(--color-celadon); }
-  .severity-3 { color: var(--color-vermillion); }
-  .severity-4 {
-    color: var(--color-bg);
-    background: var(--color-vermillion);
-    border-color: var(--color-vermillion);
-  }
-
-  .audit-table-wrap {
-    overflow-x: auto;
-    margin-bottom: var(--space-4);
-  }
-
-  .audit-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-bg);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    font-size: var(--text-small);
-  }
-
-  .audit-table th,
-  .audit-table td {
-    padding: var(--space-3);
-    text-align: left;
-    vertical-align: top;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .audit-table thead th {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-wash);
-    font-weight: var(--weight-medium);
-    background: var(--color-surface);
-  }
-
-  .audit-table tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  .audit-id {
-    font-family: var(--font-mono);
-    color: var(--color-celadon);
-    font-weight: var(--weight-medium);
-    white-space: nowrap;
-  }
-
-  .audit-name {
-    font-weight: var(--weight-semibold);
-    color: var(--color-text);
-    white-space: nowrap;
-  }
-
-  .audit-justification,
-  .audit-remediation {
-    color: var(--color-text-secondary);
-    line-height: var(--leading-normal);
-  }
-
-  /* On narrow screens, switch from a real table to a stacked card layout.
-     Each <tr> becomes a card; data-label attributes on <td> surface the
-     column header inline so the meaning still reads. */
-  @media (max-width: 720px) {
-    .audit-table thead {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    .audit-table,
-    .audit-table tbody,
-    .audit-table tr,
-    .audit-table td {
-      display: block;
-      width: 100%;
-    }
-
-    .audit-table tr {
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-left: 3px solid var(--color-celadon);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      margin-bottom: var(--space-3);
-    }
-
-    .audit-table td {
-      border-bottom: none;
-      padding: var(--space-1) 0;
-      display: grid;
-      grid-template-columns: minmax(110px, max-content) 1fr;
-      gap: var(--space-2);
-      align-items: baseline;
-    }
-
-    .audit-table td::before {
-      content: attr(data-label);
-      font-family: var(--font-mono);
-      font-size: var(--text-caption);
-      letter-spacing: var(--tracking-wider);
-      text-transform: uppercase;
-      color: var(--color-wash);
-    }
-
-    .audit-name { white-space: normal; }
-  }
-
-  .audit-note {
-    font-size: var(--text-small);
-    color: var(--color-wash);
-    font-style: italic;
-    max-width: 65ch;
-  }
-
-  .audit-note code {
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    background: var(--color-bg);
-    padding: 0.1em 0.3em;
-    border-radius: var(--radius-sm);
-    font-style: normal;
   }
 </style>
 
